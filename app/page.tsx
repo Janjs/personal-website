@@ -35,7 +35,7 @@ const aboutItems: AboutGlobeItem[] = [
     quote:
       "My semester at Ajou University in Suwon gave me a new academic and cultural perspective, and it is still one of the experiences that most expanded how I see the world.",
     location: [37.2636, 127.0286],
-    spotlightLocation: [37.2636, 127.0286],
+    spotlightLocation: [31, 68],
     place: "Ajou University",
     country: "South Korea",
     flag: "🇰🇷",
