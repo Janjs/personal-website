@@ -26,6 +26,7 @@ const BASE_CONFIG: Omit<
 };
 
 const INTERPOLATION_FACTOR = 0.12;
+const DRAG_SENSITIVITY = 0.005;
 const FOCUS_BIAS = {
   phi: (-20 * Math.PI) / 180,
   theta: (-20 * Math.PI) / 180,
@@ -55,6 +56,13 @@ export function Globe({ className, location, label }: GlobeProps) {
   const markerLocationRef = useRef(location);
   const targetRotationRef = useRef(locationToAngles(location));
   const currentRotationRef = useRef(locationToAngles(location));
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startPhi: number;
+    startTheta: number;
+  } | null>(null);
   const timeRef = useRef(0);
 
   useEffect(() => {
@@ -136,12 +144,59 @@ export function Globe({ className, location, label }: GlobeProps) {
     };
   }, []);
 
+  const handlePointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    canvas.setPointerCapture(event.pointerId);
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startPhi: targetRotationRef.current.phi,
+      startTheta: targetRotationRef.current.theta,
+    };
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const dragState = dragStateRef.current;
+    const canvas = canvasRef.current;
+
+    if (!dragState || !canvas || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - dragState.startX;
+
+    targetRotationRef.current.phi = dragState.startPhi + deltaX * DRAG_SENSITIVITY;
+    targetRotationRef.current.theta = dragState.startTheta;
+  };
+
+  const handlePointerEnd = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const dragState = dragStateRef.current;
+    const canvas = canvasRef.current;
+
+    if (!dragState || !canvas || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    canvas.releasePointerCapture(event.pointerId);
+    dragStateRef.current = null;
+  };
+
   return (
     <div className={cn("absolute inset-0", className)}>
       <canvas
         ref={canvasRef}
         aria-label={label ? `Animated globe focused on ${label}` : "Animated globe"}
-        className="size-full opacity-0 transition-opacity duration-700 [contain:layout_paint_size]"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        className="size-full cursor-grab touch-none opacity-0 transition-opacity duration-700 active:cursor-grabbing [contain:layout_paint_size]"
       />
     </div>
   );
