@@ -198,7 +198,7 @@ export function AboutGlobeSection({
           }
         }}
       >
-        <div className="absolute -top-10 z-0 aspect-square w-[20rem] sm:-top-35 sm:w-full">
+        <div className="absolute -top-10 z-0 aspect-square w-[20rem] sm:-top-30 sm:w-full">
           <Globe
             className="z-0"
             locations={items}
