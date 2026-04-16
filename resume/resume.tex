@@ -19,6 +19,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage[english]{babel}
+\usepackage{setspace}
 \usepackage{tabularx}
 \ifPDFTeX
   \input{glyphtounicode}
@@ -68,6 +69,7 @@
 \fancyfoot{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
+\setlength{\footskip}{8pt}
 
 % Adjust margins
 \addtolength{\oddsidemargin}{-0.5in}
@@ -81,11 +83,12 @@
 \raggedbottom
 \raggedright
 \setlength{\tabcolsep}{0in}
+\setstretch{1.08}
 
 % Sections formatting
 \titleformat{\section}{
-  \vspace{-4pt}\bfseries\raggedright\large
-}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+  \vspace{-2pt}\bfseries\raggedright\small
+}{}{0em}{}[\color{black}\titlerule \vspace{-2pt}]
 
 % Ensure that generated PDFs remain machine readable when using pdfLaTeX.
 \ifPDFTeX
@@ -95,31 +98,31 @@
 %-------------------------
 % Custom commands
 \newcommand{\resumeItem}[1]{
-  \item\small{
+  \item\footnotesize{
     {#1 \vspace{-2pt}}
   }
 }
 
 \newcommand{\resumeSubheading}[4]{
-  \vspace{-2pt}\item
+  \vspace{1pt}\item
     \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
       \textbf{#1} & #2 \\
-      \textit{\small#3} & \textit{\small #4} \\
-    \end{tabular*}\vspace{-7pt}
+      \textit{\footnotesize#3} & \textit{\footnotesize #4} \\
+    \end{tabular*}\vspace{-3pt}
 }
 
 \newcommand{\resumeSubSubheading}[2]{
     \item
     \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \textit{\small#1} & \textit{\small #2} \\
-    \end{tabular*}\vspace{-7pt}
+      \textit{\footnotesize#1} & \textit{\footnotesize #2} \\
+    \end{tabular*}\vspace{-3pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
     \item
     \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \small#1 & #2 \\
-    \end{tabular*}\vspace{-7pt}
+      \footnotesize#1 & \footnotesize#2 \\
+    \end{tabular*}\vspace{-3pt}
 }
 
 \newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
@@ -128,7 +131,7 @@
 
 \newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
 \newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
-\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[itemsep=4pt, topsep=4pt]}
 \newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
 
 %-------------------------------------------
@@ -139,21 +142,20 @@
 
 %----------HEADING----------
 \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
-  \textbf{\Huge Jan Jiménez Serra} & \large {\normalsize \faGlobe}\ \href{https://janjs.dev}{\underline{janjs.dev}} \\
+  \textbf{\Large Jan Jiménez Serra} & \small {\faGlobe}\ \href{https://janjs.dev}{\underline{janjs.dev}} \\
 \end{tabular*}
-\vspace{6pt}
+\vspace{2pt}
 
 \noindent
-\begin{tabular*}{\textwidth}{@{}c@{\extracolsep{\fill}}c@{}}
-  \footnotesize
+{\footnotesize
   \faGithub\ \href{https://github.com/janjs}{\underline{github.com/janjs}}
   \hspace{0.5em} $|$ \hspace{0.5em}
   \faPhone\ +34 684 22 55 70
   \hspace{0.5em} $|$ \hspace{0.5em}
   \faEnvelope\ \href{mailto:jan.jime.serra@gmail.com}{\underline{jan.jime.serra@gmail.com}}
   \hspace{0.5em} $|$ \hspace{0.5em}
-  \faMapMarker\ Netherlands (Originally from Barcelona) \\
-\end{tabular*}
+  \faMapMarker\ Netherlands (Originally from Barcelona)
+}
 
 
 
@@ -231,7 +233,7 @@
 %-----------PROGRAMMING SKILLS-----------
 \section{Skills}
  \begin{itemize}[leftmargin=0.15in, label={}]
-    \item \small{
+    \item \footnotesize{
       \textbf{Programming Languages}: \textbf{Java} · \textbf{Kotlin} · \textbf{Python} · \textbf{JavaScript/TypeScript}. \\
       \textbf{Frameworks}: React JS · Angular JS · Spring · Three JS · React Native · Django · ARKit · iOS UIKit · OpenGL. \\
       \textbf{Machine Learning}: PyTorch · AWS/GCP machine learning tools (Rekognition, Firebase ML). \\
@@ -240,7 +242,7 @@
       \textbf{Web Markup Languages}: HTML/CSS. \\
       \textbf{Others}: DevOps · OOP · AOP · Computer Graphics (C++) · Machine Learning.
     }
-    \item \small{ \textbf{Spoken Languages}: English (\emph{Level C1 - Cambridge English: Advanced}) · Spanish (\emph{Native}) · Catalan (\emph{Native}). }
+    \item \footnotesize{ \textbf{Spoken Languages}: English (\emph{Level C1 - Cambridge English: Advanced}) · Spanish (\emph{Native}) · Catalan (\emph{Native}). }
  \end{itemize}
 
 
