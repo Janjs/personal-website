@@ -7,6 +7,8 @@
 
 \documentclass[letterpaper,11pt]{article}
 
+\usepackage{iftex}
+\usepackage{fontspec}
 \usepackage{latexsym}
 \usepackage[empty]{fullpage}
 \usepackage{titlesec}
@@ -18,7 +20,9 @@
 \usepackage{fancyhdr}
 \usepackage[english]{babel}
 \usepackage{tabularx}
-\input{glyphtounicode}
+\ifPDFTeX
+  \input{glyphtounicode}
+\fi
 \usepackage{fontawesome5}
 
 
@@ -32,6 +36,31 @@
 % serif
 % \usepackage{CormorantGaramond}
 % \usepackage{charter}
+
+\setmainfont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf,
+  BoldFont=Geist-Regular.ttf,
+  ItalicFont=Geist-Regular.ttf,
+  BoldItalicFont=Geist-Regular.ttf,
+  BoldFeatures={FakeBold=1.6},
+  ItalicFeatures={FakeSlant=0.2},
+  BoldItalicFeatures={FakeBold=1.6,FakeSlant=0.2}
+]{Geist}
+\setsansfont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf,
+  BoldFont=Geist-Regular.ttf,
+  ItalicFont=Geist-Regular.ttf,
+  BoldItalicFont=Geist-Regular.ttf,
+  BoldFeatures={FakeBold=1.6},
+  ItalicFeatures={FakeSlant=0.2},
+  BoldItalicFeatures={FakeBold=1.6,FakeSlant=0.2}
+]{Geist}
+\setmonofont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf
+]{Geist}
 
 
 \pagestyle{fancy}
@@ -55,11 +84,13 @@
 
 % Sections formatting
 \titleformat{\section}{
-  \vspace{-4pt}\scshape\raggedright\large
+  \vspace{-4pt}\bfseries\raggedright\large
 }{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
 
-% Ensure that generate pdf is machine readable/ATS parsable
-\pdfgentounicode=1
+% Ensure that generated PDFs remain machine readable when using pdfLaTeX.
+\ifPDFTeX
+  \pdfgentounicode=1
+\fi
 
 %-------------------------
 % Custom commands
@@ -108,7 +139,7 @@
 
 %----------HEADING----------
 \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
-  \textbf{\Huge \scshape Jan Jiménez Serra} & \large {\normalsize \faGlobe}\ \href{https://janjs.dev}{\underline{janjs.dev}} \\
+  \textbf{\Huge Jan Jiménez Serra} & \large {\normalsize \faGlobe}\ \href{https://janjs.dev}{\underline{janjs.dev}} \\
 \end{tabular*}
 \vspace{6pt}
 
@@ -127,6 +158,30 @@
 
 
 
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {AI Software Engineer}{October 2021 -- Present}
+      {Accenture Netherlands}{Amsterdam (Netherlands)}
+      \resumeItemListStart
+      \resumeItem{Promoted twice while growing into AI-focused engineering roles spanning LLM platforms, agentic systems, and enterprise AI products.}
+      \resumeItem{\textit{German Industrial Machinery} (2026 -- Present): Built Next.js-based agentic systems using LLMs, RAG, and enterprise integrations.}
+      \resumeItem{\textit{US Medtech} (2023 -- 2025): Built an internal AI chatbot platform used daily by 50,000+ employees, using Azure OpenAI and AWS Bedrock with enterprise workflows, context-aware agents, and no-code tools for citizen developers.}
+      \resumeItem{\textit{Large Dutch Bank} (2021 -- 2023): Helped replace a 20+ year legacy user account platform with Kotlin, Spring, AngularJS, Azure SQL, and Cosmos DB, building backend services serving 1,000+ QPS with $>$99.9\% availability and single-digit millisecond API latency.}
+    \resumeItemListEnd
+    
+    \resumeSubheading
+      {Full-stack Software Engineer}{April 2018 -- Dec. 2019}
+      {NexoTech}{Mataró, Barcelona (Spain)}
+      \resumeItemListStart
+        \resumeItem{Led project about designing and building of a full-stack web application build in ReactJS and Java Spring for counting the amount of people in a building with IoT and Deep Learning implementations.}
+        \resumeItem{Implemented a Machine Learning model with Keras and Python that recognizes gender and age. Used AWS Rekognition in production for better speed and accuracy.}
+      \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+
 %-----------EDUCATION-----------
 \section{Education}
   \resumeSubHeadingListStart
@@ -139,42 +194,10 @@
     \resumeSubheading
       {Bachelor’s in Computer Engineering and Information Systems}{Sep. 2016 -- Dec. 2019}
       {Universitat Pompeu Fabra}{Barcelona, Spain}
-    \resumeSubheading
-      {Study Abroad, Ajou University}{2017}
-      {Ajou University}{Suwon, South Korea}
       \resumeItemListStart
-        \resumeItem{Studied a semester at \emph{Ajou University}.}
+        \resumeItem{Studied a semester abroad at \emph{Ajou University} in Suwon, South Korea.}
       \resumeItemListEnd
   \resumeSubHeadingListEnd
-
-
-%-----------EXPERIENCE-----------
-\section{Experience}
-  \resumeSubHeadingListStart
-    \resumeSubheading
-      {Full-Stack Software Engineer}{October 2021 - Currently}
-      {Accenture Netherlands}{Amsterdam (Netherlands)}
-      \resumeItemListStart
-      \resumeItem{Worked in one of the largest banks in the Netherlands, where we migrated user accounts from an outdated system to a new, cloud-based application built in AngularJS and Kotlin with Spring.}
-      \resumeItem{Gained DevOps knowledge by: implementing CI/CD pipelines; automating build, test, monitoring and logging to ensure system reliability and performance; and managing a microservices infrastructure.}
-      \resumeItem{Internal project to research the viability of hosting websites on a satellite, built a front-end web app with interactive 3D models in ThreeJS.}
-    \resumeItemListEnd
-    
-    \resumeSubheading
-      {Software Engineer}{April 2018 -- Dec. 2019}
-      {NexoTech}{Mataró, Barcelona (Spain)}
-      \resumeItemListStart
-        \resumeItem{Led project about designing and building of a full-stack web application build in ReactJS and Java Spring for counting the amount of people in a building with IoT and Deep Learning implementations.}
-        \resumeItem{Implemented a Machine Learning model with Keras and Python that recognizes gender and age. Used AWS Rekognition in production for better speed and accuracy.}
-      \resumeItemListEnd
-
-    \resumeSubheading
-      {Freelance Python Teacher}{February 2021}
-      {Projecte SocialNEET}{Barcelona (Spain)}
-      \resumeItemListStart
-      \resumeItem{Taught beginner level Python and Machine Learning for a governmental learning project. }
-    \resumeItemListEnd
-    \resumeSubHeadingListEnd
       
       
 % -----------Multiple Positions Heading-----------
