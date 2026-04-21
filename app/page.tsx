@@ -112,7 +112,9 @@ const aboutEntries: AboutGlobeEntry[] = [
   {
     id: "consulting",
     parts: [
-      { text: "4+ years consulting building AI web apps at ", itemId: "dutch-bank" },
+      { text: "5+ years consulting building ", itemId: "dutch-bank" },
+      { text: "AI web apps", itemId: "dutch-bank", className: "font-semibold" },
+      { text: " at ", itemId: "dutch-bank" },
       { text: "Dutch Bank,", itemId: "dutch-bank", className: "font-semibold" },
       { text: " " },
       { text: "US Medtech", itemId: "us-medtech", className: "font-semibold" },

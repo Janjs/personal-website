@@ -1,17 +1,26 @@
+import type { StaticImageData } from "next/image";
+
+import chordwiseScreenshot from "@/public/project-screenshots/chordwise.png";
+import highlightsAiScreenshot from "@/public/project-screenshots/highlights-ai.jpeg";
+import scandropMcpScreenshot from "@/public/project-screenshots/scandrop-mcp.png";
+import stroopScreenshot from "@/public/project-screenshots/stroop.png";
+import sunnySpotsScreenshot from "@/public/project-screenshots/sunny-spots.jpeg";
+import todaysHarvestScreenshot from "@/public/project-screenshots/todays-harvest.png";
+
 export type ProjectKind = "web" | "mobile" | "mcp";
 
 export type Project = {
   name: string;
   tag: string;
   liveUrl: string | null;
-  iconSrc?: string;
+  iconSrc?: string | StaticImageData;
   iconText?: string;
   darkIconText?: string;
   github: string;
   kind: ProjectKind;
   iconWrapperClass?: string;
   stars?: number;
-  screenshotSrc?: string;
+  screenshotSrc?: string | StaticImageData;
   description: string;
   chips: string[];
   techStack: string[];
@@ -27,7 +36,7 @@ export const portfolioProjects: Project[] = [
     kind: "web",
     iconWrapperClass:
       "bg-linear-to-br from-white via-[#f8f8f8] to-[#ededed] p-0.5 dark:from-[#1d1d1d] dark:via-[#252525] dark:to-[#2c2c2c]",
-    screenshotSrc: "/project-screenshots/chordwise.png",
+    screenshotSrc: chordwiseScreenshot,
     description: "AI-powered chord progression generator for musicians exploring harmony and songwriting ideas.",
     chips: ["Web App", "AI", "Music"],
     techStack: ["Next.js", "TypeScript", "OpenAI API", "Convex"],
@@ -41,7 +50,7 @@ export const portfolioProjects: Project[] = [
     kind: "web",
     iconWrapperClass:
       "bg-linear-to-br from-white via-[#f4fbfb] to-[#2d8b8f]/10 p-0.5 dark:from-[#173d3f] dark:via-[#1d4c4f] dark:to-[#2d8b8f]/35",
-    screenshotSrc: "/project-screenshots/stroop.png",
+    screenshotSrc: stroopScreenshot,
     description: "Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting.",
     chips: ["Web App", "Audio", "Generative"],
     techStack: ["Next.js", "TypeScript", "Strudel", "Convex"],
@@ -56,7 +65,7 @@ export const portfolioProjects: Project[] = [
     iconWrapperClass:
       "bg-linear-to-br from-white via-[#f4fdf9] to-[#2ea892]/10 p-0.5 dark:from-[#113b34] dark:via-[#154842] dark:to-[#2ea892]/30",
     stars: 39,
-    screenshotSrc: "/project-screenshots/scandrop-mcp.png",
+    screenshotSrc: scandropMcpScreenshot,
     description: "MCP server that helps LLMs reason about and interact with 3D spatial environments.",
     chips: ["MCP", "Spatial", "3D"],
     techStack: ["TypeScript", "MCP", "3D Processing"],
@@ -71,7 +80,7 @@ export const portfolioProjects: Project[] = [
       "bg-linear-to-br from-white via-[#fffaf0] to-[#ffb63a]/12 dark:from-[#0f1f3d] dark:via-[#162a4f] dark:to-[#264a87]/45",
     github: "sunnyspots",
     kind: "web",
-    screenshotSrc: "/project-screenshots/sunny-spots.jpeg",
+    screenshotSrc: sunnySpotsScreenshot,
     description: "Map-based app to discover when parks, cafes, and city spots receive sunlight during the day.",
     chips: ["Web App", "Maps", "Urban"],
     techStack: ["Next.js", "TypeScript", "Mapping APIs"],
@@ -85,7 +94,7 @@ export const portfolioProjects: Project[] = [
     kind: "web",
     iconWrapperClass:
       "bg-linear-to-br from-white via-[#fff8ef] to-[#ffb267]/12 p-0.5 dark:from-[#4d2c17] dark:via-[#63381d] dark:to-[#ffb267]/35",
-    screenshotSrc: "/project-screenshots/highlights-ai.jpeg",
+    screenshotSrc: highlightsAiScreenshot,
     description: "Create basketball highlight reels by combining computer vision detections with scene-aware editing.",
     chips: ["Web App", "Sports", "Computer Vision"],
     techStack: ["Next.js", "Python", "Roboflow"],
@@ -97,7 +106,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/todays-harvest.png",
     github: "todays-harvest",
     kind: "mobile",
-    screenshotSrc: "/project-screenshots/todays-harvest.png",
+    screenshotSrc: todaysHarvestScreenshot,
     description: "Widget-focused iOS app that shows in-season produce based on your location to support fresher, local eating.",
     chips: ["Mobile App", "Food", "Seasonality"],
     techStack: ["Swift", "iOS", "Location Services"],

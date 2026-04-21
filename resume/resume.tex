@@ -41,22 +41,20 @@
 \setmainfont[
   Path=fonts/,
   UprightFont=Geist-Regular.ttf,
-  BoldFont=Geist-Regular.ttf,
+  BoldFont=Geist-Bold.ttf,
   ItalicFont=Geist-Regular.ttf,
-  BoldItalicFont=Geist-Regular.ttf,
-  BoldFeatures={FakeBold=1.6},
+  BoldItalicFont=Geist-Bold.ttf,
   ItalicFeatures={FakeSlant=0.2},
-  BoldItalicFeatures={FakeBold=1.6,FakeSlant=0.2}
+  BoldItalicFeatures={FakeSlant=0.2}
 ]{Geist}
 \setsansfont[
   Path=fonts/,
   UprightFont=Geist-Regular.ttf,
-  BoldFont=Geist-Regular.ttf,
+  BoldFont=Geist-Bold.ttf,
   ItalicFont=Geist-Regular.ttf,
-  BoldItalicFont=Geist-Regular.ttf,
-  BoldFeatures={FakeBold=1.6},
+  BoldItalicFont=Geist-Bold.ttf,
   ItalicFeatures={FakeSlant=0.2},
-  BoldItalicFeatures={FakeBold=1.6,FakeSlant=0.2}
+  BoldItalicFeatures={FakeSlant=0.2}
 ]{Geist}
 \setmonofont[
   Path=fonts/,
@@ -107,14 +105,14 @@
   \vspace{1pt}\item
     \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
       \textbf{#1} & #2 \\
-      \textit{\footnotesize#3} & \textit{\footnotesize #4} \\
+      \small #3 & \textit{\small #4} \\
     \end{tabular*}\vspace{-3pt}
 }
 
 \newcommand{\resumeSubSubheading}[2]{
     \item
     \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \textit{\footnotesize#1} & \textit{\footnotesize #2} \\
+      \small #1 & \textit{\small #2} \\
     \end{tabular*}\vspace{-3pt}
 }
 
@@ -133,6 +131,12 @@
 \newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
 \newcommand{\resumeItemListStart}{\begin{itemize}[itemsep=4pt, topsep=4pt]}
 \newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+\newcommand{\resumeSkillRow}[2]{%
+  \textbf{#1} & \footnotesize #2 \\
+}
+\newcommand{\resumeSkillSpacer}{%
+  & \\
+}
 
 %-------------------------------------------
 %%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,10 +171,10 @@
       {AI Software Engineer}{October 2021 -- Present}
       {Accenture Netherlands}{Amsterdam (Netherlands)}
       \resumeItemListStart
-      \resumeItem{Promoted twice while growing into AI-focused engineering roles spanning LLM platforms, agentic systems, and enterprise AI products.}
-      \resumeItem{\textit{German Industrial Machinery} (2026 -- Present): Built Next.js-based agentic systems using LLMs, RAG, and enterprise integrations.}
-      \resumeItem{\textit{US Medtech} (2023 -- 2025): Built an internal AI chatbot platform used daily by 50,000+ employees, using Azure OpenAI and AWS Bedrock with enterprise workflows, context-aware agents, and no-code tools for citizen developers.}
-      \resumeItem{\textit{Large Dutch Bank} (2021 -- 2023): Helped replace a 20+ year legacy user account platform with Kotlin, Spring, AngularJS, Azure SQL, and Cosmos DB, building backend services serving 1,000+ QPS with $>$99.9\% availability and single-digit millisecond API latency.}
+      \resumeItem{Promoted twice while growing into AI-focused engineering roles spanning \textbf{LLM platforms}, \textbf{agentic systems}, and enterprise AI products.}
+      \resumeItem{German Industrial Machinery (2026 -- Present): Built \textbf{Next.js-based agentic systems} using \textbf{LLMs}, \textbf{RAG}, and enterprise integrations.}
+      \resumeItem{US Medtech (2023 -- 2025): Built an internal \textbf{AI chatbot platform} used daily by \textbf{50,000+ employees}, using \textbf{Azure OpenAI} and \textbf{AWS Bedrock} with enterprise workflows, context-aware agents, and no-code tools for citizen developers.}
+      \resumeItem{Large Dutch Bank (2021 -- 2023): Helped replace a 20+ year legacy user account platform with Kotlin, Spring, AngularJS, Azure SQL, and Cosmos DB, building backend services serving \textbf{1,000+ QPS} with \textbf{$>$99.9\% availability} and single-digit millisecond API latency.}
     \resumeItemListEnd
     
     \resumeSubheading
@@ -191,13 +195,13 @@
       {M.Sc. in Computer Science}{Sep. 2020 -- Oct. 2021}
       {Trinity College Dublin}{Dublin, Ireland}
       \resumeItemListStart
-        \resumeItem{Specialized in AR/VR, Machine Learning, and Computer Graphics.}
+        \resumeItem{Specialized in \textbf{AR/VR}, \textbf{Machine Learning}, and \textbf{Computer Graphics}.}
       \resumeItemListEnd
     \resumeSubheading
       {Bachelor’s in Computer Engineering and Information Systems}{Sep. 2016 -- Dec. 2019}
       {Universitat Pompeu Fabra}{Barcelona, Spain}
       \resumeItemListStart
-        \resumeItem{Studied a semester abroad at \emph{Ajou University} in Suwon, South Korea.}
+        \resumeItem{Studied a semester abroad at \textbf{Ajou University} in \textit{Suwon, South Korea}.}
       \resumeItemListEnd
   \resumeSubHeadingListEnd
       
@@ -217,14 +221,11 @@
 \section{Projects}
     \resumeSubHeadingListStart
       \resumeProjectHeading
-          {\textbf{3D Copy \& Paste} $|$ \emph{ARKit, Swift, Python, Blender}}{April 2021 - September 2021}
+          {Highlighted projects are listed below; more web, mobile, and open-source work can be found at: \href{https://github.com/janjs}{\underline{github.com/janjs}}.}{}
           \resumeItemListStart
-            \resumeItem{Developed an iOS app that obtains a 3D mesh using LiDAR from a 4th Gen iPad Pro, and seamlessly sends the mesh to a 3D modeling program (Blender) by pointing the camera to it.}
-            \resumeItem{Blender Add-on written in Python that retrieves the model and positions it at the centroid between the camera picture and the computer screen.}
+            \resumeItem{\textbf{Chordwise} --- AI-powered chord progression generator for musicians, built with Next.js, OpenAI API, and Convex.}
+            \resumeItem{\textbf{Scandrop MCP} --- MCP server that helps LLMs reason about and interact with 3D spatial environments, built with Python, TypeScript, and 3D processing pipelines.}
           \resumeItemListEnd
-
-          More Web and Mobile applications in an abundance of programming language, frameworks and libraries can be found at: \vspace{1pt}
-    \href{https://github.com/janjs}{\underline{github.com/janjs}}
     \resumeSubHeadingListEnd
 
 
@@ -234,15 +235,17 @@
 \section{Skills}
  \begin{itemize}[leftmargin=0.15in, label={}]
     \item \footnotesize{
-      \textbf{Programming Languages}: \textbf{Java} · \textbf{Kotlin} · \textbf{Python} · \textbf{JavaScript/TypeScript}. \\
-      \textbf{Frameworks}: React JS · Angular JS · Spring · Three JS · React Native · Django · ARKit · iOS UIKit · OpenGL. \\
-      \textbf{Machine Learning}: PyTorch · AWS/GCP machine learning tools (Rekognition, Firebase ML). \\
-      \textbf{Database Management}: SQL (MySQL/Oracle/PostgreSQL) · NoSQL (CosmosDB) · Firebase. \\
-      \textbf{Developer Tools}: Git · IntelliJ · VS Code · Firebase · XCode · Azure DevOps. \\
-      \textbf{Web Markup Languages}: HTML/CSS. \\
-      \textbf{Others}: DevOps · OOP · AOP · Computer Graphics (C++) · Machine Learning.
+      \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}@{\hspace{0.45em}}X@{}}
+        \resumeSkillRow{Languages}{\textbf{TypeScript/JavaScript} · \textbf{Python} · Java · Kotlin · Swift}
+        \resumeSkillRow{Frameworks}{\textbf{Next.js} · \textbf{React} · \textbf{Node.js} · Spring · Angular · ThreeJS · React Native · iOS · ARKit/ARCore · Strudel}
+        \resumeSkillRow{ML \& Spatial}{PyTorch · AWS Rekognition · Computer Vision · 3D Processing · Augmented Reality}
+        \resumeSkillRow{Cloud, Data \& APIs}{\textbf{Azure} · SQL (PostgreSQL) · NoSQL (Cosmos DB) · Mapping APIs · Enterprise Integrations}
+        \resumeSkillRow{Developer Tools}{Git · Cursor · Claude Code · OpenAI Codex · VS Code · IntelliJ · Xcode · Azure DevOps · Convex}
+        \resumeSkillRow{AI \& Agentic}{\textbf{AI Agents} · \textbf{RAG} · Model Context Protocol (MCP) · Prompt Engineering · Azure AI Foundry · OpenAI API · AWS Bedrock · Hugging Face · Replicate · Roboflow}
+        \resumeSkillSpacer
+        \resumeSkillRow{Spoken Languages}{English (C1, Cambridge Advanced) · Spanish (Native) · Catalan (Native) · Dutch (Beginner)}
+      \end{tabularx}
     }
-    \item \footnotesize{ \textbf{Spoken Languages}: English (\emph{Level C1 - Cambridge English: Advanced}) · Spanish (\emph{Native}) · Catalan (\emph{Native}). }
  \end{itemize}
 
 

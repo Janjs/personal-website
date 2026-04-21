@@ -52,6 +52,8 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   const modalRef = useRef<HTMLDivElement>(null);
   const preloadedScreenshotUrls = useRef<Set<string>>(new Set());
 
+  const getImageSrc = (src: NonNullable<Project["screenshotSrc"]>) => (typeof src === "string" ? src : src.src);
+
   const chipBaseClass =
     "inline-flex h-8 items-center rounded-full border px-3 text-sm leading-none whitespace-nowrap";
   const neutralChipClass =
@@ -95,7 +97,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
       return;
     }
 
-    const screenshotSources = projects.flatMap((project) => (project.screenshotSrc ? [project.screenshotSrc] : []));
+    const screenshotSources = projects.flatMap((project) => (project.screenshotSrc ? [getImageSrc(project.screenshotSrc)] : []));
     if (!screenshotSources.length) {
       return;
     }
@@ -276,12 +278,12 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                                 <Image
                                   src={active.screenshotSrc}
                                   alt={`${active.name} screenshot`}
-                                  width={1200}
-                                  height={675}
+                                  width={typeof active.screenshotSrc === "string" ? 1200 : active.screenshotSrc.width}
+                                  height={typeof active.screenshotSrc === "string" ? 675 : active.screenshotSrc.height}
                                   quality={60}
                                   sizes="(max-width: 768px) 100vw, 768px"
                                   loading="eager"
-                                  className="h-auto w-full object-cover"
+                                  className="h-auto w-full"
                                 />
                               </motion.div>
                             ) : (

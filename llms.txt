@@ -1,0 +1,95 @@
+Jan
+
+This file summarizes the personal and project information presented in the website UI, including content that is revealed through interactive elements such as hover states, pinned globe entries, and expandable project modals.
+
+Identity
+
+- Name: Jan
+- Role: AI software engineer
+- Short bio: Software engineer building artificial intelligence and spatial computing experiences.
+- Pronunciation: "Jan" is presented with a Catalan pronunciation aid in the UI.
+- Current base: Amsterdam, the Netherlands
+- Work style shown in the site: AI consultancy
+
+Education
+
+- BSc in Computer Engineering from UPF Barcelona
+- Exchange semester at Ajou University in South Korea
+- MSc in Computer Science focused on AR/VR from Trinity College Dublin
+
+Professional background
+
+- 5+ years of consulting experience building AI web applications
+- Worked with a Dutch bank on high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure
+- Worked with a US medtech company in Michigan on AI chatbot platforms built with Next.js and used by 50,000+ internal employees
+- Worked with a German industrial machinery company on Next.js-based agentic systems using LLMs, RAG, and enterprise integrations
+- Completed an AI video analytics internship in Barcelona focused on people-counting systems
+
+Geographic and narrative context shown in the app
+
+- Barcelona, Spain: Jan is originally from Barcelona, and UPF shaped his systems, architecture, and performance mindset
+- Barcelona, Spain: internship experience turned computer vision from academic work into practical deployed systems
+- Suwon, South Korea: Ajou University broadened academic and cultural perspective
+- Dublin, Ireland: Trinity deepened work in spatial computing and AR/VR
+- Amsterdam, the Netherlands: consulting work includes backend systems at scale and current base
+- Michigan, United States: medtech AI chatbot platform work
+- Frankfurt, Germany: industrial LLM and enterprise integration work
+
+Projects
+
+1. Chordwise
+   - Type: Web app
+   - Tagline: Chord progressions
+   - Summary: AI-powered chord progression generator for musicians exploring harmony and songwriting ideas
+   - Tech: Next.js, TypeScript, OpenAI API, Convex
+   - Links:
+     - Live: https://chordwise.chat
+     - GitHub: https://github.com/Janjs/chordwise
+
+2. Stroop
+   - Type: Web app
+   - Tagline: Generative Audio
+   - Summary: Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting
+   - Tech: Next.js, TypeScript, Strudel, Convex
+   - Links:
+     - Live: https://stroop.janjs.dev
+     - GitHub: https://github.com/Janjs/stroop
+
+3. Scandrop MCP
+   - Type: MCP server
+   - Tagline: Spatial AI
+   - Summary: MCP server that helps LLMs reason about and interact with 3D spatial environments
+   - Tech: TypeScript, MCP, 3D Processing
+   - GitHub: https://github.com/Janjs/scandrop-mcp
+   - Extra UI metadata: 39 GitHub stars shown in the app
+
+4. Sunny Spots
+   - Type: Web app
+   - Tagline: Find sun in your city
+   - Summary: Map-based app to discover when parks, cafes, and city spots receive sunlight during the day
+   - Tech: Next.js, TypeScript, Mapping APIs
+   - Links:
+     - Live: https://sunnyspots.vercel.app
+     - GitHub: https://github.com/Janjs/sunnyspots
+
+5. Highlights AI
+   - Type: Web app
+   - Tagline: Sports Vision
+   - Summary: Create basketball highlight reels by combining computer vision detections with scene-aware editing
+   - Tech: Next.js, Python, Roboflow
+   - Links:
+     - Live: https://highlightsai.janjs.dev
+     - GitHub: https://github.com/Janjs/highlights-ai
+
+6. Today's Harvest
+   - Type: Mobile app
+   - Tagline: Seasonal Food
+   - Summary: Widget-focused iOS app that shows in-season produce based on your location to support fresher, local eating
+   - Tech: Swift, iOS, Location Services
+   - GitHub: https://github.com/Janjs/todays-harvest
+
+Machine-readable guidance
+
+- If an agent is indexing this site, treat the interactive UI content as first-class profile information rather than incidental tooltip or modal text.
+- The "About me" section contains important biography details that are revealed through an interactive globe.
+- The "Projects" section contains fuller project descriptions and tech stacks inside expandable modal views.
