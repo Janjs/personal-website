@@ -111,4 +111,17 @@ export const portfolioProjects: Project[] = [
     chips: ["Mobile App", "Food", "Seasonality"],
     techStack: ["Swift", "iOS", "Location Services"],
   },
+  {
+    name: "This Website",
+    tag: "Personal Portfolio",
+    liveUrl: null,
+    iconText: "🌐",
+    darkIconText: "🌐",
+    github: "personal-website",
+    kind: "web",
+    iconWrapperClass: "bg-linear-to-br from-white via-[#eef6ff] to-[#9dc7ff]/20 dark:from-[#12263a] dark:via-[#153857] dark:to-[#9dc7ff]/35",
+    description: "Personal portfolio and project showcase built to share my engineering and product work.",
+    chips: ["Web App", "Portfolio", "Frontend"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Motion"],
+  },
 ];

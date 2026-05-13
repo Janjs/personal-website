@@ -133,6 +133,14 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   const platformLabel = (kind: ProjectKind) =>
     kind === "mcp" ? "Model Context Protocol Server" : kind === "mobile" ? "Mobile App" : "Web App";
 
+  const isSelfProject = (project: Project) => project.github === "personal-website";
+
+  const goToProjectGithub = (project: Project) => {
+    if (typeof window !== "undefined") {
+      window.open(`https://github.com/Janjs/${project.github}`, "_blank", "noopener,noreferrer");
+    }
+  };
+
   const actionChips = (project: Project, small = false) => (
     <>
       <span className="group relative inline-flex">
@@ -185,13 +193,19 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   return (
     <>
       <div className="w-full">
-        {projects.map((project, index) => (
-          <div key={project.github}>
-            <motion.div
-              layoutId={`project-card-${project.github}`}
-              className="relative py-3 transition-colors hover:bg-accent/20 sm:py-4"
-              onClick={() => setActive(project)}
-            >
+            {projects.map((project, index) => (
+            <div key={project.github}>
+              <motion.div
+                layoutId={`project-card-${project.github}`}
+                className="relative py-3 transition-colors hover:bg-accent/20 sm:py-4"
+                onClick={() => {
+                  if (isSelfProject(project)) {
+                    goToProjectGithub(project);
+                  } else {
+                    setActive(project);
+                  }
+                }}
+                >
               <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
                 <motion.div
                   layoutId={`project-icon-${project.github}`}
