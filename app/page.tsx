@@ -69,9 +69,9 @@ const aboutItems: AboutGlobeItem[] = [
     flag: "🇺🇸",
   },
   {
-    id: "german-machinery",
+    id: "german-pharma",
     quote:
-      "The German industrial work focused on developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
+      "The German pharma work focused on developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
     location: [50.1109, 8.6821],
     place: "Frankfurt",
     country: "Germany",
@@ -119,7 +119,7 @@ const aboutEntries: AboutGlobeEntry[] = [
       { text: " " },
       { text: "US Medtech", itemId: "us-medtech", className: "font-semibold" },
       { text: ", and " },
-      { text: "German Industrial Machinery", itemId: "german-machinery", className: "font-semibold" },
+      { text: "German Pharma", itemId: "german-pharma", className: "font-semibold" },
     ],
   },
 ];
