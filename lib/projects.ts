@@ -58,7 +58,7 @@ export const portfolioProjects: Project[] = [
   {
     name: "Scandrop MCP",
     tag: "Spatial AI",
-    liveUrl: null,
+    liveUrl: "https://scandrop.janjs.dev",
     iconSrc: "/project-icons/scandrop.svg",
     github: "scandrop-mcp",
     kind: "mcp",
