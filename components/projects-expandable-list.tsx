@@ -1,7 +1,6 @@
 "use client";
 
 import { LiveProjectButton } from "@/components/live-project-button";
-import { Separator } from "@/components/ui/separator";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import type { Project, ProjectKind } from "@/lib/projects";
 import { Laptop, Smartphone, Star, X } from "lucide-react";
@@ -193,11 +192,12 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   return (
     <>
       <div className="w-full">
-            {projects.map((project, index) => (
+        <div className="space-y-1">
+          {projects.map((project) => (
             <div key={project.github}>
               <motion.div
                 layoutId={`project-card-${project.github}`}
-                className="relative py-3 transition-colors hover:bg-accent/20 sm:py-4"
+                className="relative -mx-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 sm:py-4"
                 onClick={() => {
                   if (isSelfProject(project)) {
                     goToProjectGithub(project);
@@ -205,55 +205,54 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                     setActive(project);
                   }
                 }}
-                >
-              <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
-                <motion.div
-                  layoutId={`project-icon-${project.github}`}
-                  className={`h-9 w-9 shrink-0 overflow-hidden rounded-lg sm:h-10 sm:w-10 ${project.iconWrapperClass ?? ""}`}
-                >
-                  {project.iconText ? (
-                    <span className="flex h-full w-full items-center justify-center text-lg sm:text-xl" aria-hidden="true">
-                      {project.darkIconText ? (
-                        <>
-                          <span className="dark:hidden">{project.iconText}</span>
-                          <span className="hidden dark:inline">{project.darkIconText}</span>
-                        </>
-                      ) : (
-                        project.iconText
-                      )}
-                    </span>
-                  ) : (
-                    <Image
-                      src={project.iconSrc!}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="h-full w-full object-contain"
-                      aria-hidden="true"
-                    />
-                  )}
-                </motion.div>
+              >
+                <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
+                  <motion.div
+                    layoutId={`project-icon-${project.github}`}
+                    className={`h-9 w-9 shrink-0 overflow-hidden rounded-lg sm:h-10 sm:w-10 ${project.iconWrapperClass ?? ""}`}
+                  >
+                    {project.iconText ? (
+                      <span className="flex h-full w-full items-center justify-center text-lg sm:text-xl" aria-hidden="true">
+                        {project.darkIconText ? (
+                          <>
+                            <span className="dark:hidden">{project.iconText}</span>
+                            <span className="hidden dark:inline">{project.darkIconText}</span>
+                          </>
+                        ) : (
+                          project.iconText
+                        )}
+                      </span>
+                    ) : (
+                      <Image
+                        src={project.iconSrc!}
+                        alt=""
+                        width={40}
+                        height={40}
+                        className="h-full w-full object-contain"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </motion.div>
 
-                <motion.div
-                  layoutId={`project-title-${project.github}`}
-                  className="min-w-0 flex-1 truncate text-sm leading-tight font-medium sm:text-xl sm:tracking-[-0.01em]"
-                >
-                  {project.name}
-                </motion.div>
+                  <motion.div
+                    layoutId={`project-title-${project.github}`}
+                    className="min-w-0 flex-1 truncate text-sm leading-tight font-medium sm:text-xl sm:tracking-[-0.01em]"
+                  >
+                    {project.name}
+                  </motion.div>
 
-                <div className="hidden shrink-0 items-center gap-1.5 sm:flex" onClick={(event) => event.stopPropagation()}>
-                  {actionChips(project)}
+                  <div className="hidden shrink-0 items-center gap-1.5 sm:flex" onClick={(event) => event.stopPropagation()}>
+                    {actionChips(project)}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 sm:hidden" onClick={(event) => event.stopPropagation()}>
+                    {actionChips(project, true)}
+                  </div>
                 </div>
-
-                <div className="flex items-center gap-1.5 sm:hidden" onClick={(event) => event.stopPropagation()}>
-                  {actionChips(project, true)}
-                </div>
-              </div>
-            </motion.div>
-            {index < projects.length - 1 ? <Separator /> : null}
-          </div>
-        ))}
-        <Separator />
+              </motion.div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {typeof window !== "undefined"

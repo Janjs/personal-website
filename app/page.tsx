@@ -43,6 +43,14 @@ import {
 
 const aboutItems: AboutGlobeItem[] = [
   {
+    id: "current-location",
+    quote: "Currently based in Utrecht, the Netherlands, working in AI consultancy.",
+    location: [52.0907, 5.1214],
+    place: "Utrecht",
+    country: "Netherlands",
+    flag: "🇳🇱",
+  },
+  {
     id: "upf",
     quote:
       "Barcelona is where I'm originally from. UPF gave me the systems foundation behind how I approach product engineering, architecture, and performance.",
@@ -257,7 +265,9 @@ export default function Home() {
           <ProjectsExpandableList projects={projects} />
         </section>
 
-        <section id="skills" className="mt-9 scroll-mt-10 space-y-4 fade-up-in fade-up-delay-3">
+        <Separator className="my-9" />
+
+        <section id="skills" className="scroll-mt-10 space-y-4 fade-up-in fade-up-delay-3">
           <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Skills</h2>
           <div className="space-y-3">
             {skills.map(({ category, items, color }) => (

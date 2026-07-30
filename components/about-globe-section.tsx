@@ -28,9 +28,7 @@ export function AboutGlobeSection({
   items: AboutGlobeItem[];
   entries: AboutGlobeEntry[];
 }) {
-  const defaultQuote = "Currently based in the Netherlands, working in AI consultancy.";
-  const defaultItem =
-    items.find((item) => item.id === "dutch-bank" || item.place.includes("Amsterdam")) ?? items[0];
+  const defaultItem = items.find((item) => item.id === "current-location") ?? items[0];
   const defaultIndex = Math.max(
     0,
     items.findIndex((item) => item.id === defaultItem.id)
@@ -46,7 +44,7 @@ export function AboutGlobeSection({
   const globeFocusLocation = hasSpotlight ? spotlightFocusLocation : overviewLocation;
   const activeItemId = hasSpotlight ? activeItem.id : undefined;
   const selectedLocationId = activeItem.id;
-  const displayedQuote = hasSpotlight ? activeItem.quote : defaultQuote;
+  const displayedQuote = activeItem.quote;
   const itemIndexById = new Map(items.map((item, index) => [item.id, index]));
 
   const activate = (index: number) => {

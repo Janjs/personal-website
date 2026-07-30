@@ -34,8 +34,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/chordwise.svg",
     github: "chordwise",
     kind: "web",
-    iconWrapperClass:
-      "bg-linear-to-br from-white via-[#f8f8f8] to-[#ededed] p-0.5 dark:from-[#1d1d1d] dark:via-[#252525] dark:to-[#2c2c2c]",
+    iconWrapperClass: "bg-[#f8f8f8] p-0.5 dark:bg-[#252525]",
     screenshotSrc: chordwiseScreenshot,
     description: "AI-powered chord progression generator for musicians exploring harmony and songwriting ideas.",
     chips: ["Web App", "AI", "Music"],
@@ -48,8 +47,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/stroop.svg",
     github: "stroop",
     kind: "web",
-    iconWrapperClass:
-      "bg-linear-to-br from-white via-[#f4fbfb] to-[#2d8b8f]/10 p-0.5 dark:from-[#173d3f] dark:via-[#1d4c4f] dark:to-[#2d8b8f]/35",
+    iconWrapperClass: "bg-[#f4fbfb] p-0.5 dark:bg-[#1d4c4f]",
     screenshotSrc: stroopScreenshot,
     description: "Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting.",
     chips: ["Web App", "Audio", "Generative"],
@@ -62,8 +60,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/scandrop.svg",
     github: "scandrop-mcp",
     kind: "mcp",
-    iconWrapperClass:
-      "bg-linear-to-br from-white via-[#f4fdf9] to-[#2ea892]/10 p-0.5 dark:from-[#113b34] dark:via-[#154842] dark:to-[#2ea892]/30",
+    iconWrapperClass: "bg-[#f4fdf9] p-0.5 dark:bg-[#154842]",
     stars: 39,
     screenshotSrc: scandropMcpScreenshot,
     description: "MCP server that helps LLMs reason about and interact with 3D spatial environments.",
@@ -76,8 +73,7 @@ export const portfolioProjects: Project[] = [
     liveUrl: "https://sunnyspots.vercel.app",
     iconText: "☀️",
     darkIconText: "🌙",
-    iconWrapperClass:
-      "bg-linear-to-br from-white via-[#fffaf0] to-[#ffb63a]/12 dark:from-[#0f1f3d] dark:via-[#162a4f] dark:to-[#264a87]/45",
+    iconWrapperClass: "bg-[#fffaf0] dark:bg-[#162a4f]",
     github: "sunnyspots",
     kind: "web",
     screenshotSrc: sunnySpotsScreenshot,
@@ -92,8 +88,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/highlights-ai.svg",
     github: "highlights-ai",
     kind: "web",
-    iconWrapperClass:
-      "bg-linear-to-br from-white via-[#fff8ef] to-[#ffb267]/12 p-0.5 dark:from-[#4d2c17] dark:via-[#63381d] dark:to-[#ffb267]/35",
+    iconWrapperClass: "bg-[#fff8ef] p-0.5 dark:bg-[#63381d]",
     screenshotSrc: highlightsAiScreenshot,
     description: "Create basketball highlight reels by combining computer vision detections with scene-aware editing.",
     chips: ["Web App", "Sports", "Computer Vision"],
@@ -119,7 +114,7 @@ export const portfolioProjects: Project[] = [
     darkIconText: "🌐",
     github: "personal-website",
     kind: "web",
-    iconWrapperClass: "bg-linear-to-br from-white via-[#eef6ff] to-[#9dc7ff]/20 dark:from-[#12263a] dark:via-[#153857] dark:to-[#9dc7ff]/35",
+    iconWrapperClass: "bg-[#eef6ff] dark:bg-[#153857]",
     description: "Personal portfolio and project showcase built to share my engineering and product work.",
     chips: ["Web App", "Portfolio", "Frontend"],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Motion"],
