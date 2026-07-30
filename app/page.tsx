@@ -93,7 +93,7 @@ const aboutEntries: AboutGlobeEntry[] = [
     id: "internship",
     parts: [
       {
-        text: "AI, IoT, and computer vision internship: installed people-counting sensors at Ibiza clubs and built the full-stack monitoring app",
+        text: "AI video analytics internship: people counting systems at local startup",
         itemId: "internship",
       },
     ],
