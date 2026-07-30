@@ -28,14 +28,14 @@ export function AboutGlobeSection({
   items: AboutGlobeItem[];
   entries: AboutGlobeEntry[];
 }) {
-  const defaultQuote = "Currently based in Amsterdam, the Netherlands, working in AI consultancy.";
+  const defaultQuote = "Currently based in the Netherlands, working in AI consultancy.";
   const defaultItem =
     items.find((item) => item.id === "dutch-bank" || item.place.includes("Amsterdam")) ?? items[0];
   const defaultIndex = Math.max(
     0,
     items.findIndex((item) => item.id === defaultItem.id)
   );
-  const overviewLocation: [number, number] = [47, -50];
+  const overviewLocation: [number, number] = [52.0907, 5.1214];
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const [pinnedIndex, setPinnedIndex] = useState<number | null>(null);
   const [hasSpotlight, setHasSpotlight] = useState(false);

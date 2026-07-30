@@ -15,7 +15,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "upf",
     quote:
-      "Barcelona is where I'm originally from. UPF gave me the systems foundation that still shapes how I approach product engineering, architecture, and performance.",
+      "Barcelona is where I'm originally from. UPF gave me the systems foundation behind how I approach product engineering, architecture, and performance.",
     location: [41.3874, 2.1686],
     place: "Barcelona",
     country: "Spain",
@@ -24,7 +24,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "internship",
     quote:
-      "That internship was where computer vision stopped being academic and became something practical, measurable, and deployed.",
+      "During my internship, I integrated AI, IoT, and computer vision in the real world. I traveled to major clubs in Ibiza to install people-counting sensors, then built the full-stack app used to track how many people entered and left.",
     location: [41.3851, 2.1734],
     place: "Barcelona",
     country: "Spain",
@@ -43,7 +43,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "trinity",
     quote:
-      "Studying at Trinity pulled me deep into spatial computing and AR/VR, with mentors and professors connected to the top of the industry shaping how I think about interaction design.",
+      "Studying at Trinity pulled me deep into spatial computing and AR/VR. Learning from mentors and professors connected to industry leaders changed how I think about interaction design.",
     location: [53.3498, -6.2603],
     place: "Dublin",
     country: "Ireland",
@@ -93,7 +93,7 @@ const aboutEntries: AboutGlobeEntry[] = [
     id: "internship",
     parts: [
       {
-        text: "AI video analytics internship: people counting systems at local startup",
+        text: "AI, IoT, and computer vision internship: installed people-counting sensors at Ibiza clubs and built the full-stack monitoring app",
         itemId: "internship",
       },
     ],

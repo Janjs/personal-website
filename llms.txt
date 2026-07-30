@@ -8,7 +8,7 @@ Identity
 - Role: AI software engineer
 - Short bio: Software engineer building artificial intelligence and spatial computing experiences.
 - Pronunciation: "Jan" is presented with a Catalan pronunciation aid in the UI.
-- Current base: Amsterdam, the Netherlands
+- Current base: Utrecht, the Netherlands
 - Work style shown in the site: AI consultancy
 
 Education
@@ -23,15 +23,16 @@ Professional background
 - Worked with a Dutch bank on high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure
 - Worked with a US medtech company in Michigan on AI chatbot platforms built with Next.js and used by 50,000+ internal employees
 - Worked with a German industrial machinery company on Next.js-based agentic systems using LLMs, RAG, and enterprise integrations
-- Completed an AI video analytics internship in Barcelona focused on people-counting systems
+- Completed an internship integrating AI, IoT, and computer vision in the real world; traveled to major clubs in Ibiza to install people-counting sensors and built the full-stack app used to monitor entries and exits
 
 Geographic and narrative context shown in the app
 
-- Barcelona, Spain: Jan is originally from Barcelona, and UPF shaped his systems, architecture, and performance mindset
-- Barcelona, Spain: internship experience turned computer vision from academic work into practical deployed systems
+- Barcelona, Spain: Jan is originally from Barcelona, and UPF provided his foundation in systems, architecture, and performance
+- Ibiza, Spain: during his internship, Jan installed people-counting sensors at major clubs and built the full-stack app used to monitor entries and exits
 - Suwon, South Korea: Ajou University broadened academic and cultural perspective
 - Dublin, Ireland: Trinity deepened work in spatial computing and AR/VR
-- Amsterdam, the Netherlands: consulting work includes backend systems at scale and current base
+- Amsterdam, the Netherlands: consulting work includes backend systems at scale
+- Utrecht, the Netherlands: current base
 - Michigan, United States: medtech AI chatbot platform work
 - Frankfurt, Germany: industrial LLM and enterprise integration work
 
