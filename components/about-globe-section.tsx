@@ -215,11 +215,7 @@ export function AboutGlobeSection({
         </div>
 
         <blockquote className="pointer-events-none absolute bottom-0 right-0 z-20 w-full max-w-[19rem] rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10">
-          <p>
-            <span aria-hidden="true">&ldquo;</span>
-            {displayedQuote}
-            <span aria-hidden="true">&rdquo;</span>
-          </p>
+          <p>{displayedQuote}</p>
         </blockquote>
       </div>
     </div>
