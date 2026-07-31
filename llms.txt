@@ -38,16 +38,7 @@ Geographic and narrative context shown in the app
 
 Projects
 
-1. Chordwise
-   - Type: Web app
-   - Tagline: Chord progressions
-   - Summary: AI-powered chord progression generator for musicians exploring harmony and songwriting ideas
-   - Tech: Next.js, TypeScript, OpenAI API, Convex
-   - Links:
-     - Live: https://chordwise.chat
-     - GitHub: https://github.com/Janjs/chordwise
-
-2. Stroop
+1. Stroop
    - Type: Web app
    - Tagline: Generative Audio
    - Summary: Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting
@@ -55,6 +46,15 @@ Projects
    - Links:
      - Live: https://stroop.janjs.dev
      - GitHub: https://github.com/Janjs/stroop
+
+2. Chordwise
+   - Type: Web app
+   - Tagline: Chord progressions
+   - Summary: AI-powered chord progression generator for musicians exploring harmony and songwriting ideas
+   - Tech: Next.js, TypeScript, OpenAI API, Convex
+   - Links:
+     - Live: https://chordwise.chat
+     - GitHub: https://github.com/Janjs/chordwise
 
 3. Scandrop MCP
    - Type: MCP server

@@ -28,19 +28,6 @@ export type Project = {
 
 export const portfolioProjects: Project[] = [
   {
-    name: "Chordwise",
-    tag: "Chord progressions",
-    liveUrl: "https://chordwise.chat",
-    iconSrc: "/project-icons/chordwise.svg",
-    github: "chordwise",
-    kind: "web",
-    iconWrapperClass: "bg-[#f8f8f8] p-0.5 dark:bg-[#252525]",
-    screenshotSrc: chordwiseScreenshot,
-    description: "AI-powered chord progression generator for musicians exploring harmony and songwriting ideas.",
-    chips: ["Web App", "AI", "Music"],
-    techStack: ["Next.js", "TypeScript", "OpenAI API", "Convex"],
-  },
-  {
     name: "Stroop",
     tag: "Generative Audio",
     liveUrl: "https://stroop.janjs.dev",
@@ -52,6 +39,19 @@ export const portfolioProjects: Project[] = [
     description: "Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting.",
     chips: ["Web App", "Audio", "Generative"],
     techStack: ["Next.js", "TypeScript", "Strudel", "Convex"],
+  },
+  {
+    name: "Chordwise",
+    tag: "Chord progressions",
+    liveUrl: "https://chordwise.chat",
+    iconSrc: "/project-icons/chordwise.svg",
+    github: "chordwise",
+    kind: "web",
+    iconWrapperClass: "bg-[#f8f8f8] p-0.5 dark:bg-[#252525]",
+    screenshotSrc: chordwiseScreenshot,
+    description: "AI-powered chord progression generator for musicians exploring harmony and songwriting ideas.",
+    chips: ["Web App", "AI", "Music"],
+    techStack: ["Next.js", "TypeScript", "OpenAI API", "Convex"],
   },
   {
     name: "Scandrop MCP",
