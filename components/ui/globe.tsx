@@ -23,17 +23,45 @@ type GlobeProps = {
 
 const BASE_CONFIG: Omit<
   COBEOptions,
-  "width" | "height" | "phi" | "theta" | "markers" | "devicePixelRatio"
+  | "width"
+  | "height"
+  | "phi"
+  | "theta"
+  | "markers"
+  | "devicePixelRatio"
+  | "dark"
+  | "mapBrightness"
+  | "mapBaseBrightness"
+  | "baseColor"
+  | "glowColor"
 > = {
-  dark: 0,
   diffuse: 1.1,
   mapSamples: 16000,
-  mapBrightness: 1.35,
-  mapBaseBrightness: 0.05,
-  baseColor: [0.86, 0.88, 0.92],
   markerColor: [239 / 255, 68 / 255, 68 / 255],
-  glowColor: [1, 1, 1],
 };
+
+const THEME_CONFIG = {
+  light: {
+    dark: 0,
+    mapBrightness: 1.35,
+    mapBaseBrightness: 0.05,
+    baseColor: [0.86, 0.88, 0.92],
+    glowColor: [1, 1, 1],
+  },
+  dark: {
+    dark: 1,
+    mapBrightness: 0.65,
+    mapBaseBrightness: 0.01,
+    baseColor: [0.16, 0.42, 0.82],
+    glowColor: [0.075, 0.12, 0.17],
+  },
+} satisfies Record<
+  "light" | "dark",
+  Pick<
+    COBEOptions,
+    "dark" | "mapBrightness" | "mapBaseBrightness" | "baseColor" | "glowColor"
+  >
+>;
 
 const INTERPOLATION_FACTOR = 0.12;
 const DRAG_SENSITIVITY = 0.005;
@@ -45,7 +73,7 @@ const FOCUS_BIAS = {
 } as const;
 const LABEL_CHIP_CLASS =
   "inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-background px-2.5 text-xs leading-none whitespace-nowrap text-muted-foreground shadow-sm";
-const LABEL_LINE_CLASS = "bg-[rgb(239,68,68)]";
+const LABEL_LINE_CLASS = "bg-[rgb(239,68,68)] dark:bg-emerald-400";
 
 function getMarkerKey(location: Pick<GlobeLocation, "place" | "country">) {
   return `${location.place}::${location.country}`;
@@ -169,6 +197,9 @@ export function Globe({
 
     const globe = createGlobe(canvas, {
       ...BASE_CONFIG,
+      ...THEME_CONFIG[
+        document.documentElement.classList.contains("dark") ? "dark" : "light"
+      ],
       width: widthRef.current * 2,
       height: widthRef.current * 2,
       phi: currentRotationRef.current.phi,
@@ -182,6 +213,7 @@ export function Globe({
 
     const render = () => {
       const target = targetRotationRef.current;
+      const isDark = document.documentElement.classList.contains("dark");
 
       currentRotationRef.current.phi = interpolateAngle(
         currentRotationRef.current.phi,
@@ -210,13 +242,18 @@ export function Globe({
         return {
           location: item.location,
           size,
-          color: isSelected || isHovered
-            ? [239 / 255, 68 / 255, 68 / 255]
-            : [15 / 255, 23 / 255, 42 / 255],
+          color: isDark
+            ? isSelected || isHovered
+              ? [52 / 255, 211 / 255, 153 / 255]
+              : [110 / 255, 231 / 255, 183 / 255]
+            : isSelected || isHovered
+              ? [239 / 255, 68 / 255, 68 / 255]
+              : [15 / 255, 23 / 255, 42 / 255],
         };
       });
 
       globe.update({
+        ...THEME_CONFIG[isDark ? "dark" : "light"],
         phi: currentRotationRef.current.phi,
         theta: currentRotationRef.current.theta,
         width: widthRef.current * 2,
