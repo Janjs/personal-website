@@ -61,7 +61,7 @@ export const portfolioProjects: Project[] = [
     iconSrc: "/project-icons/cinema-3d-seat-selection.png",
     github: "cinema-3d-seat-selection",
     kind: "web",
-    iconWrapperClass: "bg-[#7a1824] p-2 dark:bg-[#4f1018]",
+    iconWrapperClass: "bg-[#fef6f7] p-2 dark:bg-[#4f1018]",
     screenshotSrc: cinema3dSeatSelectionScreenshot,
     description:
       "Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium.",
