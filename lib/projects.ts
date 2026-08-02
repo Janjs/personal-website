@@ -55,8 +55,8 @@ export const portfolioProjects: Project[] = [
     techStack: ["Next.js", "TypeScript", "OpenAI API", "Convex"],
   },
   {
-    name: "Cinema Experience Demo",
-    tag: "3D Seat Selection",
+    name: "3D Seat Selection",
+    tag: "Cinema Experience Demo",
     liveUrl: "https://cinema.janjs.dev",
     iconSrc: "/project-icons/cinema-3d-seat-selection.png",
     github: "cinema-3d-seat-selection",

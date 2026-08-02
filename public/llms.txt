@@ -56,9 +56,9 @@ Projects
      - Live: https://chordwise.chat
      - GitHub: https://github.com/Janjs/chordwise
 
-3. Cinema Experience Demo
+3. 3D Seat Selection
    - Type: Web app
-   - Tagline: 3D Seat Selection
+   - Tagline: Cinema Experience Demo
    - Summary: Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium
    - Tech: Three.js, Vite
    - Links:
