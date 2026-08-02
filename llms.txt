@@ -56,7 +56,16 @@ Projects
      - Live: https://chordwise.chat
      - GitHub: https://github.com/Janjs/chordwise
 
-3. Scandrop MCP
+3. Cinema Experience Demo
+   - Type: Web app
+   - Tagline: 3D Seat Selection
+   - Summary: Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium
+   - Tech: Three.js, Vite
+   - Links:
+     - Live: https://cinema.janjs.dev
+     - GitHub: https://github.com/Janjs/cinema-3d-seat-selection
+
+4. Scandrop MCP
    - Type: MCP server
    - Tagline: Spatial AI
    - Summary: MCP server that helps LLMs reason about and interact with 3D spatial environments
@@ -64,7 +73,7 @@ Projects
    - GitHub: https://github.com/Janjs/scandrop-mcp
    - Extra UI metadata: 39 GitHub stars shown in the app
 
-4. Sunny Spots
+5. Sunny Spots
    - Type: Web app
    - Tagline: Find sun in your city
    - Summary: Map-based app to discover when parks, cafes, and city spots receive sunlight during the day
@@ -73,7 +82,7 @@ Projects
      - Live: https://sunnyspots.vercel.app
      - GitHub: https://github.com/Janjs/sunnyspots
 
-5. Highlights AI
+6. Highlights AI
    - Type: Web app
    - Tagline: Sports Vision
    - Summary: Create basketball highlight reels by combining computer vision detections with scene-aware editing
@@ -82,7 +91,7 @@ Projects
      - Live: https://highlightsai.janjs.dev
      - GitHub: https://github.com/Janjs/highlights-ai
 
-6. Today's Harvest
+7. Today's Harvest
    - Type: Mobile app
    - Tagline: Seasonal Food
    - Summary: Widget-focused iOS app that shows in-season produce based on your location to support fresher, local eating

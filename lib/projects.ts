@@ -1,5 +1,6 @@
 import type { StaticImageData } from "next/image";
 
+import cinema3dSeatSelectionScreenshot from "@/public/project-screenshots/cinema-3d-seat-selection.jpeg";
 import chordwiseScreenshot from "@/public/project-screenshots/chordwise.png";
 import highlightsAiScreenshot from "@/public/project-screenshots/highlights-ai.jpeg";
 import scandropMcpScreenshot from "@/public/project-screenshots/scandrop-mcp.png";
@@ -52,6 +53,20 @@ export const portfolioProjects: Project[] = [
     description: "AI-powered chord progression generator for musicians exploring harmony and songwriting ideas.",
     chips: ["Web App", "AI", "Music"],
     techStack: ["Next.js", "TypeScript", "OpenAI API", "Convex"],
+  },
+  {
+    name: "Cinema Experience Demo",
+    tag: "3D Seat Selection",
+    liveUrl: "https://cinema.janjs.dev",
+    iconSrc: "/project-icons/cinema-3d-seat-selection.png",
+    github: "cinema-3d-seat-selection",
+    kind: "web",
+    iconWrapperClass: "bg-[#7a1824] p-2 dark:bg-[#4f1018]",
+    screenshotSrc: cinema3dSeatSelectionScreenshot,
+    description:
+      "Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium.",
+    chips: ["Web App", "3D", "Interactive"],
+    techStack: ["Three.js", "Vite"],
   },
   {
     name: "Scandrop MCP",
