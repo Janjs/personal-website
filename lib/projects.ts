@@ -58,10 +58,10 @@ export const portfolioProjects: Project[] = [
     name: "3D Seat Selection",
     tag: "Cinema Experience Demo",
     liveUrl: "https://cinema.janjs.dev",
-    iconSrc: "/project-icons/cinema-3d-seat-selection.png",
+    iconSrc: "/project-icons/cinema-camera.png",
     github: "cinema-3d-seat-selection",
     kind: "web",
-    iconWrapperClass: "bg-[#fef6f7] p-2 dark:bg-[#4f1018]",
+    iconWrapperClass: "bg-[#f9efd3] p-1 dark:bg-[#d4af57]",
     screenshotSrc: cinema3dSeatSelectionScreenshot,
     description:
       "Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium.",
