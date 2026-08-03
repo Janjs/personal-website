@@ -261,7 +261,7 @@ export default function Home() {
         <Separator className="my-9" />
 
         <section id="projects" className="scroll-mt-10 space-y-3 fade-up-in fade-up-delay-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Projects</h2>
+          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Selected projects</h2>
           <ProjectsExpandableList projects={projects} />
         </section>
 
