@@ -24,7 +24,6 @@
 \ifPDFTeX
   \input{glyphtounicode}
 \fi
-\usepackage{fontawesome5}
 
 
 %----------FONT OPTIONS----------
@@ -41,18 +40,18 @@
 \setmainfont[
   Path=fonts/,
   UprightFont=Geist-Regular.ttf,
-  BoldFont=Geist-Bold.ttf,
+  BoldFont=Geist-SemiBold.ttf,
   ItalicFont=Geist-Regular.ttf,
-  BoldItalicFont=Geist-Bold.ttf,
+  BoldItalicFont=Geist-SemiBold.ttf,
   ItalicFeatures={FakeSlant=0.2},
   BoldItalicFeatures={FakeSlant=0.2}
 ]{Geist}
 \setsansfont[
   Path=fonts/,
   UprightFont=Geist-Regular.ttf,
-  BoldFont=Geist-Bold.ttf,
+  BoldFont=Geist-SemiBold.ttf,
   ItalicFont=Geist-Regular.ttf,
-  BoldItalicFont=Geist-Bold.ttf,
+  BoldItalicFont=Geist-SemiBold.ttf,
   ItalicFeatures={FakeSlant=0.2},
   BoldItalicFeatures={FakeSlant=0.2}
 ]{Geist}
@@ -134,9 +133,6 @@
 \newcommand{\resumeSkillRow}[2]{%
   \textbf{#1} & \footnotesize #2 \\
 }
-\newcommand{\resumeSkillSpacer}{%
-  & \\
-}
 
 %-------------------------------------------
 %%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,24 +140,30 @@
 
 \begin{document}
 
+\vspace{-10pt}
 %----------HEADING----------
 \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
-  \textbf{\Large Jan J. Serra} & \small {\faGlobe}\ \href{https://janjs.dev}{\underline{janjs.dev}} \\
+  \textbf{\Large Jan J. Serra} & \small \href{https://janjs.dev}{\underline{janjs.dev}} \\
 \end{tabular*}
-\vspace{2pt}
+\vspace{-2pt}
 
 \noindent
-{\footnotesize
-  \faGithub\ \href{https://github.com/janjs}{\underline{github.com/janjs}}
-  \hspace{0.5em} $|$ \hspace{0.5em}
-  \faPhone\ +31 683711678
-  \hspace{0.5em} $|$ \hspace{0.5em}
-  \faEnvelope\ \href{mailto:jan.jime.serra@gmail.com}{jan.jime.serra@gmail.com}
-  \hspace{0.5em} $|$ \hspace{0.5em}
-  \faMapMarker\ Netherlands (Originally from Barcelona)
+{\scriptsize
+  {\color{Gray}GitHub\color{black}} \href{https://github.com/janjs}{\underline{github.com/janjs}}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Phone\color{black}} +31 683711678
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Email\color{black}} \href{mailto:jan.jime.serra@gmail.com}{jan.jime.serra@gmail.com}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Location\color{black}} Utrecht, Netherlands
 }
 
-
+\vspace{6pt}
+\noindent
+{\small
+Software engineer with 5+ years of experience building AI-powered applications from idea to production using TypeScript, Python, and modern cloud technologies. I enjoy exploring new technologies and turning ideas into production systems, from enterprise AI platforms used across large organizations to personal AI and 3D side projects.
+}
+\vspace{4pt}
 
 
 %-----------EXPERIENCE-----------
@@ -181,11 +183,7 @@
     \resumeSubheading
       {Full Stack Software Engineer}{April 2018 -- Dec. 2019}
       {NexoTech}{Mataró, Barcelona (Spain)}
-      \resumeItem{Joined a Spanish startup as a university intern and progressed into a full-time role, working on integrating AI into production applications before the current hype cycle.}
-      \resumeItemListStart
-        \resumeItem{Led project about designing and building of a full-stack web application build in ReactJS and Java Spring for counting the amount of people in a building with IoT and Deep Learning implementations.}
-        \resumeItem{Implemented a Machine Learning model with Keras and Python that recognizes gender and age. Used AWS Rekognition in production for better speed and accuracy.}
-      \resumeItemListEnd
+      \resumeItem{Built a full-stack people-counting web app (React, Java Spring, IoT) and personally handled on-site hardware installation. Also built a computer vision classification model (Keras, AWS Rekognition) for demographic attribute detection, as a university intern progressing to full-time.}
 
     \resumeSubHeadingListEnd
 
@@ -220,12 +218,12 @@
 
 
 %-----------PROJECTS-----------
-\section{Projects}
+\section{Personal Projects}
     \resumeSubHeadingListStart
       \resumeProjectHeading
           {Highlighted projects are listed below; open-source contributions (including \textbf{React Native}) are available at: \href{https://github.com/janjs}{\underline{github.com/janjs}}.}{}
           \resumeItemListStart
-            \resumeItem{\textbf{Chordwise} --- AI-powered chord progression generator for musicians, built with Next.js, OpenAI API, and Convex.}
+            \resumeItem{\textbf{Stroop} --- AI-assisted Strudel live-coding music playground for generating and experimenting with generative audio snippets, built with Next.js, TypeScript, Strudel, and Convex.}
             \resumeItem{\textbf{Scandrop MCP} --- MCP server that helps LLMs reason about and interact with 3D spatial environments, built with Python, TypeScript, and 3D processing pipelines.}
           \resumeItemListEnd
     \resumeSubHeadingListEnd
@@ -243,7 +241,6 @@
         \resumeSkillRow{AI \& Data}{LLMs · RAG · MCP · Azure OpenAI · AWS Bedrock · PyTorch}
         \resumeSkillRow{Cloud \& Infrastructure}{Azure · Docker · Cosmos DB · PostgreSQL · Azure DevOps}
         \resumeSkillRow{Other}{Enterprise Integrations · 3D Processing · AR/VR · AI Agentic Platforms}
-        \resumeSkillSpacer
         \resumeSkillRow{Spoken Languages}{English (C1, Cambridge Advanced) · Spanish (Native) · Catalan (Native) · Dutch (Beginner)}
       \end{tabularx}
     }
