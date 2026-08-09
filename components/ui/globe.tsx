@@ -53,7 +53,7 @@ const THEME_CONFIG = {
     mapBrightness: 0.65,
     mapBaseBrightness: 0.01,
     baseColor: [0.16, 0.42, 0.82],
-    glowColor: [0.075, 0.12, 0.17],
+    glowColor: [0.04, 0.06, 0.09],
   },
 } satisfies Record<
   "light" | "dark",
