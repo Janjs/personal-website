@@ -50,6 +50,8 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   const [active, setActive] = useState<Project | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const preloadedScreenshotUrls = useRef<Set<string>>(new Set());
+  const modalTransition = { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
+  const overlayTransition = { duration: 0.12, ease: "easeOut" as const };
 
   const getImageSrc = (src: NonNullable<Project["screenshotSrc"]>) => (typeof src === "string" ? src : src.src);
 
@@ -120,13 +122,17 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
       });
     };
 
-    if ("requestIdleCallback" in window) {
-      const idleCallbackId = window.requestIdleCallback(preloadScreenshots, { timeout: 2000 });
-      return () => window.cancelIdleCallback(idleCallbackId);
+    if (document.readyState === "complete") {
+      preloadScreenshots();
+      return;
     }
 
-    const timeoutId = globalThis.setTimeout(preloadScreenshots, 600);
-    return () => globalThis.clearTimeout(timeoutId);
+    const onLoad = () => preloadScreenshots();
+    window.addEventListener("load", onLoad, { once: true });
+
+    return () => {
+      window.removeEventListener("load", onLoad);
+    };
   }, [projects]);
 
   const platformLabel = (kind: ProjectKind) =>
@@ -134,9 +140,17 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
 
   const isSelfProject = (project: Project) => project.github === "personal-website";
 
-  const goToProjectGithub = (project: Project) => {
+  const getProjectDestinationHref = (project: Project) => {
+    if (project.liveUrl) {
+      return project.liveUrl;
+    }
+
+    return `https://github.com/Janjs/${project.github}`;
+  };
+
+  const openProjectDestination = (project: Project) => {
     if (typeof window !== "undefined") {
-      window.open(`https://github.com/Janjs/${project.github}`, "_blank", "noopener,noreferrer");
+      window.open(getProjectDestinationHref(project), "_blank", "noopener,noreferrer");
     }
   };
 
@@ -197,10 +211,11 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
             <div key={project.github}>
               <motion.div
                 layoutId={`project-card-${project.github}`}
+                transition={{ layout: modalTransition }}
                 className="relative -mx-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 sm:py-4"
                 onClick={() => {
                   if (isSelfProject(project)) {
-                    goToProjectGithub(project);
+                    openProjectDestination(project);
                   } else {
                     setActive(project);
                   }
@@ -209,6 +224,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                 <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
                   <motion.div
                     layoutId={`project-icon-${project.github}`}
+                    transition={{ layout: modalTransition }}
                     className={`h-9 w-9 shrink-0 overflow-hidden rounded-lg sm:h-10 sm:w-10 ${project.iconWrapperClass ?? ""}`}
                   >
                     {project.iconText ? (
@@ -236,6 +252,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
 
                   <motion.div
                     layoutId={`project-title-${project.github}`}
+                    transition={{ layout: modalTransition }}
                     className="min-w-0 flex-1 truncate text-sm leading-tight font-medium sm:text-xl sm:tracking-[-0.01em]"
                   >
                     {project.name}
@@ -264,12 +281,17 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    transition={overlayTransition}
                     className="fixed inset-0 z-50 bg-black/30"
                   />
                   <div className="fixed inset-0 z-[60] grid place-items-center p-4">
                     <motion.div
                       ref={modalRef}
                       layoutId={`project-card-${active.github}`}
+                      initial={{ opacity: 0, scale: 0.98, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.98, y: 4 }}
+                      transition={modalTransition}
                       className="w-full max-w-3xl overflow-hidden rounded-2xl border bg-background shadow-2xl"
                     >
                       <div className="max-h-[90vh] overflow-y-auto p-3 sm:p-4">
@@ -285,9 +307,15 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                         </div>
 
                         <div className="space-y-3">
-                          <div className="overflow-hidden rounded-lg border bg-background">
+                          <a
+                            href={getProjectDestinationHref(active)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="group block overflow-hidden rounded-lg border bg-background transition-transform duration-180 hover:scale-[1.01]"
+                            aria-label={`${active.liveUrl ? "Open live demo" : "Open source code"} for ${active.name}`}
+                          >
                             {active.screenshotSrc ? (
-                              <motion.div layoutId={`project-image-${active.github}`}>
+                              <motion.div layoutId={`project-image-${active.github}`} transition={{ layout: modalTransition }}>
                                 <Image
                                   src={active.screenshotSrc}
                                   alt={`${active.name} screenshot`}
@@ -304,12 +332,13 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                                 Add screenshot in project data
                               </div>
                             )}
-                          </div>
+                          </a>
 
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <motion.div
                                 layoutId={`project-icon-${active.github}`}
+                                transition={{ layout: modalTransition }}
                                 className={`h-8 w-8 shrink-0 overflow-hidden rounded-lg sm:h-9 sm:w-9 ${active.iconWrapperClass ?? ""}`}
                               >
                                 {active.iconText ? (
@@ -334,7 +363,11 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                                   />
                                 )}
                               </motion.div>
-                              <motion.p layoutId={`project-title-${active.github}`} className="text-sm font-semibold sm:text-base">
+                              <motion.p
+                                layoutId={`project-title-${active.github}`}
+                                transition={{ layout: modalTransition }}
+                                className="text-sm font-semibold sm:text-base"
+                              >
                                 {active.name}
                               </motion.p>
                             </div>
