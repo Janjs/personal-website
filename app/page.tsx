@@ -158,6 +158,7 @@ const aboutEntries: AboutGlobeEntry[] = [
       { text: "US Medtech", itemId: "us-medtech", className: "font-semibold" },
       { text: ", and " },
       { text: "German Pharma", itemId: "german-pharma", className: "font-semibold" },
+      { text: " for Accenture" },
     ],
   },
 ];
