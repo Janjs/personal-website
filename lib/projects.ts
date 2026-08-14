@@ -32,11 +32,11 @@ export const portfolioProjects: Project[] = [
   {
     name: "Heighliner",
     tag: "AI Automation",
-    liveUrl: "https://heighliner.janjs.dev",
+    liveUrl: "https://heighliner.app/",
     iconSrc: "/project-icons/heighliner.svg",
     github: "heighliner",
     kind: "web",
-    iconWrapperClass: "bg-[#f7f7f5] p-1 dark:bg-[#f7f7f5]",
+    iconWrapperClass: "bg-[#f0f0ed] p-1 dark:bg-[#f0f0ed]",
     screenshotSrc: heighlinerScreenshot,
     description: "Map how your company works, discover opportunities, and turn them into AI-powered automation routes.",
     chips: ["Web App", "AI", "Automation"],
