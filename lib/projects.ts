@@ -2,6 +2,7 @@ import type { StaticImageData } from "next/image";
 
 import cinema3dSeatSelectionScreenshot from "@/public/project-screenshots/cinema-3d-seat-selection.jpeg";
 import chordwiseScreenshot from "@/public/project-screenshots/chordwise.png";
+import heighlinerScreenshot from "@/public/project-screenshots/heighliner.png";
 import highlightsAiScreenshot from "@/public/project-screenshots/highlights-ai.jpeg";
 import scandropMcpScreenshot from "@/public/project-screenshots/scandrop-mcp.png";
 import stroopScreenshot from "@/public/project-screenshots/stroop.png";
@@ -28,6 +29,19 @@ export type Project = {
 };
 
 export const portfolioProjects: Project[] = [
+  {
+    name: "Heighliner",
+    tag: "AI Automation",
+    liveUrl: "https://heighliner.janjs.dev",
+    iconSrc: "/project-icons/heighliner.svg",
+    github: "heighliner",
+    kind: "web",
+    iconWrapperClass: "bg-[#f7f7f5] p-1 dark:bg-[#f7f7f5]",
+    screenshotSrc: heighlinerScreenshot,
+    description: "Map how your company works, discover opportunities, and turn them into AI-powered automation routes.",
+    chips: ["Web App", "AI", "Automation"],
+    techStack: ["Next.js", "TypeScript", "OpenAI", "Composio"],
+  },
   {
     name: "Stroop",
     tag: "Generative Audio",
