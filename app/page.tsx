@@ -5,6 +5,7 @@ import { Highlighter } from "@/components/ui/highlighter";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SectionNavigation } from "@/components/section-navigation";
 import { JanPronunciation } from "@/components/jan-pronunciation";
+import { PolaroidStack } from "@/components/polaroid-stack";
 import { ProjectsExpandableList } from "@/components/projects-expandable-list";
 import {
   AboutGlobeSection,
@@ -39,7 +40,14 @@ import {
   ServerStack01Icon,
   VirtualRealityVrIcon,
   WorkflowSquare01Icon,
+  ArrowUpRight01Icon,
 } from "@hugeicons/core-free-icons";
+
+const elsewhereLinks = [
+  { label: "GitHub", href: "https://github.com/Janjs" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/janjimenezserra/" },
+  { label: "Email", href: "mailto:jan.jime.serra@gmail.com" },
+] as const;
 
 const aboutItems: AboutGlobeItem[] = [
   {
@@ -261,9 +269,16 @@ export default function Home() {
 
         <Separator className="my-9" />
 
-        <section id="projects" className="scroll-mt-10 space-y-3 fade-up-in fade-up-delay-3">
+        <section id="projects" className="group/projects -my-9 scroll-mt-10 space-y-3 py-9 fade-up-in fade-up-delay-3">
           <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Selected projects</h2>
           <ProjectsExpandableList projects={projects} />
+        </section>
+
+        <Separator className="my-9" />
+
+        <section id="moments" className="-mb-9 scroll-mt-10 space-y-4 fade-up-in fade-up-delay-3 md:mb-0">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Moments</h2>
+          <PolaroidStack />
         </section>
 
         <Separator className="my-9" />
@@ -285,6 +300,27 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </section>
+
+        <Separator className="my-9" />
+
+        <section id="elsewhere" className="scroll-mt-10 space-y-3">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Elsewhere</h2>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {elsewhereLinks.map(({ label, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
+                  className="inline-flex items-center gap-1 hover:underline underline-offset-4"
+                >
+                  {label}
+                  <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} strokeWidth={2} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </section>
       </main>
     </>

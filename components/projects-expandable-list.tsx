@@ -1,13 +1,14 @@
 "use client";
 
 import { LiveProjectButton } from "@/components/live-project-button";
+import { Button } from "@/components/ui/button";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import type { Project, ProjectKind } from "@/lib/projects";
 import { Laptop, Smartphone, Star, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 type ProjectsExpandableListProps = {
   projects: Project[];
@@ -48,10 +49,14 @@ function McpLogoMark({ className }: { className: string }) {
 
 export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps) {
   const [active, setActive] = useState<Project | null>(null);
+  const [showMore, setShowMore] = useState(false);
+  const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
   const preloadedScreenshotUrls = useRef<Set<string>>(new Set());
   const modalTransition = { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
   const overlayTransition = { duration: 0.12, ease: "easeOut" as const };
+  const initiallyVisibleCount = Math.max(0, projects.length - 4);
+  const hasMoreProjects = projects.length > 4;
 
   const getImageSrc = (src: NonNullable<Project["screenshotSrc"]>) => (typeof src === "string" ? src : src.src);
 
@@ -205,22 +210,57 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
 
   return (
     <>
-      <div className="w-full">
+      <div className="relative w-full">
         <div className="space-y-1">
-          {projects.map((project) => (
-            <div key={project.github}>
-              <motion.div
-                layoutId={`project-card-${project.github}`}
-                transition={{ layout: modalTransition }}
-                className="relative -mx-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 sm:py-4"
-                onClick={() => {
-                  if (isSelfProject(project)) {
-                    openProjectDestination(project);
-                  } else {
-                    setActive(project);
-                  }
-                }}
-              >
+          {projects.map((project, index) => {
+            const isRevealedProject = hasMoreProjects && index >= initiallyVisibleCount;
+            const revealDelay = (index - initiallyVisibleCount) * 0.06;
+
+            return (
+              <Fragment key={project.github}>
+                {hasMoreProjects && !showMore && index === initiallyVisibleCount ? (
+                  <div className="pointer-events-none absolute top-full left-1/2 z-20 -translate-x-1/2 opacity-0 transition-opacity group-hover/projects:pointer-events-auto group-hover/projects:opacity-100 group-focus-within/projects:pointer-events-auto group-focus-within/projects:opacity-100">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="border border-transparent hover:border-border hover:bg-background"
+                      onClick={() => setShowMore(true)}
+                      aria-label="Show more projects"
+                    >
+                      More
+                    </Button>
+                  </div>
+                ) : null}
+                {!isRevealedProject || showMore ? (
+                  <motion.div
+                    initial={
+                      isRevealedProject ? (reduceMotion ? { opacity: 0 } : { opacity: 0, y: -14, scale: 0.98 }) : false
+                    }
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    layoutId={`project-card-${project.github}`}
+                    transition={
+                      isRevealedProject
+                        ? reduceMotion
+                          ? { layout: modalTransition, opacity: { duration: 0.16 } }
+                          : {
+                              layout: modalTransition,
+                              type: "spring",
+                              bounce: 0.25,
+                              duration: 0.5,
+                              delay: revealDelay,
+                              opacity: { duration: 0.2, delay: revealDelay },
+                            }
+                        : { layout: modalTransition }
+                    }
+                    className="relative -mx-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 sm:py-4"
+                    onClick={() => {
+                      if (isSelfProject(project)) {
+                        openProjectDestination(project);
+                      } else {
+                        setActive(project);
+                      }
+                    }}
+                  >
                 <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
                   <motion.div
                     layoutId={`project-icon-${project.github}`}
@@ -265,10 +305,12 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                   <div className="flex items-center gap-1.5 sm:hidden" onClick={(event) => event.stopPropagation()}>
                     {actionChips(project, true)}
                   </div>
-                </div>
-              </motion.div>
-            </div>
-          ))}
+                    </div>
+                  </motion.div>
+                ) : null}
+              </Fragment>
+            );
+          })}
         </div>
       </div>
 

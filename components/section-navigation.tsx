@@ -7,7 +7,9 @@ const sections = [
   { id: "intro", label: "Intro" },
   { id: "about", label: "About me" },
   { id: "projects", label: "Selected projects" },
+  { id: "moments", label: "Moments" },
   { id: "skills", label: "Skills" },
+  { id: "elsewhere", label: "Elsewhere" },
 ];
 
 export function SectionNavigation() {
@@ -55,7 +57,7 @@ export function SectionNavigation() {
   return (
     <nav
       aria-label="Page sections"
-      className="fixed top-1/2 right-[calc(1rem-var(--scrollbar-compensation,0px))] z-40 -translate-y-1/2 sm:right-[calc(1.5rem-var(--scrollbar-compensation,0px))]"
+      className="fixed top-1/2 right-[calc(1rem-var(--scrollbar-compensation,0px))] z-40 hidden -translate-y-1/2 sm:block sm:right-[calc(1.5rem-var(--scrollbar-compensation,0px))]"
     >
       <div className="relative flex flex-col gap-3">
         {sections.map((section, index) => (
