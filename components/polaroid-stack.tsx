@@ -34,6 +34,7 @@ type Polaroid = {
   alt: string;
   captionTilt: number;
   objectPosition?: string;
+  href?: string;
 } & ({ kind: "image"; src: string } | { kind: "video"; src: string; poster: string });
 
 const polaroids: Polaroid[] = [
@@ -64,6 +65,7 @@ const polaroids: Polaroid[] = [
     kind: "video",
     src: "/moments/copy-paste.mp4",
     poster: "/moments/copy-paste.jpg",
+    href: "https://www.youtube.com/watch?v=B52r1ccVacU",
     alt: "3D copy and paste LiDAR scanning demo",
     label: "A 3D copy-paste demo at Trinity that got traction online and led to Scandrop MCP",
     caption: (
@@ -79,8 +81,8 @@ const polaroids: Polaroid[] = [
     kind: "image",
     src: "/moments/upscale-conf.jpg",
     alt: "AI Video panel on stage at Upscale Conf",
-    label: "At Upscale Conf in Málaga, learning from people leading AI",
-    caption: "At Upscale Conf in Málaga, learning from people leading AI",
+    label: "At Upscale Conf in Málaga last year, learning from people leading AI",
+    caption: "At Upscale Conf in Málaga last year, learning from people leading AI",
     objectPosition: "center 35%",
     captionTilt: -0.5,
   },
@@ -99,6 +101,15 @@ const polaroids: Polaroid[] = [
     ),
     objectPosition: "center",
     captionTilt: 1,
+  },
+  {
+    kind: "image",
+    src: "/moments/graduation.jpg",
+    alt: "Graduation portrait in Trinity College courtyard with the Campanile behind",
+    label: "Graduating at Trinity, felt like a Normal People character",
+    caption: "Graduating at Trinity, felt like a Normal People character",
+    objectPosition: "42% 30%",
+    captionTilt: 1.5,
   },
   {
     kind: "image",
@@ -270,6 +281,10 @@ function PolaroidCarousel({ reduceMotion }: { reduceMotion: boolean | null }) {
                 )}
                 onClick={(event) => {
                   if ((event.target as HTMLElement).closest("a")) return;
+                  if (isFocused && polaroid.href) {
+                    window.open(polaroid.href, "_blank", "noopener,noreferrer");
+                    return;
+                  }
                   setFocused(index);
                   if (isFirst) return;
                   event.currentTarget.closest("li")?.scrollIntoView({
