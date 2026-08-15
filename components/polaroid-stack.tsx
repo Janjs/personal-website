@@ -65,10 +65,10 @@ const polaroids: Polaroid[] = [
     src: "/moments/copy-paste.mp4",
     poster: "/moments/copy-paste.jpg",
     alt: "3D copy and paste LiDAR scanning demo",
-    label: "A 3D copy-paste demo from Trinity that got traction online and led to Scandrop MCP",
+    label: "A 3D copy-paste demo at Trinity that got traction online and led to Scandrop MCP",
     caption: (
       <>
-        A 3D copy-paste demo from Trinity that got traction online and led to{" "}
+        A 3D copy-paste demo at Trinity that got traction online and led to{" "}
         <PolaroidLink href="https://github.com/Janjs/scandrop-mcp">Scandrop MCP</PolaroidLink>
       </>
     ),
@@ -89,12 +89,12 @@ const polaroids: Polaroid[] = [
     src: "/moments/desert-jam.mp4",
     poster: "/moments/desert-jam.jpg",
     alt: "Nighttime jam session with guitar and drums",
-    label: "Jamming in the Moroccan desert, where Stroop and Chordwise started",
+    label: "Jamming in the Moroccan desert. I've always loved mixing music with tech, i.e. Stroop and Chordwise",
     caption: (
       <>
-        Jamming in the Moroccan desert. I've always loved mixing music with tech — that's where{" "}
+        Jamming in the Moroccan desert. I've always loved mixing music with tech, i.e:{" "}
         <PolaroidLink href="https://stroop.janjs.dev">Stroop</PolaroidLink> and{" "}
-        <PolaroidLink href="https://chordwise.chat">Chordwise</PolaroidLink> started
+        <PolaroidLink href="https://chordwise.chat">Chordwise</PolaroidLink>
       </>
     ),
     objectPosition: "center",
@@ -113,8 +113,8 @@ const polaroids: Polaroid[] = [
     kind: "image",
     src: "/moments/cat.jpg",
     alt: "Orange tabby cat being petted at sunset",
-    label: "My cat, back home in Spain",
-    caption: "My cat, back home in Spain",
+    label: "My cat, back home in Barcelona",
+    caption: "My cat, back home in Barcelona",
     objectPosition: "40% center",
     captionTilt: -1.5,
   },
