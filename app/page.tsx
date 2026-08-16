@@ -98,7 +98,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "dutch-bank",
     quote:
-      "The Dutch bank work had me designing and building high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure.",
+      "The Rabobank work had me designing and building high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure.",
     location: [52.3676, 4.9041],
     place: "Amsterdam",
     country: "Netherlands",
@@ -107,7 +107,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "us-medtech",
     quote:
-      "The Michigan medtech work centered on building AI chatbot platforms with Next.js, used by 50,000+ internal employees.",
+      "The Medtronic work centered on building AI chatbot platforms with Next.js, used by 50,000+ internal employees.",
     location: [44.3148, -85.6024],
     spotlightLocation: [44.3148, -85.6024],
     place: "Michigan",
@@ -117,7 +117,7 @@ const aboutItems: AboutGlobeItem[] = [
   {
     id: "german-pharma",
     quote:
-      "The German pharma work focused on developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
+      "The Merz Pharma work focused on developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
     location: [50.1109, 8.6821],
     place: "Frankfurt",
     country: "Germany",
@@ -161,11 +161,11 @@ const aboutEntries: AboutGlobeEntry[] = [
       { text: "5+ years consulting building ", itemId: "dutch-bank" },
       { text: "AI web apps", itemId: "dutch-bank", className: "font-semibold" },
       { text: " at ", itemId: "dutch-bank" },
-      { text: "Dutch Bank,", itemId: "dutch-bank", className: "font-semibold" },
+      { text: "Rabobank,", itemId: "dutch-bank", className: "font-semibold" },
       { text: " " },
-      { text: "US Medtech", itemId: "us-medtech", className: "font-semibold" },
+      { text: "Medtronic", itemId: "us-medtech", className: "font-semibold" },
       { text: ", and " },
-      { text: "German Pharma", itemId: "german-pharma", className: "font-semibold" },
+      { text: "Merz Pharma", itemId: "german-pharma", className: "font-semibold" },
       { text: " for Accenture" },
     ],
   },
