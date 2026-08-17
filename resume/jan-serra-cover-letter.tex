@@ -1,0 +1,85 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{iftex}
+\usepackage{fontspec}
+\usepackage[empty]{fullpage}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{setspace}
+
+\setmainfont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf,
+  BoldFont=Geist-SemiBold.ttf,
+  ItalicFont=Geist-Regular.ttf,
+  BoldItalicFont=Geist-SemiBold.ttf,
+  ItalicFeatures={FakeSlant=0.2},
+  BoldItalicFeatures={FakeSlant=0.2}
+]{Geist}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\footskip}{8pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedright
+\setstretch{1.15}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{11pt}
+
+\begin{document}
+
+\vspace{-10pt}
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+  \textbf{\Large Jan J. Serra} & \small \href{https://janjs.dev}{\underline{janjs.dev}} \\
+\end{tabular*}
+\vspace{-2pt}
+
+\noindent
+{\scriptsize
+  {\color{Gray}GitHub\color{black}} \href{https://github.com/janjs}{\underline{github.com/janjs}}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Phone\color{black}} +31 683711678
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Email\color{black}} \href{mailto:jan.jime.serra@gmail.com}{jan.jime.serra@gmail.com}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Location\color{black}} Utrecht, Netherlands
+}
+
+\vspace{18pt}
+\noindent
+{\small 17 August 2026}
+
+\vspace{6pt}
+\noindent
+Dear Optiver team,
+
+I'm a software engineer with more than five years of experience building production systems across AI, banking and cloud infrastructure. I'm applying to Optiver because I want to work somewhere where technical decisions have direct, measurable consequences, and where performance and reliability are central to the work.
+
+Before focusing on AI, I worked on a critical identity and account platform at Rabobank. Our backend services handled more than 1,000 requests per second with over 99.9\% availability and single-digit millisecond latency. Working on a system at that scale taught me to think carefully about performance, failure modes and the consequences of even small engineering decisions.
+
+More recently, I helped build an internal AI platform for Medtronic used by more than 50,000 employees. I worked across the Next.js application, backend services, RAG pipelines, agent orchestration and Azure infrastructure. As usage grew, we built load balancing across Azure OpenAI deployments in multiple regions, a queue that prioritized live conversations over background tasks, and session management that allowed long-running generations to continue when users moved between chats.
+
+I've always had a lot of ideas and enjoyed experimenting with new technology. AI has made it possible for me to turn far more of those ideas into working products, but I still care about understanding what happens underneath. That is one reason Optiver appeals to me: the combination of creative problem-solving with an environment where ideas are tested against real data and results.
+
+I've also deliberately pushed myself to become a better communicator, including giving in-person technical talks about emerging technologies such as MCP. I've always been naturally introverted, so this did not come easily, but it has made me better at explaining technical ideas and working with different kinds of people. It also means I tend to notice quieter teammates and make sure they have room to contribute.
+
+After several years consulting at Accenture, I'm looking to take more ownership of what I build and work closely with people who enjoy difficult technical problems. Optiver's focus on continuous improvement, intellectual curiosity and engineering systems for scale and speed feels like a strong match for how I want to develop next.
+
+\vspace{6pt}
+\noindent
+Best,\\[10pt]
+Jan Serra
+
+\end{document}
