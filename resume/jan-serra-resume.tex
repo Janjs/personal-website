@@ -108,6 +108,19 @@
     \end{tabular*}\vspace{-3pt}
 }
 
+\newcommand{\resumeEmbeddedHeading}[5]{
+  \vspace{1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} --- #2 & #3 \\
+      \textit{\footnotesize\color{Gray}#4} & \textit{\small #5} \\
+    \end{tabular*}\vspace{-3pt}
+}
+
+\newcommand{\resumeClientHeading}[2]{
+  \vspace{2pt}\item
+  \textbf{\small #1} --- \small #2\vspace{-3pt}
+}
+
 \newcommand{\resumeSubSubheading}[2]{
     \item
     \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
@@ -169,17 +182,30 @@ Product-minded AI engineer with 5+ years of experience turning messy problems in
 %-----------EXPERIENCE-----------
 \section{Experience}
   \resumeSubHeadingListStart
-    \resumeSubheading
-      {AI / Software Engineer — Accenture}{October 2021 -- Present}
+    \resumeEmbeddedHeading
+      {AI / Software Engineer}{Accenture}{October 2021 -- Present}
       {Embedded engineering roles across Medtronic, Merz Pharma and Rabobank.}{Amsterdam, Netherlands}
+
+      \resumeClientHeading{Forward Deployed AI Engineer}{Merz Pharma}
       \resumeItemListStart
-      \resumeItem{\textbf{Merz Pharma — Forward Deployed AI Engineer:} Own end-to-end delivery of a production multi-agent orchestrator platform, working directly with the client to identify automation opportunities, design solutions and ship them into production.}
-      \resumeItem{Architected and implemented LLM integrations, RAG, streaming chat, tool calling, Google's Agent2Agent protocol, Microsoft Copilot agents, and enterprise system integrations.}
-      \resumeItem{\textbf{Medtronic — AI Platform Engineer:} Built an internal enterprise AI platform used daily across an organization of \textbf{50,000+ employees}. Scaled RAG retrieval across large volumes of vector data, moving from exact search to HNSW indexing for lower latency while maintaining acceptable recall.}
-      \resumeItem{Implemented chat session management, custom load balancing and a queueing system for LLM providers across regions, alongside enterprise agents, workflows, integrations, evaluation and guardrails.}
-      \resumeItem{\textbf{Rabobank — Software Engineer:} Modernized a 20+ year identity and account platform using Kotlin, Spring, Angular, Azure SQL, and Cosmos DB. Built business-critical backend services handling \textbf{1,000+ QPS} with \textbf{99.99\% availability} and single-digit millisecond API latency.}
-    \resumeItemListEnd
-    
+        \resumeItem{Own end-to-end delivery of a production multi-agent orchestrator platform, working directly with the client to identify automation opportunities, design solutions and ship them into production.}
+        \resumeItem{Architected and implemented LLM integrations, RAG, streaming chat, tool calling, Google's Agent2Agent protocol, Microsoft Copilot agents, and enterprise system integrations.}
+      \resumeItemListEnd
+
+      \resumeClientHeading{AI Platform Engineer}{Medtronic}
+      \resumeItemListStart
+        \resumeItem{Built an internal enterprise AI platform used daily across an organization of \textbf{50,000+ employees}.}
+        \resumeItem{Scaled RAG retrieval across large volumes of vector data, moving from exact search to HNSW indexing for lower latency while maintaining acceptable recall.}
+        \resumeItem{Implemented chat session management, custom load balancing and a queueing system for LLM providers across regions, alongside enterprise agents, workflows, integrations, evaluation and guardrails.}
+      \resumeItemListEnd
+
+      \resumeClientHeading{Software Engineer}{Rabobank}
+      \resumeItemListStart
+        \resumeItem{Modernized a 20+ year identity and account platform using Kotlin, Spring, Angular, Azure SQL, and Cosmos DB.}
+        \resumeItem{Built business-critical backend services handling \textbf{1,000+ QPS} with \textbf{99.99\% availability} and single-digit millisecond API latency.}
+      \resumeItemListEnd
+
+    \vspace{4pt}
     \resumeSubheading
       {Full Stack Software Engineer}{April 2018 -- Dec. 2019}
       {NexoTech}{Mataró, Barcelona (Spain)}
