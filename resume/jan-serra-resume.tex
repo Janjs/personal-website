@@ -1,0 +1,252 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{iftex}
+\usepackage{fontspec}
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{tabularx}
+\ifPDFTeX
+  \input{glyphtounicode}
+\fi
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+\setmainfont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf,
+  BoldFont=Geist-SemiBold.ttf,
+  ItalicFont=Geist-Regular.ttf,
+  BoldItalicFont=Geist-SemiBold.ttf,
+  ItalicFeatures={FakeSlant=0.2},
+  BoldItalicFeatures={FakeSlant=0.2}
+]{Geist}
+\setsansfont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf,
+  BoldFont=Geist-SemiBold.ttf,
+  ItalicFont=Geist-Regular.ttf,
+  BoldItalicFont=Geist-SemiBold.ttf,
+  ItalicFeatures={FakeSlant=0.2},
+  BoldItalicFeatures={FakeSlant=0.2}
+]{Geist}
+\setmonofont[
+  Path=fonts/,
+  UprightFont=Geist-Regular.ttf
+]{Geist}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\footskip}{8pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\setstretch{1.08}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-2pt}\bfseries\raggedright\small
+}{}{0em}{}[\color{black}\titlerule \vspace{-2pt}]
+
+% Ensure that generated PDFs remain machine readable when using pdfLaTeX.
+\ifPDFTeX
+  \pdfgentounicode=1
+\fi
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item{
+    \footnotesize #1 \vspace{-2pt}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \small #3 & \textit{\small #4} \\
+    \end{tabular*}\vspace{-3pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small #1 & \textit{\small #2} \\
+    \end{tabular*}\vspace{-3pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \footnotesize#1 & \footnotesize#2 \\
+    \end{tabular*}\vspace{-3pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[itemsep=4pt, topsep=4pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+\newcommand{\resumeSkillRow}[2]{%
+  \textbf{#1} & \footnotesize #2 \\
+}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\vspace{-10pt}
+%----------HEADING----------
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+  \textbf{\Large Jan J. Serra} & \small \href{https://janjs.dev}{\underline{janjs.dev}} \\
+\end{tabular*}
+\vspace{-2pt}
+
+\noindent
+{\scriptsize
+  {\color{Gray}GitHub\color{black}} \href{https://github.com/janjs}{\underline{github.com/janjs}}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Phone\color{black}} +31 683711678
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Email\color{black}} \href{mailto:jan.jime.serra@gmail.com}{jan.jime.serra@gmail.com}
+  \hspace{0.35em} $|$ \hspace{0.35em}
+  {\color{Gray}Location\color{black}} Utrecht, Netherlands
+}
+
+\vspace{6pt}
+\noindent
+{\small
+Product-minded AI engineer with 5+ years of experience turning messy problems into production systems. I work directly with stakeholders to find what should be automated, then design, build and ship the solution end to end. I enjoy exploring new technologies and applying them across enterprise AI platforms, open-source AI tools, and 3D projects.
+}
+\vspace{4pt}
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {AI / Software Engineer — Accenture}{October 2021 -- Present}
+      {Embedded engineering roles across Medtronic, Merz Pharma and Rabobank.}{Amsterdam, Netherlands}
+      \resumeItemListStart
+      \resumeItem{\textbf{Merz Pharma — Forward Deployed AI Engineer:} Own end-to-end delivery of a production multi-agent orchestrator platform, working directly with the client to identify automation opportunities, design solutions and ship them into production.}
+      \resumeItem{Architected and implemented LLM integrations, RAG, streaming chat, tool calling, Google's Agent2Agent protocol, Microsoft Copilot agents, and enterprise system integrations.}
+      \resumeItem{\textbf{Medtronic — AI Platform Engineer:} Built an internal enterprise AI platform used daily across an organization of \textbf{50,000+ employees}. Scaled RAG retrieval across large volumes of vector data, moving from exact search to HNSW indexing for lower latency while maintaining acceptable recall.}
+      \resumeItem{Implemented chat session management, custom load balancing and a queueing system for LLM providers across regions, alongside enterprise agents, workflows, integrations, evaluation and guardrails.}
+      \resumeItem{\textbf{Rabobank — Software Engineer:} Modernized a 20+ year identity and account platform using Kotlin, Spring, Angular, Azure SQL, and Cosmos DB. Built business-critical backend services handling \textbf{1,000+ QPS} with \textbf{99.99\% availability} and single-digit millisecond API latency.}
+    \resumeItemListEnd
+    
+    \resumeSubheading
+      {Full Stack Software Engineer}{April 2018 -- Dec. 2019}
+      {NexoTech}{Mataró, Barcelona (Spain)}
+      \resumeItem{Built a full-stack people-counting web app (React, Java Spring, IoT) and personally handled on-site hardware installation. Also built a computer vision classification model (PyTorch, AWS Rekognition) for demographic attribute detection, as a university intern progressing to full-time.}
+
+    \resumeSubHeadingListEnd
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {M.Sc. in Computer Science}{Sep. 2020 -- Oct. 2021}
+      {Trinity College Dublin}{Dublin, Ireland}
+      \resumeItemListStart
+        \resumeItem{Specialized in \textbf{AR/VR}, \textbf{Machine Learning}, and \textbf{Computer Graphics}.}
+      \resumeItemListEnd
+    \resumeSubheading
+      {B.Sc. in Computer Engineering and Information Systems}{Sep. 2016 -- Dec. 2019}
+      {Universitat Pompeu Fabra}{Barcelona, Spain}
+      \resumeItemListStart
+        \resumeItem{Studied a semester abroad at \textbf{Ajou University} in \textit{Suwon, South Korea}.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+      
+      
+% -----------Multiple Positions Heading-----------
+%    \resumeSubSubheading
+%     {Software Engineer I}{Oct 2014 - Sep 2016}
+%     \resumeItemListStart
+%        \resumeItem{Apache Beam}
+%          {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+%     \resumeItemListEnd
+%    \resumeSubHeadingListEnd
+%-------------------------------------------
+
+
+%-----------PROJECTS-----------
+\section{Personal Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {Highlighted projects are listed below; open-source contributions (including \textbf{React Native}) are available at: \href{https://github.com/janjs}{\underline{github.com/janjs}}.}{}
+          \resumeItemListStart
+            \resumeItem{\textbf{Heighliner}: Built a platform that maps company or personal workflows and converts identified opportunities into LLM-powered automation routes.}
+            \resumeItem{\textbf{Stroop}: AI-assisted Strudel live-coding playground for generating and experimenting with generative audio snippets. Next.js, TypeScript, Strudel, Convex.}
+            % \resumeItem{\textbf{Scandrop MCP} --- MCP server that helps LLMs reason about and interact with 3D spatial environments, built with Python, TypeScript, and 3D processing pipelines.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+
+% 
+%-----------PROGRAMMING SKILLS-----------
+\section{Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \item \footnotesize{
+      \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}@{\hspace{0.45em}}X@{}}
+        \resumeSkillRow{Languages}{TypeScript · Python · Java · Kotlin}
+        \resumeSkillRow{Frontend \& Backend}{Next.js · React · Node.js · Spring · React Native · Flask}
+        \resumeSkillRow{AI \& Data}{LLMs · RAG · MCP · Azure OpenAI · AWS Bedrock · PyTorch}
+        \resumeSkillRow{Cloud \& Infrastructure}{Azure · Docker · Cosmos DB · PostgreSQL · Azure DevOps}
+        \resumeSkillRow{Other}{Enterprise Integrations · 3D Processing · AR/VR · AI Agentic Platforms}
+        \resumeSkillRow{Spoken Languages}{English (Professional) · Spanish (Native) · Catalan (Native) · Dutch (Beginner)}
+      \end{tabularx}
+    }
+ \end{itemize}
+
+
+%-------------------------------------------
+\end{document}

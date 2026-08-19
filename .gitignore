@@ -24,7 +24,7 @@
 .DS_Store
 *.pem
 
-# LaTeX resume (keep local; do not publish)
+# LaTeX resume build artifacts
 /resume.aux
 /resume.fdb_latexmk
 /resume.fls
@@ -38,8 +38,6 @@
 /resume/*.log
 /resume/*.out
 /resume/*.synctex.gz
-/resume/*.tex
-/resume/*.pdf
 
 # debug
 npm-debug.log*
