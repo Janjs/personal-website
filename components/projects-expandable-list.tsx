@@ -219,7 +219,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
             return (
               <Fragment key={project.github}>
                 {hasMoreProjects && !showMore && index === initiallyVisibleCount ? (
-                  <div className="pointer-events-none absolute top-full left-1/2 z-20 -translate-x-1/2 opacity-0 transition-opacity group-hover/projects:pointer-events-auto group-hover/projects:opacity-100 group-focus-within/projects:pointer-events-auto group-focus-within/projects:opacity-100">
+                  <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 opacity-100 transition-opacity sm:pointer-events-none sm:opacity-0 sm:group-hover/projects:pointer-events-auto sm:group-hover/projects:opacity-100 sm:group-focus-within/projects:pointer-events-auto sm:group-focus-within/projects:opacity-100">
                     <Button
                       type="button"
                       variant="ghost"
