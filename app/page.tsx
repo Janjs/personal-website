@@ -158,7 +158,7 @@ const aboutEntries: AboutGlobeEntry[] = [
   {
     id: "consulting",
     parts: [
-      { text: "5+ years consulting building ", itemId: "dutch-bank" },
+      { text: "6+ years consulting building ", itemId: "dutch-bank" },
       { text: "AI web apps", itemId: "dutch-bank", className: "font-semibold" },
       { text: " at ", itemId: "dutch-bank" },
       { text: "Rabobank,", itemId: "dutch-bank", className: "font-semibold" },

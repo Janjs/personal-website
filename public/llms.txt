@@ -19,7 +19,7 @@ Education
 
 Professional background
 
-- 5+ years of consulting experience building AI web applications
+- 6+ years of consulting experience building AI web applications
 - Worked with a Dutch bank on high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure
 - Worked with a US medtech company in Michigan on AI chatbot platforms built with Next.js and used by 50,000+ internal employees
 - Worked with a German industrial machinery company on Next.js-based agentic systems using LLMs, RAG, and enterprise integrations
