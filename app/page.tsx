@@ -248,15 +248,15 @@ export default function Home() {
             </span>
           </p>
           <p className="pr-16 text-xl leading-tight sm:pr-0 sm:text-2xl">
-            Software engineer building{" "}
+            Software engineer combining{" "}
             <Highlighter action="underline" color="#9fc5ff">
               artificial intelligence
             </Highlighter>{" "}
-            and{" "}
+            with the things I'm into:{" "}
             <Highlighter action="underline" color="#a7f3d0">
-              spacial computing
-            </Highlighter>{" "}
-            experiences.
+              music, sports, and 3D
+            </Highlighter>
+            .
           </p>
         </section>
 
