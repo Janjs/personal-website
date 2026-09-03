@@ -4,18 +4,20 @@ import cinema3dSeatSelectionScreenshot from "@/public/project-screenshots/cinema
 import chordwiseScreenshot from "@/public/project-screenshots/chordwise.png";
 import heighlinerScreenshot from "@/public/project-screenshots/heighliner.png";
 import highlightsAiScreenshot from "@/public/project-screenshots/highlights-ai.jpeg";
+import musicAsCodeScreenshot from "@/public/project-screenshots/music-as-code.png";
 import scandropMcpScreenshot from "@/public/project-screenshots/scandrop-mcp.png";
 import stroopScreenshot from "@/public/project-screenshots/stroop.png";
 import sunnySpotsScreenshot from "@/public/project-screenshots/sunny-spots.jpeg";
 import todaysHarvestScreenshot from "@/public/project-screenshots/todays-harvest.png";
 
-export type ProjectKind = "web" | "mobile" | "mcp";
+export type ProjectKind = "web" | "mobile" | "mcp" | "skill";
 
 export type Project = {
   name: string;
   tag: string;
   liveUrl: string | null;
   iconSrc?: string | StaticImageData;
+  darkIconSrc?: string | StaticImageData;
   iconText?: string;
   darkIconText?: string;
   github: string;
@@ -43,6 +45,33 @@ export const portfolioProjects: Project[] = [
     techStack: ["Next.js", "TypeScript", "Strudel", "Convex"],
   },
   {
+    name: "Scandrop MCP",
+    tag: "Spatial AI",
+    liveUrl: null,
+    iconSrc: "/project-icons/scandrop.svg",
+    github: "scandrop-mcp",
+    kind: "mcp",
+    iconWrapperClass: "bg-[#f4fdf9] p-0.5 dark:bg-[#154842]",
+    stars: 39,
+    screenshotSrc: scandropMcpScreenshot,
+    description: "MCP server that helps LLMs reason about and interact with 3D spatial environments.",
+    chips: ["MCP", "Spatial", "3D"],
+    techStack: ["TypeScript", "MCP", "3D Processing"],
+  },
+  {
+    name: "Music as Code",
+    tag: "Agent Skills",
+    liveUrl: null,
+    iconSrc: "/project-icons/music-as-code-light.png",
+    darkIconSrc: "/project-icons/music-as-code-dark.png",
+    github: "music-as-code",
+    kind: "skill",
+    screenshotSrc: musicAsCodeScreenshot,
+    description: "Agent skills that turn natural-language music requests into local Strudel, LilyPond, or SuperCollider files.",
+    chips: ["Skills", "Music", "Live-coding"],
+    techStack: ["Strudel", "LilyPond", "SuperCollider"],
+  },
+  {
     name: "Heighliner",
     tag: "AI Automation",
     liveUrl: "https://heighliner.app/",
@@ -54,20 +83,6 @@ export const portfolioProjects: Project[] = [
     description: "Map how your company works, discover opportunities, and turn them into AI-powered automation routes.",
     chips: ["Web App", "AI", "Automation"],
     techStack: ["Next.js", "TypeScript", "OpenAI", "Composio"],
-  },
-  {
-    name: "Scandrop MCP",
-    tag: "Spatial AI",
-    liveUrl: "https://scandrop.janjs.dev",
-    iconSrc: "/project-icons/scandrop.svg",
-    github: "scandrop-mcp",
-    kind: "mcp",
-    iconWrapperClass: "bg-[#f4fdf9] p-0.5 dark:bg-[#154842]",
-    stars: 39,
-    screenshotSrc: scandropMcpScreenshot,
-    description: "MCP server that helps LLMs reason about and interact with 3D spatial environments.",
-    chips: ["MCP", "Spatial", "3D"],
-    techStack: ["TypeScript", "MCP", "3D Processing"],
   },
   {
     name: "3D Seat Selection",

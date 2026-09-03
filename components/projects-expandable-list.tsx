@@ -4,7 +4,7 @@ import { LiveProjectButton } from "@/components/live-project-button";
 import { Button } from "@/components/ui/button";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import type { Project, ProjectKind } from "@/lib/projects";
-import { Laptop, Smartphone, Star, X } from "lucide-react";
+import { Laptop, Smartphone, Sparkles, Star, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
@@ -141,7 +141,13 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   }, [projects]);
 
   const platformLabel = (kind: ProjectKind) =>
-    kind === "mcp" ? "Model Context Protocol Server" : kind === "mobile" ? "Mobile App" : "Web App";
+    kind === "mcp"
+      ? "Model Context Protocol Server"
+      : kind === "mobile"
+        ? "Mobile App"
+        : kind === "skill"
+          ? "Agent Skills"
+          : "Web App";
 
   const isSelfProject = (project: Project) => project.github === "personal-website";
 
@@ -170,6 +176,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
           {project.kind === "mcp" ? (
             <McpLogoMark className={small ? "h-3.5 w-3.5 shrink-0" : "mr-1.5 h-3.5 w-3.5 shrink-0"} />
           ) : null}
+          {project.kind === "skill" ? <Sparkles className={small ? "h-3.5 w-3.5" : "mr-1.5 h-3.5 w-3.5"} aria-hidden="true" /> : null}
           {project.kind === "mobile" ? <Smartphone className={small ? "h-3.5 w-3.5" : "mr-1.5 h-3.5 w-3.5"} aria-hidden="true" /> : null}
           {project.kind === "web" ? <Laptop className={small ? "h-3.5 w-3.5" : "mr-1.5 h-3.5 w-3.5"} aria-hidden="true" /> : null}
           {!small ? project.tag : null}
@@ -279,14 +286,26 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                         )}
                       </span>
                     ) : (
-                      <Image
-                        src={project.iconSrc!}
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="h-full w-full object-contain"
-                        aria-hidden="true"
-                      />
+                      <>
+                        <Image
+                          src={project.iconSrc!}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className={`h-full w-full object-contain${project.darkIconSrc ? " dark:hidden" : ""}`}
+                          aria-hidden="true"
+                        />
+                        {project.darkIconSrc ? (
+                          <Image
+                            src={project.darkIconSrc}
+                            alt=""
+                            width={40}
+                            height={40}
+                            className="hidden h-full w-full object-contain dark:block"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                      </>
                     )}
                   </motion.div>
 
@@ -395,14 +414,26 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                                     )}
                                   </span>
                                 ) : (
-                                  <Image
-                                    src={active.iconSrc!}
-                                    alt=""
-                                    width={36}
-                                    height={36}
-                                    className="h-full w-full object-contain"
-                                    aria-hidden="true"
-                                  />
+                                  <>
+                                    <Image
+                                      src={active.iconSrc!}
+                                      alt=""
+                                      width={36}
+                                      height={36}
+                                      className={`h-full w-full object-contain${active.darkIconSrc ? " dark:hidden" : ""}`}
+                                      aria-hidden="true"
+                                    />
+                                    {active.darkIconSrc ? (
+                                      <Image
+                                        src={active.darkIconSrc}
+                                        alt=""
+                                        width={36}
+                                        height={36}
+                                        className="hidden h-full w-full object-contain dark:block"
+                                        aria-hidden="true"
+                                      />
+                                    ) : null}
+                                  </>
                                 )}
                               </motion.div>
                               <motion.p
