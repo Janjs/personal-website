@@ -191,7 +191,10 @@ export function AboutGlobeSection({
                 );
               })}</p>
               {entry.date && (
-                <span className="ml-auto shrink-0 pl-2 tabular-nums text-muted-foreground">{entry.date}</span>
+                <span className="ml-auto shrink-0 pl-2 text-xs font-normal tracking-tight tabular-nums text-muted-foreground">
+                  {entry.date.replace("Present", "")}
+                  {entry.date.includes("Present") && <span className="font-semibold">Present</span>}
+                </span>
               )}
               {entry.details && (
                 <div className="mt-1.5 w-full space-y-1 pl-3">
@@ -220,8 +223,9 @@ export function AboutGlobeSection({
                         >
                           <span className="font-semibold">{detail.role}</span> at {detail.company}
                         </button>
-                        <span className="ml-auto shrink-0 pl-2 tabular-nums text-muted-foreground">
-                          {detail.date}
+                        <span className="ml-auto shrink-0 pl-2 text-xs font-normal tracking-tight tabular-nums text-muted-foreground">
+                          {detail.date.replace("Present", "")}
+                          {detail.date.includes("Present") && <span className="font-semibold">Present</span>}
                         </span>
                       </div>
                     );

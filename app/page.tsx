@@ -161,7 +161,7 @@ const aboutEntries: AboutGlobeEntry[] = [
   {
     id: "consulting",
     parts: [
-      { text: "Tech consulting in the Netherlands", itemId: "current-location" },
+      { text: "Tech consulting in the Netherlands:", itemId: "current-location" },
     ],
     details: [
       {
