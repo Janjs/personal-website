@@ -160,7 +160,6 @@ const aboutEntries: AboutGlobeEntry[] = [
   },
   {
     id: "consulting",
-    date: "2021–Present",
     parts: [
       { text: "Tech consulting in the Netherlands", itemId: "current-location" },
     ],
