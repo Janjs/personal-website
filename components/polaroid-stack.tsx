@@ -42,8 +42,8 @@ const polaroids: Polaroid[] = [
     kind: "image",
     src: "/moments/meetup.jpg",
     alt: "Group selfie at a community meetup in a warehouse venue",
-    label: "Tech talk on MCPs at Accenture NL's summer meeting",
-    caption: "Tech talk on MCPs at Accenture NL's summer meeting",
+    label: "Tech talk on MCPs at a summer meeting",
+    caption: "Tech talk on MCPs at a summer meeting",
     objectPosition: "center 40%",
     captionTilt: -2,
   },
@@ -54,7 +54,7 @@ const polaroids: Polaroid[] = [
     label: "Automating my brother's souvenir company, which inspired Heighliner",
     caption: (
       <>
-        Automating my brother's souvenir company, which inspired{" "}
+        Automating my brother&apos;s souvenir company, which inspired{" "}
         <PolaroidLink href="https://heighliner.app/">Heighliner</PolaroidLink>
       </>
     ),
@@ -94,7 +94,7 @@ const polaroids: Polaroid[] = [
     label: "Jamming in the Moroccan desert. I've always loved mixing music with tech, i.e. Stroop and Chordwise",
     caption: (
       <>
-        Jamming in the Moroccan desert. I've always loved mixing music with tech, i.e:{" "}
+        Jamming in the Moroccan desert. I&apos;ve always loved mixing music with tech, i.e:{" "}
         <PolaroidLink href="https://stroop.janjs.dev">Stroop</PolaroidLink> and{" "}
         <PolaroidLink href="https://chordwise.chat">Chordwise</PolaroidLink>
       </>

@@ -18,7 +18,14 @@ export type AboutGlobeEntryPart = {
 
 export type AboutGlobeEntry = {
   id: string;
+  date?: string;
   parts: AboutGlobeEntryPart[];
+  details?: {
+    itemId: string;
+    role: string;
+    company: string;
+    date: string;
+  }[];
 };
 
 export function AboutGlobeSection({
@@ -102,7 +109,7 @@ export function AboutGlobeSection({
       ref={sectionRef}
       className="grid gap-6 sm:items-stretch sm:grid-cols-[minmax(0,1fr)_minmax(16rem,21rem)] sm:gap-8"
     >
-      <div
+      <ul
         className="order-1 space-y-4 sm:space-y-5"
         onMouseLeave={reset}
         onBlur={(event) => {
@@ -114,20 +121,21 @@ export function AboutGlobeSection({
         {entries.map((entry) => {
           const entryItemIds = entry.parts
             .map((part) => part.itemId)
-            .filter((itemId): itemId is string => Boolean(itemId));
+            .filter((itemId): itemId is string => Boolean(itemId))
+            .concat(entry.details?.map((detail) => detail.itemId) ?? []);
           const entryHasActiveItem = entryItemIds.includes(activeItemId ?? "");
           const entryUsesInternalSpotlight = entryItemIds.length > 1 && entryHasActiveItem;
           const entryIsDimmed = hasSpotlight && !entryHasActiveItem;
 
           return (
-            <p
+            <li
               key={entry.id}
               className={cn(
-                "max-w-[38rem] whitespace-pre-wrap text-[0.98rem] leading-[1.45] tracking-[-0.015em] text-foreground/92 transition duration-300 sm:text-[1.02rem]",
+                "flex max-w-[38rem] flex-wrap gap-x-2 whitespace-pre-wrap text-sm leading-[1.45] tracking-[-0.015em] text-foreground/92 transition duration-300",
                 entryIsDimmed && !entryUsesInternalSpotlight && "opacity-25 blur-[1.4px]"
               )}
             >
-              {entry.parts.map((part, partIndex) => {
+              <p className="min-w-0 flex-1">{entry.parts.map((part, partIndex) => {
                 const partIsActive = part.itemId === activeItemId;
                 const partIsSoftened = entryUsesInternalSpotlight && !partIsActive;
 
@@ -181,11 +189,49 @@ export function AboutGlobeSection({
                     {part.text}
                   </button>
                 );
-              })}
-            </p>
+              })}</p>
+              {entry.date && (
+                <span className="ml-auto shrink-0 pl-2 tabular-nums text-muted-foreground">{entry.date}</span>
+              )}
+              {entry.details && (
+                <div className="mt-1.5 w-full space-y-1 pl-3">
+                  {entry.details.map((detail) => {
+                    const itemIndex = itemIndexById.get(detail.itemId);
+                    if (itemIndex === undefined) return null;
+
+                    const isActive = items[itemIndex]?.id === activeItemId;
+
+                    return (
+                      <div
+                        key={detail.itemId}
+                        className={cn(
+                          "flex gap-2 transition duration-300",
+                          entryUsesInternalSpotlight && !isActive && "opacity-25 blur-[1.4px]"
+                        )}
+                      >
+                        <span aria-hidden="true">•</span>
+                        <button
+                          type="button"
+                          className="min-w-0 flex-1 cursor-pointer text-left text-foreground transition duration-300 hover:text-foreground focus-visible:rounded-[0.2rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                          onMouseEnter={() => activate(itemIndex)}
+                          onFocus={() => activate(itemIndex)}
+                          onClick={() => togglePinned(itemIndex)}
+                          aria-pressed={isActive}
+                        >
+                          <span className="font-semibold">{detail.role}</span> at {detail.company}
+                        </button>
+                        <span className="ml-auto shrink-0 pl-2 tabular-nums text-muted-foreground">
+                          {detail.date}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </li>
           );
         })}
-      </div>
+      </ul>
 
       <div
         className="order-2 relative mt-4 h-[15rem] border-t pt-6 sm:mt-0 sm:h-auto sm:self-stretch sm:border-t-0 sm:pt-0"

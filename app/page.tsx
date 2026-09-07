@@ -45,14 +45,14 @@ import {
 
 const elsewhereLinks = [
   { label: "GitHub", href: "https://github.com/Janjs" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/janjimenezserra/" },
+  { label: "X", href: "https://x.com/Janjs" },
   { label: "Email", href: "mailto:jan.jime.serra@gmail.com" },
 ] as const;
 
 const aboutItems: AboutGlobeItem[] = [
   {
     id: "current-location",
-    quote: "Currently based in Utrecht, the Netherlands, working in AI consultancy.",
+    quote: "Product-minded AI engineer in Utrecht with 6+ years turning enterprise problems into production systems.",
     location: [52.0907, 5.1214],
     place: "Utrecht",
     country: "Netherlands",
@@ -128,6 +128,7 @@ const aboutItems: AboutGlobeItem[] = [
 const aboutEntries: AboutGlobeEntry[] = [
   {
     id: "upf",
+    date: "2016–2019",
     parts: [
       { text: "BSc Computer Engineering - ", itemId: "upf" },
       { text: "UPF Barcelona,", itemId: "upf", className: "font-semibold" },
@@ -137,15 +138,17 @@ const aboutEntries: AboutGlobeEntry[] = [
   },
   {
     id: "internship",
+    date: "2018–2019",
     parts: [
       {
-        text: "AI video analytics internship: people counting systems at local startup",
+        text: "AI video analytics internship: people counting systems at a local startup",
         itemId: "internship",
       },
     ],
   },
   {
     id: "trinity",
+    date: "2020–2021",
     parts: [
       { text: "MSc Computer Science (AR/VR) - ", itemId: "trinity" },
       {
@@ -157,16 +160,19 @@ const aboutEntries: AboutGlobeEntry[] = [
   },
   {
     id: "consulting",
+    date: "2021–Present",
     parts: [
-      { text: "6+ years consulting building ", itemId: "dutch-bank" },
-      { text: "AI web apps", itemId: "dutch-bank", className: "font-semibold" },
-      { text: " at ", itemId: "dutch-bank" },
-      { text: "Rabobank,", itemId: "dutch-bank", className: "font-semibold" },
-      { text: " " },
-      { text: "Medtronic", itemId: "us-medtech", className: "font-semibold" },
-      { text: ", and " },
-      { text: "Merz Pharma", itemId: "german-pharma", className: "font-semibold" },
-      { text: " for Accenture" },
+      { text: "Tech consulting in the Netherlands", itemId: "current-location" },
+    ],
+    details: [
+      {
+        itemId: "german-pharma",
+        role: "Forward Deployed AI Engineer",
+        company: "Merz Pharma",
+        date: "2026–Present",
+      },
+      { itemId: "us-medtech", role: "AI Platform Engineer", company: "Medtronic", date: "2023–2025" },
+      { itemId: "dutch-bank", role: "Software Engineer", company: "Rabobank", date: "2021–2023" },
     ],
   },
 ];
@@ -252,7 +258,7 @@ export default function Home() {
             <Highlighter action="underline" color="#9fc5ff">
               artificial intelligence
             </Highlighter>{" "}
-            with the things I'm into:{" "}
+            with the things I&apos;m into:{" "}
             <Highlighter action="underline" color="#a7f3d0">
               music, sports, and 3D
             </Highlighter>
