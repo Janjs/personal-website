@@ -42,7 +42,7 @@ export const portfolioProjects: Project[] = [
     screenshotSrc: stroopScreenshot,
     description: "Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting.",
     chips: ["Web App", "Audio", "Generative"],
-    techStack: ["Next.js", "TypeScript", "Strudel", "Convex"],
+    techStack: ["Next.js", "TypeScript", "Strudel", "OpenRouter", "Convex"],
   },
   {
     name: "Scandrop MCP",

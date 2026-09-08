@@ -42,7 +42,7 @@ Projects
    - Type: Web app
    - Tagline: Generative Audio
    - Summary: Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting
-   - Tech: Next.js, TypeScript, Strudel, Convex
+   - Tech: Next.js, TypeScript, Strudel, OpenRouter, Convex
    - Links:
      - Live: https://stroop.app
      - GitHub: https://github.com/Janjs/stroop
