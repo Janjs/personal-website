@@ -34,7 +34,7 @@ export const portfolioProjects: Project[] = [
   {
     name: "Stroop",
     tag: "Generative Audio",
-    liveUrl: "https://stroop.janjs.dev",
+    liveUrl: "https://stroop.app",
     iconSrc: "/project-icons/stroop.svg",
     github: "stroop",
     kind: "web",

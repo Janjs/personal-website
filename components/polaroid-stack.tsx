@@ -95,7 +95,7 @@ const polaroids: Polaroid[] = [
     caption: (
       <>
         Jamming in the Moroccan desert. I&apos;ve always loved mixing music with tech, i.e:{" "}
-        <PolaroidLink href="https://stroop.janjs.dev">Stroop</PolaroidLink> and{" "}
+        <PolaroidLink href="https://stroop.app">Stroop</PolaroidLink> and{" "}
         <PolaroidLink href="https://chordwise.chat">Chordwise</PolaroidLink>
       </>
     ),

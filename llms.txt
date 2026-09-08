@@ -44,7 +44,7 @@ Projects
    - Summary: Generate and experiment with Strudel live-coding music snippets with AI-assisted prompting
    - Tech: Next.js, TypeScript, Strudel, Convex
    - Links:
-     - Live: https://stroop.janjs.dev
+     - Live: https://stroop.app
      - GitHub: https://github.com/Janjs/stroop
 
 2. Scandrop MCP
