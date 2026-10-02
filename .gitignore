@@ -25,6 +25,8 @@
 *.pem
 
 # LaTeX resume build artifacts
+/resume/jan-serra-cover-letter.pdf
+/resume/jan-serra-cover-letter.tex
 /resume.aux
 /resume.fdb_latexmk
 /resume.fls
