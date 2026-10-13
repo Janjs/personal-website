@@ -166,7 +166,7 @@ const aboutEntries: AboutGlobeEntry[] = [
     details: [
       {
         itemId: "german-pharma",
-        role: "Forward Deployed AI Engineer",
+        role: "Senior AI Software Engineer",
         company: "Merz Pharma",
         date: "2026–Present",
       },
