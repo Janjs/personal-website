@@ -58,14 +58,6 @@ const moments: Moment[] = [
   },
   {
     kind: "image",
-    src: "/moments/meetup.jpg",
-    width: 1024,
-    height: 768,
-    alt: "Group selfie at a community meetup in a warehouse venue",
-    caption: "Tech talk on MCPs at a summer meeting",
-  },
-  {
-    kind: "image",
     src: "/moments/office.jpg",
     width: 768,
     height: 1024,
