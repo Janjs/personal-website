@@ -8,7 +8,6 @@ const sections = [
   ["about", "About me"],
   ["projects", "Selected projects"],
   ["workspace", "Workspace"],
-  ["moments", "Outside the computer"],
   ["skills", "Skills"],
   ["elsewhere", "Elsewhere"],
 ];

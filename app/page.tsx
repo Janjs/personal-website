@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { EncryptedText } from "@/components/ui/encrypted-text";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { JanPronunciation } from "@/components/jan-pronunciation";
-import { MomentsList } from "@/components/moments-list";
 import { ProjectsExpandableList } from "@/components/projects-expandable-list";
 import { RoomSection } from "@/components/room-section";
 import {
@@ -268,9 +267,6 @@ export default function Home() {
       </Column>
       <Column id="workspace" title="Workspace">
         <RoomSection />
-      </Column>
-      <Column id="moments" title="Outside the computer">
-        <MomentsList />
       </Column>
       <Column id="skills" title="Skills">
         <div className="space-y-4">
