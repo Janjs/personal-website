@@ -4,6 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { JanPronunciation } from "@/components/jan-pronunciation";
 import { MomentsList } from "@/components/moments-list";
 import { ProjectsExpandableList } from "@/components/projects-expandable-list";
+import { RoomSection } from "@/components/room-section";
 import {
   AboutGlobeSection,
   type AboutGlobeEntry,
@@ -264,6 +265,9 @@ export default function Home() {
       </Column>
       <Column id="projects" title="Selected projects">
         <ProjectsExpandableList projects={portfolioProjects} />
+      </Column>
+      <Column id="workspace" title="Workspace">
+        <RoomSection />
       </Column>
       <Column id="moments" title="Outside the computer">
         <MomentsList />

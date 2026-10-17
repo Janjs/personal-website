@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const sections = [
   ["about", "About me"],
   ["projects", "Selected projects"],
+  ["workspace", "Workspace"],
   ["moments", "Outside the computer"],
   ["skills", "Skills"],
   ["elsewhere", "Elsewhere"],
