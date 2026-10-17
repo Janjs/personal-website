@@ -21,11 +21,8 @@ export const AnimatedThemeToggler = ({
       className={cn(className)}
       {...props}
     >
-      {isDark ? (
-        <Sun className="size-4" aria-hidden="true" />
-      ) : (
-        <Moon className="size-4" aria-hidden="true" />
-      )}
+      <Sun className="hidden size-4 dark:block" aria-hidden="true" />
+      <Moon className="size-4 dark:hidden" aria-hidden="true" />
       <span className="sr-only">Toggle theme</span>
     </button>
   )

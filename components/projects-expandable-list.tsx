@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import type { Project, ProjectKind } from "@/lib/projects";
 import { Laptop, Smartphone, Sparkles, Star, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ProjectsExpandableListProps = {
   projects: Project[];
@@ -50,13 +50,10 @@ function McpLogoMark({ className }: { className: string }) {
 export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps) {
   const [active, setActive] = useState<Project | null>(null);
   const [showMore, setShowMore] = useState(false);
-  const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
   const preloadedScreenshotUrls = useRef<Set<string>>(new Set());
   const modalTransition = { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
   const overlayTransition = { duration: 0.12, ease: "easeOut" as const };
-  const initiallyVisibleCount = Math.max(0, projects.length - 4);
-  const hasMoreProjects = projects.length > 4;
 
   const getImageSrc = (src: NonNullable<Project["screenshotSrc"]>) => (typeof src === "string" ? src : src.src);
 
@@ -165,9 +162,9 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
     }
   };
 
-  const actionChips = (project: Project, small = false) => (
+  const actionChips = (project: Project, small = false, showCategory = true) => (
     <>
-      <span className="group relative inline-flex">
+      {showCategory ? <span className="group relative inline-flex">
         <span
           className={small ? `inline-flex h-7 w-7 items-center justify-center rounded-2xl ${githubChipClass}` : `${chipBaseClass} ${neutralChipClass}`}
           aria-label={platformLabel(project.kind)}
@@ -184,7 +181,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
         <span className="pointer-events-none absolute top-0 left-1/2 z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] rounded-md bg-foreground px-2 py-1 text-[11px] leading-none whitespace-nowrap text-background opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
           {platformLabel(project.kind)}
         </span>
-      </span>
+      </span> : null}
       <a
         href={`https://github.com/Janjs/${project.github}`}
         target="_blank"
@@ -218,48 +215,14 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   return (
     <>
       <div className="relative w-full">
-        <div className="space-y-1">
-          {projects.map((project, index) => {
-            const isRevealedProject = hasMoreProjects && index >= initiallyVisibleCount;
-            const revealDelay = (index - initiallyVisibleCount) * 0.06;
-
-            return (
-              <Fragment key={project.github}>
-                {hasMoreProjects && !showMore && index === initiallyVisibleCount ? (
-                  <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 opacity-100 transition-opacity sm:pointer-events-none sm:opacity-0 sm:group-hover/projects:pointer-events-auto sm:group-hover/projects:opacity-100 sm:group-focus-within/projects:pointer-events-auto sm:group-focus-within/projects:opacity-100">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="border border-transparent hover:border-border hover:bg-background"
-                      onClick={() => setShowMore(true)}
-                      aria-label="Show more projects"
-                    >
-                      More
-                    </Button>
-                  </div>
-                ) : null}
-                {!isRevealedProject || showMore ? (
+        <div id="project-list" className="space-y-6">
+          {projects.map((project, index) => (
                   <motion.div
-                    initial={
-                      isRevealedProject ? (reduceMotion ? { opacity: 0 } : { opacity: 0, y: -14, scale: 0.98 }) : false
-                    }
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    key={project.github}
+                    initial={false}
                     layoutId={`project-card-${project.github}`}
-                    transition={
-                      isRevealedProject
-                        ? reduceMotion
-                          ? { layout: modalTransition, opacity: { duration: 0.16 } }
-                          : {
-                              layout: modalTransition,
-                              type: "spring",
-                              bounce: 0.25,
-                              duration: 0.5,
-                              delay: revealDelay,
-                              opacity: { duration: 0.2, delay: revealDelay },
-                            }
-                        : { layout: modalTransition }
-                    }
-                    className="relative -mx-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 sm:py-4"
+                    transition={{ layout: modalTransition }}
+                    className={`project-card ${!showMore && index >= Math.max(0, projects.length - 4) ? "max-[700px]:hidden" : ""}`}
                     onClick={() => {
                       if (isSelfProject(project)) {
                         openProjectDestination(project);
@@ -268,7 +231,20 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                       }
                     }}
                   >
-                <div className="relative z-10 flex cursor-pointer items-center gap-2.5">
+                  {project.screenshotSrc && (
+                    <a
+                      href={getProjectDestinationHref(project)}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={event => event.stopPropagation()}
+                      aria-label={`Open ${project.name}`}
+                      className="mx-3 mt-3 block overflow-hidden rounded-xl bg-muted"
+                    >
+                      <Image src={project.screenshotSrc} alt={`${project.name} preview`} sizes="(max-width: 700px) 100vw, 480px" className="h-auto w-full" />
+                    </a>
+                  )}
+                  <div className="space-y-4 p-5">
+                  <div className="relative z-10 flex items-center gap-2.5">
                   <motion.div
                     layoutId={`project-icon-${project.github}`}
                     transition={{ layout: modalTransition }}
@@ -314,23 +290,30 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
                     transition={{ layout: modalTransition }}
                     className="min-w-0 flex-1 truncate text-sm leading-tight font-medium sm:text-xl sm:tracking-[-0.01em]"
                   >
-                    {project.name}
+                    <button type="button" className="cursor-pointer text-left hover:underline underline-offset-4">{project.name}</button>
                   </motion.div>
 
-                  <div className="hidden shrink-0 items-center gap-1.5 sm:flex" onClick={(event) => event.stopPropagation()}>
-                    {actionChips(project)}
+                  <div className="flex shrink-0 items-center gap-1.5" onClick={event => event.stopPropagation()}>
+                    {actionChips(project, true, false)}
                   </div>
-
-                  <div className="flex items-center gap-1.5 sm:hidden" onClick={(event) => event.stopPropagation()}>
-                    {actionChips(project, true)}
                   </div>
-                    </div>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+                  </div>
                   </motion.div>
-                ) : null}
-              </Fragment>
-            );
-          })}
+          ))}
         </div>
+        {projects.length > 4 && !showMore ? (
+          <Button
+            type="button"
+            variant="ghost"
+            className="mx-auto mt-4 flex min-[701px]:hidden"
+            onClick={() => setShowMore(true)}
+            aria-controls="project-list"
+            aria-expanded={false}
+          >
+            More
+          </Button>
+        ) : null}
       </div>
 
       {typeof window !== "undefined"

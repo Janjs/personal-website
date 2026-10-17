@@ -18,6 +18,7 @@ type GlobeProps = {
   locations: GlobeLocation[];
   focusedLocation: [number, number];
   selectedLocationId?: string;
+  idleRotate?: boolean;
   onLocationSelect?: (locationId: string) => void;
 };
 
@@ -63,7 +64,8 @@ const THEME_CONFIG = {
   >
 >;
 
-const INTERPOLATION_FACTOR = 0.12;
+const INTERPOLATION_FACTOR = 0.2;
+const IDLE_ROTATION_SPEED = 0.001;
 const DRAG_SENSITIVITY = 0.005;
 const MARKER_ELEVATION = 0;
 const GLOBE_MARKER_RADIUS = 0.8 + MARKER_ELEVATION;
@@ -142,6 +144,7 @@ export function Globe({
   locations,
   focusedLocation,
   selectedLocationId,
+  idleRotate = true,
   onLocationSelect,
 }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -163,7 +166,12 @@ export function Globe({
     isHorizontalDrag: boolean;
   } | null>(null);
   const timeRef = useRef(0);
+  const idleRotateRef = useRef(idleRotate);
   const [, setHoveredMarkerKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    idleRotateRef.current = idleRotate;
+  }, [idleRotate]);
 
   useEffect(() => {
     locationsRef.current = locations;
@@ -215,6 +223,10 @@ export function Globe({
       const target = targetRotationRef.current;
       const isDark = document.documentElement.classList.contains("dark");
 
+      if (idleRotateRef.current && !dragStateRef.current) {
+        target.phi += IDLE_ROTATION_SPEED;
+      }
+
       currentRotationRef.current.phi = interpolateAngle(
         currentRotationRef.current.phi,
         target.phi,
@@ -237,7 +249,9 @@ export function Globe({
         const isHovered = markerKey === hoveredMarkerKeyRef.current;
         const pulse = (Math.sin(timeRef.current + item.location[0]) + 1) / 2;
         const emphasis = isSelected ? 1 : isHovered ? 0.6 : 0;
-        const size = 0.026 + pulse * 0.003 + emphasis * (0.02 + pulse * 0.001);
+        const size = isSelected
+          ? 0.05 + pulse * 0.004
+          : 0.026 + pulse * 0.003 + emphasis * (0.02 + pulse * 0.001);
 
         return {
           location: item.location,
@@ -246,7 +260,9 @@ export function Globe({
             ? isSelected || isHovered
               ? [52 / 255, 211 / 255, 153 / 255]
               : [110 / 255, 231 / 255, 183 / 255]
-            : isSelected || isHovered
+            : isSelected
+              ? [239 / 255, 68 / 255, 68 / 255]
+              : isHovered
               ? [239 / 255, 68 / 255, 68 / 255]
               : [15 / 255, 23 / 255, 42 / 255],
         };
@@ -415,6 +431,9 @@ export function Globe({
               aria-pressed={isSelected}
             >
               <span className="absolute inset-1 rounded-full" />
+              {isSelected && (
+                <span className="pointer-events-none absolute left-1/2 top-1/2 z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-sm" />
+              )}
               <span
                 className={cn(
                   "pointer-events-none absolute left-1/2 bottom-1/2 flex -translate-x-1/2 flex-col-reverse items-center transition-opacity duration-500 ease-out motion-reduce:transition-none",

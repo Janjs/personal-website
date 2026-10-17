@@ -6,19 +6,15 @@ import { buttonVariants } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { NewTwitterIcon } from "@hugeicons/core-free-icons";
 
-export function ThemeToggle() {
+export function ThemeToggle({ orientation = "vertical" }: { orientation?: "horizontal" | "vertical" }) {
   const iconButtonClass = buttonVariants({
     variant: "ghost",
     size: "icon-sm",
   });
   const itemClass = `${iconButtonClass} size-8 flex-none rounded-[12px]`;
-
-  return (
-    <ButtonGroup
-      orientation="vertical"
-      className="gap-1.5 rounded-[18px] border bg-background/80 p-1.5 shadow-xs backdrop-blur-md"
-    >
-      <AnimatedThemeToggler className={itemClass} aria-label="Toggle dark mode" />
+  const themeToggle = <AnimatedThemeToggler className={itemClass} aria-label="Toggle dark mode" />;
+  const socialLinks = (
+    <>
       <a
         href="https://github.com/Janjs"
         target="_blank"
@@ -37,7 +33,7 @@ export function ThemeToggle() {
         </svg>
       </a>
       <a
-        href="https://x.com/Janjs"
+        href="https://x.com/Janjijs"
         target="_blank"
         rel="noreferrer"
         className={itemClass}
@@ -45,6 +41,25 @@ export function ThemeToggle() {
       >
         <HugeiconsIcon icon={NewTwitterIcon} size={16} strokeWidth={2} aria-hidden="true" />
       </a>
+    </>
+  );
+
+  return (
+    <ButtonGroup
+      orientation={orientation}
+      className="gap-1.5 rounded-[18px] bg-background/80 p-1.5 backdrop-blur-md"
+    >
+      {orientation === "horizontal" ? (
+        <>
+          {socialLinks}
+          {themeToggle}
+        </>
+      ) : (
+        <>
+          {themeToggle}
+          {socialLinks}
+        </>
+      )}
     </ButtonGroup>
   );
 }

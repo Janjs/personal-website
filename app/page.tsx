@@ -1,11 +1,8 @@
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { EncryptedText } from "@/components/ui/encrypted-text";
-import { Highlighter } from "@/components/ui/highlighter";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SectionNavigation } from "@/components/section-navigation";
 import { JanPronunciation } from "@/components/jan-pronunciation";
-import { PolaroidStack } from "@/components/polaroid-stack";
+import { MomentsList } from "@/components/moments-list";
 import { ProjectsExpandableList } from "@/components/projects-expandable-list";
 import {
   AboutGlobeSection,
@@ -43,16 +40,20 @@ import {
   ArrowUpRight01Icon,
 } from "@hugeicons/core-free-icons";
 
+import { PortfolioShell } from "@/components/portfolio-shell";
+import { ColumnHeading } from "@/components/column-heading";
+import type { ReactNode } from "react";
+
 const elsewhereLinks = [
   { label: "GitHub", href: "https://github.com/Janjs" },
-  { label: "X", href: "https://x.com/Janjs" },
+  { label: "X", href: "https://x.com/Janjijs" },
   { label: "Email", href: "mailto:jan.jime.serra@gmail.com" },
 ] as const;
 
 const aboutItems: AboutGlobeItem[] = [
   {
     id: "current-location",
-    quote: "Product-minded AI engineer in Utrecht with 6+ years turning enterprise problems into production systems.",
+    quote: "Product-minded AI engineer in Utrecht, turning enterprise problems into production systems.",
     location: [52.0907, 5.1214],
     place: "Utrecht",
     country: "Netherlands",
@@ -128,16 +129,33 @@ const aboutItems: AboutGlobeItem[] = [
 const aboutEntries: AboutGlobeEntry[] = [
   {
     id: "upf",
+    section: "education",
     date: "2016–2019",
     parts: [
-      { text: "BSc Computer Engineering - ", itemId: "upf" },
-      { text: "UPF Barcelona,", itemId: "upf", className: "font-semibold" },
-      { text: " including a semester at ", itemId: "ajou" },
-      { text: "Ajou University", itemId: "ajou", className: "font-semibold" },
+      { text: "BSc Computer Engineering", itemId: "upf", className: "font-semibold" },
+      { text: " - UPF Barcelona", itemId: "upf" },
+    ],
+  },
+  {
+    id: "ajou",
+    section: "education",
+    date: "2017–2017",
+    parts: [
+      { text: "including a semester abroad in Ajou University", itemId: "ajou" },
+    ],
+  },
+  {
+    id: "trinity",
+    section: "education",
+    date: "2020–2021",
+    parts: [
+      { text: "MSc Computer Science (AR/VR)", itemId: "trinity", className: "font-semibold" },
+      { text: " - Trinity College Dublin", itemId: "trinity" },
     ],
   },
   {
     id: "internship",
+    section: "experience",
     date: "2018–2019",
     parts: [
       {
@@ -147,19 +165,8 @@ const aboutEntries: AboutGlobeEntry[] = [
     ],
   },
   {
-    id: "trinity",
-    date: "2020–2021",
-    parts: [
-      { text: "MSc Computer Science (AR/VR) - ", itemId: "trinity" },
-      {
-        text: "Trinity College Dublin",
-        itemId: "trinity",
-        className: "font-semibold",
-      },
-    ],
-  },
-  {
     id: "consulting",
+    section: "experience",
     parts: [
       { text: "Tech consulting in the Netherlands:", itemId: "current-location" },
     ],
@@ -234,100 +241,62 @@ const skills = [
   },
 ];
 
-export default function Home() {
-  const projects = portfolioProjects;
-
+function Column({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <>
-      <div className="fixed top-4 right-[calc(1rem-var(--scrollbar-compensation,0px))] z-50 sm:top-6 sm:right-[calc(1.5rem-var(--scrollbar-compensation,0px))]">
-        <ThemeToggle />
+    <section id={id} className="portfolio-column group/projects" aria-labelledby={`${id}-title`} tabIndex={0}>
+      <ColumnHeading id={id} title={title} />
+      <div className="column-content">{children}</div>
+    </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <PortfolioShell sidebar={
+      <div className="sidebar-intro" id="intro">
+        <h1><a href="#intro"><EncryptedText text="Jan Serra" revealDelayMs={120} /></a><JanPronunciation showName={false} /></h1>
+        <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, and 3D.</p>
+        <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
       </div>
-      <SectionNavigation />
-
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-6 py-10 sm:px-8 sm:py-14">
-        <section id="intro" className="max-w-2xl scroll-mt-10 space-y-3">
-          <p className="text-xl leading-tight sm:text-2xl">
-            <span className="inline-flex items-center gap-2">
-              <EncryptedText text="Hi, I'm Jan." revealDelayMs={120} />
-              <JanPronunciation showName={false} />
-            </span>
-          </p>
-          <p className="pr-16 text-xl leading-tight sm:pr-0 sm:text-2xl">
-            Software engineer combining{" "}
-            <Highlighter action="underline" color="#9fc5ff">
-              artificial intelligence
-            </Highlighter>{" "}
-            with the things I&apos;m into:{" "}
-            <Highlighter action="underline" color="#a7f3d0">
-              music, sports, and 3D
-            </Highlighter>
-            .
-          </p>
-        </section>
-
-        <Separator className="my-9" />
-
-        <section id="about" className="scroll-mt-10 space-y-3 fade-up-in fade-up-delay-2">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">About me</h2>
-          <AboutGlobeSection items={aboutItems} entries={aboutEntries} />
-        </section>
-
-        <Separator className="my-9" />
-
-        <section id="projects" className="group/projects -my-9 scroll-mt-10 space-y-3 py-9 fade-up-in fade-up-delay-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Selected projects</h2>
-          <ProjectsExpandableList projects={projects} />
-        </section>
-
-        <Separator className="my-9" />
-
-        <section id="moments" className="-mb-9 scroll-mt-10 space-y-4 fade-up-in fade-up-delay-3 md:mb-0">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Moments</h2>
-          <PolaroidStack />
-        </section>
-
-        <Separator className="my-9" />
-
-        <section id="skills" className="scroll-mt-10 space-y-4 fade-up-in fade-up-delay-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Skills</h2>
-          <div className="space-y-3">
-            {skills.map(({ category, items, color }) => (
-              <div key={category} className="grid gap-2 sm:grid-cols-[10rem_1fr] sm:items-start">
-                <h3 className="pt-0.5 text-sm font-medium">{category}</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {items.map(({ name, icon }) => (
-                    <Badge key={name} className={color}>
-                      <HugeiconsIcon icon={icon} size={12} strokeWidth={2} aria-hidden="true" />
-                      {name}
-                    </Badge>
-                  ))}
-                </div>
+    } footer={<ThemeToggle />}>
+      <Column id="about" title="About me">
+        <AboutGlobeSection items={aboutItems} entries={aboutEntries} />
+      </Column>
+      <Column id="projects" title="Selected projects">
+        <ProjectsExpandableList projects={portfolioProjects} />
+      </Column>
+      <Column id="moments" title="Outside the computer">
+        <MomentsList />
+      </Column>
+      <Column id="skills" title="Skills">
+        <div className="space-y-4">
+          {skills.map(({ category, items, color }) => (
+            <div key={category} className="space-y-2">
+              <h3 className="text-sm font-medium">{category}</h3>
+              <div className="flex flex-wrap gap-1.5">
+                {items.map(({ name, icon }) => (
+                  <Badge key={name} className={color}>
+                    <HugeiconsIcon icon={icon} size={12} strokeWidth={2} aria-hidden="true" />
+                    {name}
+                  </Badge>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-
-        <Separator className="my-9" />
-
-        <section id="elsewhere" className="scroll-mt-10 space-y-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Elsewhere</h2>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {elsewhereLinks.map(({ label, href }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  target={href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
-                  className="inline-flex items-center gap-1 hover:underline underline-offset-4"
-                >
-                  {label}
-                  <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} strokeWidth={2} aria-hidden="true" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </main>
-    </>
+            </div>
+          ))}
+        </div>
+      </Column>
+      <Column id="elsewhere" title="Elsewhere">
+        <ul className="divide-y divide-border">
+          {elsewhereLinks.map(({ label, href }) => (
+            <li key={label}>
+              <a href={href} target={href.startsWith("mailto:") ? undefined : "_blank"} rel={href.startsWith("mailto:") ? undefined : "noreferrer"} className="flex items-center justify-between gap-4 py-5 hover:text-muted-foreground transition-colors">
+                <span><span className="block text-base font-medium">{label}</span><span className="mt-1 block text-sm text-muted-foreground">{label === "Email" ? "jan.jime.serra@gmail.com" : label === "GitHub" ? "Projects and open source" : "@Janjs"}</span></span>
+                <HugeiconsIcon icon={ArrowUpRight01Icon} size={16} strokeWidth={2} aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Column>
+    </PortfolioShell>
   );
 }

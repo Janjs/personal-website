@@ -45,6 +45,20 @@ export const portfolioProjects: Project[] = [
     techStack: ["Next.js", "TypeScript", "Strudel", "OpenRouter", "Convex"],
   },
   {
+    name: "3D Seat Selection",
+    tag: "Cinema Experience Demo",
+    liveUrl: "https://cinema.janjs.dev",
+    iconSrc: "/project-icons/cinema-camera.png",
+    github: "cinema-3d-seat-selection",
+    kind: "web",
+    iconWrapperClass: "bg-[#f9efd3] p-1 dark:bg-[#d4af57]",
+    screenshotSrc: cinema3dSeatSelectionScreenshot,
+    description:
+      "Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium.",
+    chips: ["Web App", "3D", "Interactive"],
+    techStack: ["Three.js", "Vite"],
+  },
+  {
     name: "Scandrop MCP",
     tag: "Spatial AI",
     liveUrl: null,
@@ -83,20 +97,6 @@ export const portfolioProjects: Project[] = [
     description: "Map how your company works, discover opportunities, and turn them into AI-powered automation routes.",
     chips: ["Web App", "AI", "Automation"],
     techStack: ["Next.js", "TypeScript", "OpenAI", "Composio"],
-  },
-  {
-    name: "3D Seat Selection",
-    tag: "Cinema Experience Demo",
-    liveUrl: "https://cinema.janjs.dev",
-    iconSrc: "/project-icons/cinema-camera.png",
-    github: "cinema-3d-seat-selection",
-    kind: "web",
-    iconWrapperClass: "bg-[#f9efd3] p-1 dark:bg-[#d4af57]",
-    screenshotSrc: cinema3dSeatSelectionScreenshot,
-    description:
-      "Interactive 3D cinema seat picker that lets you preview seats from their actual viewpoint in a stylized auditorium.",
-    chips: ["Web App", "3D", "Interactive"],
-    techStack: ["Three.js", "Vite"],
   },
   {
     name: "Chordwise",
