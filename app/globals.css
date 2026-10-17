@@ -226,7 +226,8 @@ html {
 @media (max-width: 700px) {
   .mobile-header { position: sticky; top: 0; z-index: 50; display: block; padding: env(safe-area-inset-top) 20px 0; background: color-mix(in srgb, var(--background) 92%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: var(--font-portfolio), sans-serif; }
   .mobile-header-top { min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .mobile-header-name { flex: none; font-size: 18px; font-weight: 600; letter-spacing: -.5px; }
+  .mobile-header-name { flex: none; font-size: 24px; font-weight: 600; letter-spacing: -.8px; transition: font-size 200ms ease, letter-spacing 200ms ease; }
+  .mobile-header.is-scrolled .mobile-header-name { font-size: 18px; letter-spacing: -.5px; }
   .mobile-section-nav { position: sticky; top: calc(52px + env(safe-area-inset-top)); z-index: 50; isolation: isolate; display: flex; align-items: flex-start; gap: 4px; padding: 8px 20px 10px 10px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--background) 92%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: var(--font-portfolio), sans-serif; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
   .mobile-section-nav::-webkit-scrollbar { display: none; }
   .mobile-section-nav a { position: relative; z-index: 1; flex: none; border-radius: 30px; padding: 4px 11px; color: var(--muted-foreground); font-size: 14px; transition: color 150ms; white-space: nowrap; }
@@ -242,11 +243,13 @@ html {
   .sidebar-footer { display: none; }
   .portfolio-stream { display: block; overflow: visible; }
   .portfolio-column { width: 100%; overflow: visible; border-right: 0; border-bottom: 0.75px solid var(--portfolio-divider); }
-  .column-heading { padding: 28px 24px 22px; min-height: 0; }
+  .column-heading { padding: 20px 24px 8px; min-height: 0; }
   .column-content { padding: 12px 24px 24px; }
   .portfolio-column#about .column-content { padding-bottom: 24px; }
+  .about-globe-list { gap: 12px; }
+  .about-globe-entry { font-size: 12px; padding-block: 4px; }
 }
-@media (prefers-reduced-motion: reduce) { .portfolio-sidebar nav a, .mobile-section-nav a, .sidebar-highlight, .about-globe-highlight, .scroll-top { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .portfolio-sidebar nav a, .mobile-section-nav a, .mobile-header-name, .sidebar-highlight, .about-globe-highlight, .scroll-top { transition: none; } }
 
 .about-globe-highlight {
   position: absolute;

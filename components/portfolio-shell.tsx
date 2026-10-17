@@ -89,7 +89,7 @@ export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNo
   return (
     <div className="portfolio">
       <a className="skip-link" href="#about">Skip to content</a>
-      <header className="mobile-header">
+      <header className={`mobile-header ${scrolled ? "is-scrolled" : ""}`}>
         <div className="mobile-header-top">
           <strong className="mobile-header-name"><a href="#intro">Jan Serra</a></strong>
           <div className="mobile-header-actions">
