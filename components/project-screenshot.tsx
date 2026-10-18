@@ -41,14 +41,9 @@ export function ProjectScreenshot({
         wrapperClassName
       )}
     >
-      <span
-        className={cn(
-          "project-screenshot-skeleton",
-          fill ? "absolute inset-0" : "absolute inset-0",
-          loaded && "is-hidden"
-        )}
-        aria-hidden="true"
-      />
+      {!loaded && (
+        <span className={cn("project-screenshot-skeleton", "absolute inset-0")} aria-hidden="true" />
+      )}
       <Image
         {...props}
         ref={handleRef}

@@ -364,10 +364,6 @@ html {
   z-index: 0;
   background: var(--muted);
   animation: project-screenshot-skeleton 1.35s ease-in-out infinite;
-  transition: opacity 380ms cubic-bezier(.22, 1, .36, 1);
-}
-.project-screenshot-skeleton.is-hidden {
-  opacity: 0;
 }
 .project-screenshot-image {
   opacity: 0;
@@ -383,7 +379,6 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .project-screenshot-skeleton { animation: none; opacity: 0.65; }
   .project-screenshot-image { transition: none; }
-  .project-screenshot-skeleton.is-hidden { transition: none; }
 }
 
 .project-card:hover {
