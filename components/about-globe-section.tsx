@@ -232,7 +232,7 @@ export function AboutGlobeSection({
   return (
     <div
       ref={sectionRef}
-      className="relative isolate flex w-full min-w-0 flex-1 flex-col gap-6"
+      className="relative isolate flex min-h-0 w-full min-w-0 flex-1 flex-col gap-6"
     >
       <div
         ref={listRef}
@@ -271,18 +271,16 @@ export function AboutGlobeSection({
               </h3>
               <ul className="space-y-1">
                 {sectionEntries.map((entry) => {
-                  const entryIsActive = entry.parts.some(
-                    (part) => part.itemId !== undefined && part.itemId === activeItemId
-                  );
-                  const activeDetailId = entry.details?.find(
-                    (detail) => detail.itemId === activeItemId
-                  )?.itemId;
-                  const entryRowIsActive = entryIsActive && activeDetailId === undefined;
+                  const entryIsHighlighted =
+                    entry.parts.some(
+                      (part) => part.itemId !== undefined && part.itemId === activeItemId
+                    ) ||
+                    entry.details?.some((detail) => detail.itemId === activeItemId);
                   return (
                     <li
                       key={entry.id}
-                      data-active-highlight={entryRowIsActive ? "true" : undefined}
-                      className="about-globe-entry relative z-[1] grid max-w-[38rem] grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 whitespace-pre-wrap rounded-lg px-3 py-2.5 -mx-3 text-sm leading-[1.45] tracking-[-0.015em] text-foreground/92"
+                      data-active-highlight={entryIsHighlighted ? "true" : undefined}
+                      className="about-globe-entry relative z-[1] grid w-full max-w-[38rem] grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 whitespace-pre-wrap rounded-lg px-3 py-2.5 -mx-3 text-sm leading-[1.45] tracking-[-0.015em] text-foreground/92"
                     >
                       <p className="col-start-1 row-start-1 min-w-0">
                         {entry.parts.map((part, partIndex) => {
@@ -328,7 +326,6 @@ export function AboutGlobeSection({
                             return (
                               <div
                                 key={detail.itemId}
-                                data-active-highlight={isActive ? "true" : undefined}
                                 className="about-globe-detail relative z-[1] -mx-2 grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2 rounded-md px-2 py-0.5"
                               >
                                 <span className="row-start-1 pt-px" aria-hidden="true">
@@ -393,7 +390,7 @@ export function AboutGlobeSection({
           />
         </div>
 
-        <blockquote className="pointer-events-none absolute bottom-0 z-30 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10">
+        <blockquote className="pointer-events-none absolute bottom-0 z-30 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:bottom-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom)))]">
           <p>{displayedQuote}</p>
         </blockquote>
       </div>

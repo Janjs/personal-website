@@ -302,7 +302,11 @@ html {
   .sidebar-footer { display: none; }
   .portfolio-stream { height: calc(100dvh - 108px - env(safe-area-inset-top)); scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
   .portfolio-stream::-webkit-scrollbar { display: none; }
-  .portfolio-column { flex-basis: 100%; width: 100%; scroll-snap-stop: always; overflow-x: hidden; }
+  .portfolio-column { flex-basis: 100%; width: 100%; scroll-snap-stop: always; overflow-x: clip; }
+  .portfolio-column#about { overflow: hidden; }
+  #about canvas { opacity: 1; transition: none; }
+  #about [data-globe-label],
+  #about [data-globe-label] span { transition: none; }
   .project-card {
     --project-card-bg: var(--background);
     backdrop-filter: none;
@@ -317,8 +321,9 @@ html {
   .home-contact-phrase { display: block; margin-top: 25px; font-size: 14px; }
   .column-heading { display: none; }
   .column-content { padding: 12px 24px 24px; }
-  .portfolio-column#about .column-content { padding-bottom: 24px; }
-  .about-globe-list { gap: 12px; }
+  .portfolio-column#about .column-content { min-height: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .portfolio-column#about .column-content > * { min-height: 0; }
+  .about-globe-list { gap: 12px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
   .about-globe-entry { font-size: 12px; padding-block: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -333,9 +338,12 @@ html {
   left: 0;
   z-index: 0;
   border-radius: 0.5rem;
-  background-color: var(--muted);
+  background-color: color-mix(in srgb, var(--muted) 42%, var(--background));
   pointer-events: none;
-  transition: transform 250ms cubic-bezier(.22, 1, .36, 1), width 250ms cubic-bezier(.22, 1, .36, 1), height 250ms cubic-bezier(.22, 1, .36, 1), opacity 150ms ease;
+  transition: transform 250ms cubic-bezier(.22, 1, .36, 1), width 250ms cubic-bezier(.22, 1, .36, 1), height 250ms cubic-bezier(.22, 1, .36, 1), opacity 150ms ease, background-color 150ms ease;
+}
+.about-globe-list[data-pinned] .about-globe-highlight {
+  background-color: var(--muted);
 }
 
 /* Soft raised surfaces with blurred edge highlights. */
