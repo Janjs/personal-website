@@ -27,10 +27,17 @@ export function RBox({ size, radius = 0.02, color, ...props }: Omit<ComponentPro
 
 const projected = new Vector3();
 const TIP_HALF_WIDTH = 128;
-// ponytail: assumes tooltips stay under ~140px tall; measure the element if quotes get longer
 const TIP_MIN_BOTTOM = 150;
 
-export function Pickable({ active, onSelect, tip, tipY = 0.5, tipMinBottom = TIP_MIN_BOTTOM, children, ...props }: ThreeElements["group"] & ItemProps & { tipY?: number; tipMinBottom?: number }) {
+export function Pickable({
+  active,
+  onSelect,
+  tip,
+  tipY = 0.5,
+  tipMinBottom = TIP_MIN_BOTTOM,
+  children,
+  ...props
+}: ThreeElements["group"] & ItemProps & { tipY?: number; tipMinBottom?: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -63,7 +70,7 @@ export function Pickable({ active, onSelect, tip, tipY = 0.5, tipMinBottom = TIP
             return [Math.min(Math.max(x, TIP_HALF_WIDTH + 8), size.width - TIP_HALF_WIDTH - 8), Math.max(y, tipMinBottom)];
           }}
         >
-          <blockquote className="w-64 -translate-x-1/2 -translate-y-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 animate-in fade-in-0 zoom-in-95">
+          <blockquote className="w-64 max-[700px]:hidden -translate-x-1/2 -translate-y-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 animate-in fade-in-0 zoom-in-95">
             {tip}
           </blockquote>
         </Html>

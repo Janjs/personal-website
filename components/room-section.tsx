@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
 import { portfolioProjects } from "@/lib/projects";
 import type { RoomItemId } from "@/components/room/room-scene";
 
@@ -54,7 +55,14 @@ export function RoomSection() {
     poster: (
       <>
         <p>Latest movie I recommend:</p>
-        <Image src="/workspace/la-bola-negra.jpg" alt="La Bola Negra poster" width={399} height={501} className="mt-2 h-auto w-full rounded-md" />
+        <Image
+          src="/workspace/la-bola-negra.jpg"
+          alt="La Bola Negra poster"
+          width={399}
+          height={501}
+          sizes="(max-width: 700px) 85vw, 16rem"
+          className="mt-2 h-auto w-full rounded-md object-contain max-[700px]:mx-auto max-[700px]:block max-[700px]:w-auto max-[700px]:max-w-full max-[700px]:max-h-[min(15rem,34vh)]"
+        />
         <p className="mt-3">
           I love going to the movies, but I got the wrong seats by mistake too many times. That&apos;s why I built{" "}
           <QuoteLink name="3D Seat Selection" />.
@@ -96,10 +104,28 @@ export function RoomSection() {
             </div>
           </div>
         </div>
-        <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} onProgress={setSceneProgress} onReady={() => setSceneReady(true)} />
+        <RoomScene
+          selected={selected}
+          playing={playing}
+          pets={pets}
+          quotes={quotes}
+          onSelect={select}
+          onProgress={setSceneProgress}
+          onReady={() => setSceneReady(true)}
+        />
+        {selected ? (
+          <blockquote
+            className={cn(
+              "absolute bottom-0 left-0 z-30 hidden w-full overflow-y-auto overflow-x-hidden rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:block",
+              selected === "poster" ? "max-[700px]:max-h-[min(26rem,58vh)]" : "max-[700px]:max-h-[min(14rem,40vh)]",
+            )}
+          >
+            {quotes[selected]}
+          </blockquote>
+        ) : null}
       </div>
       <p className="text-sm text-muted-foreground">
-        <span className="min-[701px]:hidden">*Tip: tap around</span>
+        <span className="min-[701px]:hidden">*Tip: drag to rotate, tap items</span>
         <span className="hidden min-[701px]:inline">*Tip: click around</span>
       </p>
     </div>

@@ -4,8 +4,13 @@ import { OrbitControls, useProgress } from "@react-three/drei";
 import { EffectComposer, Outline, Selection } from "@react-three/postprocessing";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { DoubleSide, type Group, type Material } from "three";
+import { useEffect, useRef, type ReactNode } from "react";
+import { DoubleSide, setConsoleFunction, type Group, type Material } from "three";
+
+setConsoleFunction((type, message, ...params) => {
+  if (message.startsWith("THREE.Clock:")) return;
+  console[type](message, ...params);
+});
 
 import { Basketball } from "@/components/room/basketball";
 import { Cat } from "@/components/room/cat";
@@ -22,7 +27,7 @@ function fitZoom(size: { width: number; height: number }) {
   return Math.min(size.width, size.height) / 1.4 / 6.1;
 }
 
-function RoomControls({ finePointer }: { finePointer: boolean }) {
+function RoomControls() {
   const size = useThree((state) => state.size);
   const fitRef = useRef(0);
   const fit = fitZoom(size);
@@ -38,7 +43,6 @@ function RoomControls({ finePointer }: { finePointer: boolean }) {
 
   return (
     <OrbitControls
-      enabled={finePointer}
       enableZoom={false}
       enablePan={false}
       minZoom={fit}
@@ -93,18 +97,17 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
 }) {
   const dark = useTheme().resolvedTheme === "dark";
   const glow = dark ? 0xffd28a : 0xffffff;
-  const [finePointer] = useState(() => window.matchMedia("(pointer: fine)").matches);
   const pick = (id: RoomItemId) => ({ active: selected === id, onSelect: () => onSelect(id), tip: quotes[id] });
 
   return (
     <>
       <ProgressReporter onProgress={onProgress} />
       <Canvas
-        style={{ position: "absolute", inset: "-20%", width: "140%", height: "140%", background: "transparent" }}
-        gl={{ alpha: true, stencil: true }}
+        style={{ position: "absolute", inset: "-20%", width: "140%", height: "140%", background: "transparent", touchAction: "none" }}
+        gl={{ alpha: true, stencil: true, preserveDrawingBuffer: true }}
         orthographic
         flat
-        shadows
+        shadows="percentage"
         dpr={[1, 2]}
         camera={{ position: [10, 8.5, 10], zoom: 40 }}
         onPointerMissed={() => onSelect(null)}
@@ -112,7 +115,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
         aria-label="Isometric 3D workspace with a desk setup, guitar, cat, record player, poster, basketball, and souvenirs"
       >
         <SceneReady onReady={onReady} />
-        <RoomControls finePointer={finePointer} />
+        <RoomControls />
       <hemisphereLight args={[dark ? "#ffe1a8" : "#ffe0b2", dark ? "#332319" : "#d9be98", dark ? 0.4 : 1.1]} />
       <ambientLight intensity={dark ? 0.22 : 0.65} color={dark ? "#ffcf96" : "#fff4e2"} />
       <directionalLight

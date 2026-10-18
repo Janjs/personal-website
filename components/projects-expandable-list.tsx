@@ -242,7 +242,12 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                       aria-label={`Open ${project.name}`}
                       className="mx-3 mt-3 block overflow-hidden rounded-xl bg-muted"
                     >
-                      <ProjectScreenshot src={project.screenshotSrc} alt={`${project.name} preview`} sizes="(max-width: 700px) 100vw, 480px" />
+                      <ProjectScreenshot
+                        src={project.screenshotSrc}
+                        alt={`${project.name} preview`}
+                        sizes="(max-width: 700px) 100vw, 480px"
+                        loading={index === 0 ? "eager" : undefined}
+                      />
                     </a>
                   )}
                   <div className="space-y-4 p-5">

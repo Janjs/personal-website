@@ -15,6 +15,8 @@ import {
 } from "@hugeicons/core-free-icons";
 
 import { ProjectScreenshot } from "@/components/project-screenshot";
+import workspacePreviewDark from "@/public/workspace/preview-dark.png";
+import workspacePreviewLight from "@/public/workspace/preview-light.png";
 import { Globe } from "@/components/ui/globe";
 import { Badge } from "@/components/ui/badge";
 import type { AboutGlobeItem } from "@/components/about-globe-section";
@@ -143,9 +145,16 @@ export function ProjectsPreview({ projects }: { projects: Project[] }) {
       <div className="projects-preview-collage">
         {[0, 1].map((set) => (
           <div className="projects-preview-set" key={set}>
-            {featured.map((project) => (
+            {featured.map((project, index) => (
               <div className="projects-preview-card" key={project.github}>
-                <ProjectScreenshot src={project.screenshotSrc!} alt="" fill sizes="280px" wrapperClassName="absolute inset-0" />
+                <ProjectScreenshot
+                  src={project.screenshotSrc!}
+                  alt=""
+                  fill
+                  sizes="280px"
+                  loading={index === 0 ? "eager" : undefined}
+                  wrapperClassName="absolute inset-0"
+                />
               </div>
             ))}
           </div>
@@ -158,8 +167,23 @@ export function ProjectsPreview({ projects }: { projects: Project[] }) {
 export function WorkspacePreview() {
   return (
     <div className="workspace-preview" aria-hidden="true">
-      <ProjectScreenshot src="/workspace/preview-light.png" alt="" fill sizes="280px" wrapperClassName="absolute inset-0 dark:hidden" className="object-contain" />
-      <ProjectScreenshot src="/workspace/preview-dark.png" alt="" fill sizes="280px" wrapperClassName="absolute inset-0 hidden dark:block" className="object-contain" />
+      <ProjectScreenshot
+        src={workspacePreviewLight}
+        alt=""
+        fill
+        priority
+        sizes="160px"
+        wrapperClassName="absolute inset-0 dark:hidden"
+        className="object-cover object-center"
+      />
+      <ProjectScreenshot
+        src={workspacePreviewDark}
+        alt=""
+        fill
+        sizes="160px"
+        wrapperClassName="absolute inset-0 hidden dark:block"
+        className="object-cover object-center"
+      />
     </div>
   );
 }

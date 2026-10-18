@@ -229,8 +229,12 @@ html {
 .about-preview { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .home-tile-about { contain: paint; }
 .about-preview-globe { position: absolute; width: 420px; height: 420px; right: -200px; bottom: -138px; }
+.home-tile-about .home-tile-link { background: none; }
 .about-preview-globe .absolute.inset-0 { pointer-events: none; }
-.about-preview-globe canvas { pointer-events: none; }
+.about-preview-globe canvas { pointer-events: none; opacity: 1; transition: none; }
+.about-preview-globe button,
+.about-preview-globe [data-globe-label],
+.about-preview-globe [data-globe-label] span { transition: none; }
 .about-preview-globe button { pointer-events: none !important; }
 .about-preview-globe button span[class*="rounded-full"][class*="border"] { font-size: 11px; }
 .projects-preview { position: absolute; inset: 1px; overflow: hidden; border-radius: 21px; pointer-events: none; background: var(--tile-bg); }
@@ -257,8 +261,8 @@ html {
   35% { --skills-lens-x: 58%; --skills-lens-y: 34%; }
   70% { --skills-lens-x: 10%; --skills-lens-y: 52%; }
 }
-.workspace-preview { position: absolute; inset: 32px -16px -12px; pointer-events: none; }
-.workspace-preview img { object-fit: contain; }
+.workspace-preview { position: absolute; left: 16px; right: 16px; bottom: 14px; height: 132px; pointer-events: none; }
+.workspace-preview img { object-fit: cover; object-position: center; }
 .portfolio-column { flex: 0 0 480px; width: 480px; overflow-y: auto; border-right: 0.75px solid var(--portfolio-divider); background: var(--background); scroll-snap-align: start; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .portfolio-column#projects { position: relative; z-index: 2; }
 @media (min-width: 701px) {

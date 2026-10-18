@@ -196,12 +196,7 @@ export function Globe({
       return;
     }
 
-    const onResize = () => {
-      widthRef.current = canvas.offsetWidth || 1;
-    };
-
-    onResize();
-    window.addEventListener("resize", onResize);
+    widthRef.current = canvas.offsetWidth || 1;
 
     const globe = createGlobe(canvas, {
       ...BASE_CONFIG,
@@ -272,8 +267,6 @@ export function Globe({
         ...THEME_CONFIG[isDark ? "dark" : "light"],
         phi: currentRotationRef.current.phi,
         theta: currentRotationRef.current.theta,
-        width: widthRef.current * 2,
-        height: widthRef.current * 2,
         markers,
       });
 
@@ -317,10 +310,19 @@ export function Globe({
       canvas.style.opacity = "1";
     });
 
+    const syncSize = () => {
+      const width = canvas.offsetWidth || 1;
+      if (width === widthRef.current) return;
+      widthRef.current = width;
+      globe.update({ width: width * 2, height: width * 2 });
+    };
+    const resizeObserver = new ResizeObserver(syncSize);
+    resizeObserver.observe(canvas);
+
     return () => {
       window.cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
       globe.destroy();
-      window.removeEventListener("resize", onResize);
     };
   }, []);
 
