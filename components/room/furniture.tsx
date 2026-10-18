@@ -14,6 +14,8 @@ const books = [
   [0.33, "#c98a6b"],
 ] as const;
 
+const floorBoards = ["#c9ad88", "#d2b995", "#c5a57f", "#d8c09e", "#cbae88", "#d4ba96", "#c2a17a", "#d1b58e", "#c7a781", "#d6bd99"];
+
 const leaves = Array.from({ length: 11 }, (_, index) => ({
   angle: index * 2.4,
   tilt: 0.35 + (index % 3) * 0.25,
@@ -65,18 +67,23 @@ function DeskLamp({ dark }: { dark: boolean }) {
 export function Furniture({ dark }: { dark: boolean }) {
   return (
     <>
-      <Part color="#d8bf98" position={[-0.1, -0.1, -0.1]}><boxGeometry args={[4.2, 0.2, 4.2]} /></Part>
-      <Part color="#efe2cc" position={[-2.1, 1.65, -0.1]}><boxGeometry args={[0.2, 3.3, 4.2]} /></Part>
-      <Part color="#f3e8d5" position={[-0.1, 1.65, -2.1]}><boxGeometry args={[4.2, 3.3, 0.2]} /></Part>
-      <RBox color="#e2cfb0" size={[0.04, 0.15, 4]} radius={0.01} position={[-1.98, 0.075, 0]} />
-      <RBox color="#e2cfb0" size={[4, 0.15, 0.04]} radius={0.01} position={[0, 0.075, -1.98]} />
+      <Part color="#a98763" position={[-0.1, -0.1, -0.1]}><boxGeometry args={[4.2, 0.2, 4.2]} /></Part>
+      {floorBoards.map((color, index) => (
+        <Part key={color} color={color} roughness={0.82} position={[-0.1, 0.012, -1.89 + index * 0.4]}>
+          <boxGeometry args={[4.16, 0.024, 0.38]} />
+        </Part>
+      ))}
+      <Part color="#e6dccd" position={[-2.1, 1.65, -0.1]}><boxGeometry args={[0.2, 3.3, 4.2]} /></Part>
+      <Part color="#eee5d8" position={[-0.1, 1.65, -2.1]}><boxGeometry args={[4.2, 3.3, 0.2]} /></Part>
+      <RBox color="#d8c8b3" size={[0.04, 0.15, 4]} radius={0.01} position={[-1.98, 0.075, 0]} />
+      <RBox color="#d8c8b3" size={[4, 0.15, 0.04]} radius={0.01} position={[0, 0.075, -1.98]} />
 
-      <Part color="#c99a6e" roughness={1} position={[0.35, 0.01, 0.35]}><cylinderGeometry args={[1.1, 1.1, 0.02, 96]} /></Part>
-      <Part color="#e3c49b" roughness={1} position={[0.35, 0.012, 0.35]}><cylinderGeometry args={[0.88, 0.88, 0.02, 96]} /></Part>
+      <Part color="#b99b78" roughness={1} position={[0.35, 0.03, 0.35]}><cylinderGeometry args={[1.1, 1.1, 0.02, 96]} /></Part>
+      <Part color="#dfcfb7" roughness={1} position={[0.35, 0.032, 0.35]}><cylinderGeometry args={[0.88, 0.88, 0.02, 96]} /></Part>
 
-      <RBox color="#b88a5c" size={[2.2, 0.08, 1]} radius={0.03} position={[-0.45, 1.11, -1.45]} />
+      <RBox color="#cbb391" size={[2.2, 0.08, 1]} radius={0.03} position={[-0.45, 1.11, -1.45]} />
       {[[-1.45, -1.85], [0.55, -1.85], [-1.45, -1.05], [0.55, -1.05]].map(([x, z]) => (
-        <RBox key={`${x}${z}`} color="#9c7148" size={[0.07, 1.07, 0.07]} radius={0.02} position={[x, 0.535, z]} />
+        <RBox key={`${x}${z}`} color="#aa8d6b" size={[0.07, 1.07, 0.07]} radius={0.02} position={[x, 0.535, z]} />
       ))}
       <DeskSetup dark={dark} />
       <group position={[-1.25, 1.15, -1.15]}>
@@ -85,16 +92,16 @@ export function Furniture({ dark }: { dark: boolean }) {
       </group>
       <DeskLamp dark={dark} />
 
-      <RBox color="#c9a57a" size={[1.1, 0.9, 0.9]} radius={0.03} position={[1.4, 0.45, -1.5]} />
+      <RBox color="#d2bea1" size={[1.1, 0.9, 0.9]} radius={0.03} position={[1.4, 0.45, -1.5]} />
       {[0.25, 0.62].map((y) => (
         <group key={y} position={[1.4, y, -1.045]}>
-          <RBox color="#d4b287" size={[1, 0.32, 0.02]} radius={0.008} />
-          <Part color="#7a5236" roughness={0.4} position={[0, 0, 0.02]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.012, 0.012, 0.18, 16]} /></Part>
+          <RBox color="#e0d1bb" size={[1, 0.32, 0.02]} radius={0.008} />
+          <Part color="#8d735a" roughness={0.4} position={[0, 0, 0.02]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.012, 0.012, 0.18, 16]} /></Part>
         </group>
       ))}
       <RBox color="#fbf6ee" size={[2.1, 0.06, 0.3]} position={[-0.45, 1.88, -1.85]} />
 
-      <RBox color="#b88a5c" size={[0.35, 0.05, 1.4]} radius={0.015} position={[-1.82, 2.2, 0.9]} />
+      <RBox color="#bfa17c" size={[0.35, 0.05, 1.4]} radius={0.015} position={[-1.82, 2.2, 0.9]} />
       {books.map(([height, color], index) => (
         <RBox key={color} color={color} size={[0.26, height, 0.08]} radius={0.01} position={[-1.85, 2.225 + height / 2, 0.3 + index * 0.09]} />
       ))}

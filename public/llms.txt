@@ -1,10 +1,10 @@
-Jan
+Jan J. Serra
 
 This file summarizes the personal and project information presented in the website UI, including content that is revealed through interactive elements such as hover states, pinned globe entries, and expandable project modals.
 
 Identity
 
-- Name: Jan
+- Name: Jan J. Serra
 - Role: AI software engineer
 - Short bio: Software engineer building artificial intelligence and spatial computing experiences.
 - Pronunciation: "Jan" is presented with a Catalan pronunciation aid in the UI.

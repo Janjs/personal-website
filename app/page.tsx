@@ -48,6 +48,7 @@ import type { ReactNode } from "react";
 
 const elsewhereLinks = [
   { label: "GitHub", href: "https://github.com/Janjs" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/janjimenezserra/" },
   { label: "X", href: "https://x.com/Janjijs" },
   { label: "Email", href: "mailto:jan.jime.serra@gmail.com" },
 ] as const;
@@ -276,7 +277,7 @@ export default function Home() {
   return (
     <PortfolioShell sidebar={
       <div className="sidebar-intro" id="intro">
-        <h1><a href="#intro"><EncryptedText text="Jan Serra" revealDelayMs={120} /></a><JanPronunciation showName={false} /></h1>
+        <h1><a href="#intro"><EncryptedText text="Jan J. Serra" revealDelayMs={120} /></a><JanPronunciation showName={false} /></h1>
         <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, and 3D.</p>
         <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
       </div>
@@ -311,7 +312,7 @@ export default function Home() {
           {elsewhereLinks.map(({ label, href }) => (
             <li key={label}>
               <a href={href} target={href.startsWith("mailto:") ? undefined : "_blank"} rel={href.startsWith("mailto:") ? undefined : "noreferrer"} className="flex items-center justify-between gap-4 py-5 hover:text-muted-foreground transition-colors">
-                <span><span className="block text-base font-medium">{label}</span><span className="mt-1 block text-sm text-muted-foreground">{label === "Email" ? "jan.jime.serra@gmail.com" : label === "GitHub" ? "Projects and open source" : "@Janjs"}</span></span>
+                <span><span className="block text-base font-medium">{label}</span><span className="mt-1 block text-sm text-muted-foreground">{label === "Email" ? "jan.jime.serra@gmail.com" : label === "GitHub" || label === "LinkedIn" ? href : "@janjijs"}</span></span>
                 <HugeiconsIcon icon={ArrowUpRight01Icon} size={16} strokeWidth={2} aria-hidden="true" />
               </a>
             </li>

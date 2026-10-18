@@ -17,7 +17,8 @@ import { Poster, Window } from "@/components/room/wall-art";
 export type RoomItemId = "guitar" | "vinyl" | "cat" | "poster" | "basketball" | "window" | "barcelona" | "seoul" | "dublin";
 
 function fitZoom(size: { width: number; height: number }) {
-  return Math.min(size.width, size.height) / 6.1;
+  // Keep the room at its original scale inside the canvas's 20% bleed on each side.
+  return Math.min(size.width, size.height) / 1.4 / 6.1;
 }
 
 function RoomControls({ finePointer }: { finePointer: boolean }) {
@@ -50,12 +51,25 @@ function RoomControls({ finePointer }: { finePointer: boolean }) {
   );
 }
 
-export function RoomScene({ selected, playing, pets, quotes, onSelect }: {
+function SceneReady({ onReady }: { onReady: () => void }) {
+  const ready = useRef(false);
+
+  useFrame(() => {
+    if (ready.current) return;
+    ready.current = true;
+    requestAnimationFrame(onReady);
+  });
+
+  return null;
+}
+
+export function RoomScene({ selected, playing, pets, quotes, onSelect, onReady }: {
   selected: RoomItemId | null;
   playing: boolean;
   pets: number;
   quotes: Record<RoomItemId, ReactNode>;
   onSelect: (id: RoomItemId | null) => void;
+  onReady: () => void;
 }) {
   const dark = useTheme().resolvedTheme === "dark";
   const glow = dark ? 0xffd28a : 0xffffff;
@@ -64,6 +78,8 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect }: {
 
   return (
     <Canvas
+      style={{ position: "absolute", inset: "-20%", width: "140%", height: "140%", background: "transparent" }}
+      gl={{ alpha: true }}
       orthographic
       flat
       shadows="percentage"
@@ -73,6 +89,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect }: {
       role="img"
       aria-label="Isometric 3D workspace with a desk setup, guitar, cat, record player, poster, basketball, and souvenirs"
     >
+      <SceneReady onReady={onReady} />
       <RoomControls finePointer={finePointer} />
       <hemisphereLight args={[dark ? "#8f9bd6" : "#fff4e0", dark ? "#3a2f28" : "#c9a77c", dark ? 0.7 : 1.1]} />
       <ambientLight intensity={dark ? 0.35 : 0.5} color="#fff1dc" />

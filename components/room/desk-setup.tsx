@@ -44,14 +44,14 @@ function OfficeChair() {
     <group position={[-0.5, 0, -0.45]} rotation={[0, -0.15, 0]}>
       {Array.from({ length: 5 }, (_, index) => (
         <group key={index} rotation={[0, (index * Math.PI * 2) / 5, 0]}>
-          <RBox color="#2f2c2a" size={[0.05, 0.035, 0.3]} radius={0.012} position={[0, 0.07, 0.15]} />
-          <Part color="#1f1d1c" position={[0, 0.03, 0.29]}><sphereGeometry args={[0.03, 16, 12]} /></Part>
+          <RBox color="#b7afa3" size={[0.05, 0.035, 0.3]} radius={0.012} position={[0, 0.07, 0.15]} />
+          <Part color="#8f887f" position={[0, 0.03, 0.29]}><sphereGeometry args={[0.03, 16, 12]} /></Part>
         </group>
       ))}
-      <Part color="#8f8f8f" roughness={0.3} position={[0, 0.27, 0]}><cylinderGeometry args={[0.025, 0.03, 0.4, 16]} /></Part>
-      <RBox color="#3b3633" size={[0.55, 0.09, 0.52]} radius={0.04} position={[0, 0.5, 0]} />
-      <RBox color="#2f2c2a" size={[0.05, 0.42, 0.04]} radius={0.015} position={[0, 0.68, 0.27]} />
-      <RBox color="#3b3633" size={[0.5, 0.58, 0.07]} radius={0.04} position={[0, 1.02, 0.29]} rotation={[-0.1, 0, 0]} />
+      <Part color="#c8c0b5" roughness={0.3} position={[0, 0.27, 0]}><cylinderGeometry args={[0.025, 0.03, 0.4, 16]} /></Part>
+      <RBox color="#d8d1c4" size={[0.55, 0.09, 0.52]} radius={0.04} position={[0, 0.5, 0]} />
+      <RBox color="#b7afa3" size={[0.05, 0.42, 0.04]} radius={0.015} position={[0, 0.68, 0.27]} />
+      <RBox color="#d8d1c4" size={[0.5, 0.58, 0.07]} radius={0.04} position={[0, 1.02, 0.29]} rotation={[-0.1, 0, 0]} />
     </group>
   );
 }

@@ -210,6 +210,10 @@ html {
 .mobile-home { display: none; }
 .mobile-home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .home-tile { --tile-bg: color-mix(in srgb, var(--muted) 88%, var(--background)); --tile-preview-top: 54px; position: relative; min-width: 0; height: 270px; overflow: hidden; border-radius: 22px; background: var(--tile-bg); }
+.home-tile::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; background: var(--muted); opacity: 0; pointer-events: none; transition: opacity 160ms ease; }
+@media (hover: hover) {
+  .home-tile:hover::after { opacity: .18; }
+}
 .dark .home-tile { --tile-bg: color-mix(in oklch, var(--background) 48%, var(--card)); }
 .home-tile-link { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: flex-start; padding: 21px 17px; background: linear-gradient(var(--tile-bg) 0, var(--tile-bg) 18%, transparent 42%); }
 .home-tile-title { max-width: 100%; font-size: 20px; font-weight: 500; line-height: 1.08; letter-spacing: -.035em; }
@@ -260,7 +264,7 @@ html {
   .portfolio-column#projects { flex-basis: 540px; width: 540px; }
   .portfolio-column#workspace { flex-basis: clamp(560px, calc(100dvh - 60px), 980px); width: clamp(560px, calc(100dvh - 60px), 980px); }
 }
-.portfolio-column#workspace { display: flex; flex-direction: column; }
+.portfolio-column#workspace { position: relative; z-index: 1; display: flex; flex-direction: column; overflow: visible; }
 .portfolio-column#workspace .column-content { display: flex; flex: 1; padding-bottom: 30px; }
 .column-heading { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; font-family: var(--font-portfolio), sans-serif; padding: 28px 30px 25px; }
 .column-heading h2 { font-size: 24px; font-weight: 600; letter-spacing: -.8px; line-height: 36px; margin: 0; }
@@ -314,7 +318,7 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .skills-preview-stage { animation: none; --skills-lens-x: 44%; --skills-lens-y: 48%; }
 }
-@media (prefers-reduced-motion: reduce) { .home-tile { transition: none; } .projects-preview-collage { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .home-tile::after { transition: none; } .projects-preview-collage { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .portfolio-sidebar nav a, .mobile-section-nav a, .sidebar-highlight, .about-globe-highlight, .scroll-top { transition: none; } }
 
 .about-globe-highlight {

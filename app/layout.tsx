@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jan | Software Engineer",
+  title: "Jan J. Serra | Software Engineer",
   description:
     "Software engineer building artificial intelligence and spatial computing experiences.",
 };

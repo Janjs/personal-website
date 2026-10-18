@@ -10,12 +10,6 @@ import type { RoomItemId } from "@/components/room/room-scene";
 
 const RoomScene = dynamic(() => import("@/components/room/room-scene").then((m) => m.RoomScene), {
   ssr: false,
-  loading: () => (
-    <div role="status" className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
-      <Loader2 className="size-4 animate-spin" />
-      Loading workspace…
-    </div>
-  ),
 });
 
 const projectUrl = (name: string) => portfolioProjects.find((project) => project.name === name)?.liveUrl ?? undefined;
@@ -32,6 +26,7 @@ export function RoomSection() {
   const [selected, setSelected] = useState<RoomItemId | null>(null);
   const [playing, setPlaying] = useState(false);
   const [pets, setPets] = useState(0);
+  const [sceneReady, setSceneReady] = useState(false);
 
   const select = (id: RoomItemId | null) => {
     setSelected(id);
@@ -62,7 +57,15 @@ export function RoomSection() {
   return (
     <div className="flex min-h-[30rem] w-full flex-1 flex-col gap-3">
       <div className="relative min-h-0 flex-1">
-        <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} />
+        <div
+          role="status"
+          aria-hidden={sceneReady}
+          className={`absolute inset-0 z-10 flex items-center justify-center gap-2 bg-background text-sm text-muted-foreground transition-opacity duration-300 ${sceneReady ? "pointer-events-none opacity-0" : "opacity-100"}`}
+        >
+          <Loader2 className="size-4 animate-spin" />
+          Loading workspace…
+        </div>
+        <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} onReady={() => setSceneReady(true)} />
       </div>
       <p className="text-sm text-muted-foreground">
         <span className="min-[701px]:hidden">*Tip: tap around</span>

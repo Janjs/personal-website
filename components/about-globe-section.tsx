@@ -166,10 +166,6 @@ export function AboutGlobeSection({
 
     const advanceTour = () => {
       setActiveIndex((previous) => {
-        if (previous === defaultIndex) {
-          return tourIndices[0] ?? previous;
-        }
-
         const currentPosition = tourIndices.indexOf(previous);
         const nextPosition =
           currentPosition === -1 ? 0 : (currentPosition + 1) % tourIndices.length;
@@ -184,7 +180,7 @@ export function AboutGlobeSection({
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [defaultIndex, isListHovered, isSectionVisible, pinnedIndex, tourIndices]);
+  }, [isListHovered, isSectionVisible, pinnedIndex, tourIndices]);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -397,7 +393,7 @@ export function AboutGlobeSection({
           />
         </div>
 
-        <blockquote className="pointer-events-none absolute bottom-0 z-20 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10">
+        <blockquote className="pointer-events-none absolute bottom-0 z-30 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10">
           <p>{displayedQuote}</p>
         </blockquote>
       </div>

@@ -115,7 +115,7 @@ export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNo
       <a className="skip-link" href="#about">Skip to content</a>
       <header className="mobile-header">
         <div className="mobile-header-top">
-          <strong className="mobile-header-name"><a href="#home" onClick={event => goToSection(event, "home")}>Jan Serra</a></strong>
+          <strong className="mobile-header-name"><a href="#home" onClick={event => goToSection(event, "home")}>Jan J. Serra</a></strong>
           <div className="mobile-header-actions">
             <ThemeToggle orientation="horizontal" />
           </div>
