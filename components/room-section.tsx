@@ -1,12 +1,22 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
 import { portfolioProjects } from "@/lib/projects";
 import type { RoomItemId } from "@/components/room/room-scene";
 
-const RoomScene = dynamic(() => import("@/components/room/room-scene").then((m) => m.RoomScene), { ssr: false });
+const RoomScene = dynamic(() => import("@/components/room/room-scene").then((m) => m.RoomScene), {
+  ssr: false,
+  loading: () => (
+    <div role="status" className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
+      <Loader2 className="size-4 animate-spin" />
+      Loading workspace…
+    </div>
+  ),
+});
 
 const projectUrl = (name: string) => portfolioProjects.find((project) => project.name === name)?.liveUrl ?? undefined;
 
@@ -33,7 +43,15 @@ export function RoomSection() {
     guitar: <>I like music, so I made <QuoteLink name="Chordwise" /> to practise guitar with backing tracks and come up with chord progressions.</>,
     vinyl: <>I like writing music as code with Strudel, so I built <QuoteLink name="Stroop" /> to generate live-coding patterns with AI.</>,
     cat: pets > 3 ? "Okay, you have a friend for life now." : "My cat lives back home in Barcelona. Keep petting, that's the good spot.",
-    poster: <>The Odyssey. I love cinema enough that I built a <QuoteLink name="3D Seat Selection" /> to preview seats from their actual viewpoint.</>,
+    poster: (
+      <>
+        <p>Latest movie I recommend.</p>
+        <Image src="/workspace/la-bola-negra.jpg" alt="La Bola Negra poster" width={399} height={501} className="mt-2 h-auto w-full rounded-md" />
+        <p className="mt-3">
+          I love cinema enough that I built <QuoteLink name="3D Seat Selection" /> to preview seats from their actual viewpoint.
+        </p>
+      </>
+    ),
     basketball: <>I play basketball, so I built <QuoteLink name="Highlights AI" /> to cut highlight reels from game footage with computer vision.</>,
     window: "Outside is Utrecht, my adoptive city. I moved to the Netherlands in 2021 and have been building software here since.",
     barcelona: "From Barcelona, where I grew up and studied Computer Engineering at UPF.",

@@ -2,9 +2,9 @@
 
 import { OrbitControls } from "@react-three/drei";
 import { EffectComposer, Outline, Selection } from "@react-three/postprocessing";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { Basketball } from "@/components/room/basketball";
 import { Cat } from "@/components/room/cat";
@@ -16,14 +16,38 @@ import { Poster, Window } from "@/components/room/wall-art";
 
 export type RoomItemId = "guitar" | "vinyl" | "cat" | "poster" | "basketball" | "window" | "barcelona" | "seoul" | "dublin";
 
-function FitZoom() {
-  useFrame(({ camera, size }) => {
-    const zoom = Math.min(size.width, size.height) / 6.1;
-    if (camera.zoom === zoom) return;
-    camera.zoom = zoom;
-    camera.updateProjectionMatrix();
+function fitZoom(size: { width: number; height: number }) {
+  return Math.min(size.width, size.height) / 6.1;
+}
+
+function RoomControls({ finePointer }: { finePointer: boolean }) {
+  const size = useThree((state) => state.size);
+  const fitRef = useRef(0);
+  const fit = fitZoom(size);
+
+  useFrame(({ camera, size: frameSize }) => {
+    const nextFit = fitZoom(frameSize);
+    if (fitRef.current !== nextFit) {
+      camera.zoom = nextFit;
+      camera.updateProjectionMatrix();
+      fitRef.current = nextFit;
+    }
   });
-  return null;
+
+  return (
+    <OrbitControls
+      enabled={finePointer}
+      enableZoom={false}
+      enablePan={false}
+      minZoom={fit}
+      maxZoom={fit}
+      minAzimuthAngle={0.2}
+      maxAzimuthAngle={Math.PI / 2 - 0.2}
+      minPolarAngle={0.55}
+      maxPolarAngle={1.35}
+      rotateSpeed={0.6}
+    />
+  );
 }
 
 export function RoomScene({ selected, playing, pets, quotes, onSelect }: {
@@ -49,17 +73,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect }: {
       role="img"
       aria-label="Isometric 3D workspace with a desk setup, guitar, cat, record player, poster, basketball, and souvenirs"
     >
-      <FitZoom />
-      <OrbitControls
-        enabled={finePointer}
-        enableZoom={false}
-        enablePan={false}
-        minAzimuthAngle={0.2}
-        maxAzimuthAngle={Math.PI / 2 - 0.2}
-        minPolarAngle={0.55}
-        maxPolarAngle={1.35}
-        rotateSpeed={0.6}
-      />
+      <RoomControls finePointer={finePointer} />
       <hemisphereLight args={[dark ? "#8f9bd6" : "#fff4e0", dark ? "#3a2f28" : "#c9a77c", dark ? 0.7 : 1.1]} />
       <ambientLight intensity={dark ? 0.35 : 0.5} color="#fff1dc" />
       <directionalLight

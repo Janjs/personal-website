@@ -42,9 +42,11 @@ const linkButtonClass =
 export function AboutGlobeSection({
   items,
   entries,
+  idPrefix = "about",
 }: {
   items: AboutGlobeItem[];
   entries: AboutGlobeEntry[];
+  idPrefix?: string;
 }) {
   const defaultItem = items.find((item) => item.id === "current-location") ?? items[0];
   const defaultIndex = Math.max(
@@ -56,14 +58,16 @@ export function AboutGlobeSection({
   const [pinnedIndex, setPinnedIndex] = useState<number | null>(null);
   const [hasSpotlight, setHasSpotlight] = useState(false);
   const [isListHovered, setIsListHovered] = useState(false);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const highlightRef = useRef<HTMLSpanElement | null>(null);
+  const wasSectionVisibleRef = useRef(false);
 
   const activeItem = items[activeIndex] ?? defaultItem;
   const isDefaultView =
     pinnedIndex === null && !hasSpotlight && activeIndex === defaultIndex;
-  const spotlightFocusLocation = activeItem.spotlightLocation ?? overviewLocation;
+  const spotlightFocusLocation = activeItem.spotlightLocation ?? activeItem.location;
   const globeFocusLocation = hasSpotlight ? spotlightFocusLocation : overviewLocation;
   const activeItemId =
     hasSpotlight || isDefaultView ? activeItem.id : undefined;
@@ -127,7 +131,32 @@ export function AboutGlobeSection({
   };
 
   useEffect(() => {
-    if (pinnedIndex !== null || isListHovered || tourIndices.length === 0) {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const column = section.closest("#about");
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting && entry.intersectionRatio > 0.35);
+      },
+      { root: column?.closest(".portfolio-stream") ?? null, threshold: [0, 0.35, 0.6, 1] }
+    );
+
+    observer.observe(column ?? section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (isSectionVisible) {
+      wasSectionVisibleRef.current = true;
+      return;
+    }
+    if (!wasSectionVisibleRef.current || pinnedIndex !== null) return;
+    resetToDefault();
+  }, [isSectionVisible, pinnedIndex, resetToDefault]);
+
+  useEffect(() => {
+    if (pinnedIndex !== null || isListHovered || tourIndices.length === 0 || !isSectionVisible) {
       return;
     }
 
@@ -155,7 +184,7 @@ export function AboutGlobeSection({
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [defaultIndex, isListHovered, pinnedIndex, tourIndices]);
+  }, [defaultIndex, isListHovered, isSectionVisible, pinnedIndex, tourIndices]);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -237,9 +266,9 @@ export function AboutGlobeSection({
           if (sectionEntries.length === 0) return null;
 
           return (
-            <section key={section.id} aria-labelledby={`about-${section.id}-heading`}>
+            <section key={section.id} aria-labelledby={`${idPrefix}-${section.id}-heading`}>
               <h3
-                id={`about-${section.id}-heading`}
+                id={`${idPrefix}-${section.id}-heading`}
                 className="mb-1 text-sm font-normal text-muted-foreground"
               >
                 {section.title}
@@ -357,7 +386,7 @@ export function AboutGlobeSection({
             selectedLocationId={
               hasSpotlight || isDefaultView ? selectedLocationId : undefined
             }
-            idleRotate
+            idleRotate={!hasSpotlight}
             onLocationSelect={(itemId) => {
               const itemIndex = itemIndexById.get(itemId);
 

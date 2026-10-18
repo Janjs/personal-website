@@ -51,10 +51,10 @@ const THEME_CONFIG = {
   },
   dark: {
     dark: 1,
-    mapBrightness: 0.65,
-    mapBaseBrightness: 0.01,
-    baseColor: [0.16, 0.42, 0.82],
-    glowColor: [0.04, 0.06, 0.09],
+    mapBrightness: 4,
+    mapBaseBrightness: 0.04,
+    baseColor: [0.32, 0.56, 0.92],
+    glowColor: [0.14, 0.18, 0.26],
   },
 } satisfies Record<
   "light" | "dark",
@@ -294,6 +294,19 @@ export function Globe({
         markerElement.style.top = `${projected.y * 100}%`;
         markerElement.style.opacity = projected.isVisible ? "1" : "0";
         markerElement.style.pointerEvents = projected.isVisible ? "auto" : "none";
+
+        const isSelectedMarker =
+          currentSelectedMarkerKey !== undefined &&
+          getMarkerKey(item) === currentSelectedMarkerKey;
+        const label = markerElement.querySelector<HTMLElement>("[data-globe-label]");
+
+        if (label) {
+          if (isSelectedMarker) {
+            label.style.opacity = projected.isVisible ? "1" : "0";
+          } else {
+            label.style.opacity = "";
+          }
+        }
       }
 
       frameId = window.requestAnimationFrame(render);
@@ -432,9 +445,10 @@ export function Globe({
             >
               <span className="absolute inset-1 rounded-full" />
               {isSelected && (
-                <span className="pointer-events-none absolute left-1/2 top-1/2 z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-sm" />
+                <span className="pointer-events-none absolute left-1/2 top-1/2 z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-sm dark:bg-emerald-400" />
               )}
               <span
+                data-globe-label=""
                 className={cn(
                   "pointer-events-none absolute left-1/2 bottom-1/2 flex -translate-x-1/2 flex-col-reverse items-center transition-opacity duration-500 ease-out motion-reduce:transition-none",
                   isSelected ? "opacity-100" : "opacity-0"

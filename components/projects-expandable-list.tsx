@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 
 type ProjectsExpandableListProps = {
   projects: Project[];
+  idPrefix?: string;
 };
 
 function GithubMark({ className }: { className: string }) {
@@ -47,7 +48,7 @@ function McpLogoMark({ className }: { className: string }) {
   );
 }
 
-export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps) {
+export function ProjectsExpandableList({ projects, idPrefix = "project" }: ProjectsExpandableListProps) {
   const [active, setActive] = useState<Project | null>(null);
   const [showMore, setShowMore] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -215,12 +216,12 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
   return (
     <>
       <div className="relative w-full">
-        <div id="project-list" className="space-y-6">
+        <div id={`${idPrefix}-list`} className="space-y-6">
           {projects.map((project, index) => (
                   <motion.div
                     key={project.github}
                     initial={false}
-                    layoutId={`project-card-${project.github}`}
+                    layoutId={`${idPrefix}-card-${project.github}`}
                     transition={{ layout: modalTransition }}
                     className={`project-card ${!showMore && index >= Math.max(0, projects.length - 4) ? "max-[700px]:hidden" : ""}`}
                     onClick={() => {
@@ -308,7 +309,7 @@ export function ProjectsExpandableList({ projects }: ProjectsExpandableListProps
             variant="ghost"
             className="mx-auto mt-4 flex min-[701px]:hidden"
             onClick={() => setShowMore(true)}
-            aria-controls="project-list"
+            aria-controls={`${idPrefix}-list`}
             aria-expanded={false}
           >
             More

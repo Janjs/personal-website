@@ -7,7 +7,7 @@ import { SRGBColorSpace } from "three";
 import { Pickable, RBox, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
 function PosterImage() {
-  const texture = useTexture("/workspace/odyssey-poster.jpg", (loaded) => {
+  const texture = useTexture("/workspace/la-bola-negra.jpg", (loaded) => {
     loaded.colorSpace = SRGBColorSpace;
   });
 
@@ -21,7 +21,7 @@ function PosterImage() {
 
 export function Poster(props: ItemProps) {
   return (
-    <Pickable {...props} tipY={0.8} position={[1.4, 2.2, -1.97]}>
+    <Pickable {...props} tipY={0.8} tipMinBottom={500} position={[1.4, 2.2, -1.97]}>
       <RBox color="#2a211b" size={[1.03, 1.48, 0.04]} radius={0.015} />
       <Suspense fallback={null}>
         <PosterImage />

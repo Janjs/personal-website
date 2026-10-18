@@ -4,6 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { JanPronunciation } from "@/components/jan-pronunciation";
 import { ProjectsExpandableList } from "@/components/projects-expandable-list";
 import { RoomSection } from "@/components/room-section";
+import { AboutPreview, ProjectsPreview, SkillsPreview, WorkspacePreview } from "@/components/mobile-home-previews";
 import {
   AboutGlobeSection,
   type AboutGlobeEntry,
@@ -42,6 +43,7 @@ import {
 
 import { PortfolioShell } from "@/components/portfolio-shell";
 import { ColumnHeading } from "@/components/column-heading";
+import { ContactPhrase } from "@/components/contact-phrase";
 import type { ReactNode } from "react";
 
 const elsewhereLinks = [
@@ -250,6 +252,26 @@ function Column({ id, title, children }: { id: string; title: string; children: 
   );
 }
 
+function HomeTile({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <div className={`home-tile home-tile-${id}`}>
+      <a className="home-tile-link" href={`#${id}`} aria-label={`Open ${title}`}><span className="home-tile-title">{title}</span></a>
+      {children}
+    </div>
+  );
+}
+
+function SkillsContent() {
+  return <div className="space-y-4">{skills.map(({ category, items, color }) => (
+    <div key={category} className="space-y-2">
+      <h3 className="text-sm font-medium">{category}</h3>
+      <div className="flex flex-wrap gap-1.5">{items.map(({ name, icon }) => (
+        <Badge key={name} className={color}><HugeiconsIcon icon={icon} size={12} strokeWidth={2} aria-hidden="true" />{name}</Badge>
+      ))}</div>
+    </div>
+  ))}</div>;
+}
+
 export default function Home() {
   return (
     <PortfolioShell sidebar={
@@ -259,6 +281,20 @@ export default function Home() {
         <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
       </div>
     } footer={<ThemeToggle />}>
+      <section id="home" className="mobile-home" aria-labelledby="home-title">
+        <div className="mobile-home-intro">
+          <h1 id="home-title" className="sr-only">Home</h1>
+          <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, and 3D.</p>
+          <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
+        </div>
+        <nav className="mobile-home-grid" aria-label="Explore the portfolio">
+          <HomeTile id="about" title="About me"><AboutPreview items={aboutItems} /></HomeTile>
+          <HomeTile id="projects" title="Selected projects"><ProjectsPreview projects={portfolioProjects} /></HomeTile>
+          <HomeTile id="workspace" title="Workspace"><WorkspacePreview /></HomeTile>
+          <HomeTile id="skills" title="Skills"><SkillsPreview /></HomeTile>
+        </nav>
+        <ContactPhrase className="home-contact-phrase" />
+      </section>
       <Column id="about" title="About me">
         <AboutGlobeSection items={aboutItems} entries={aboutEntries} />
       </Column>
@@ -269,21 +305,7 @@ export default function Home() {
         <RoomSection />
       </Column>
       <Column id="skills" title="Skills">
-        <div className="space-y-4">
-          {skills.map(({ category, items, color }) => (
-            <div key={category} className="space-y-2">
-              <h3 className="text-sm font-medium">{category}</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {items.map(({ name, icon }) => (
-                  <Badge key={name} className={color}>
-                    <HugeiconsIcon icon={icon} size={12} strokeWidth={2} aria-hidden="true" />
-                    {name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <SkillsContent />
       </Column>
       <Column id="elsewhere" title="Elsewhere">
         <ul className="divide-y divide-border">
