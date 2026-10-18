@@ -32,7 +32,7 @@ function PosterPictureLight({ dark }: { dark: boolean }) {
         <meshStandardMaterial color={dark ? "#5c4a32" : "#cfc6b8"} emissive={dark ? "#e8b56a" : "#000000"} emissiveIntensity={dark ? 0.35 : 0} roughness={0.7} />
       </mesh>
       {dark ? (
-        <rectAreaLight position={[0, 0.01, 0.04]} rotation={[-0.45, 0, 0]} width={0.58} height={0.06} intensity={6} color="#ffd7a1" />
+        <rectAreaLight position={[0, -0.02, 0.06]} rotation={[-0.9, 0, 0]} width={0.62} height={0.045} intensity={9} color="#ffd7a1" />
       ) : null}
     </group>
   );

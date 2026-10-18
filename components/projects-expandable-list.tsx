@@ -295,7 +295,10 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                     <button type="button" className="cursor-pointer text-left hover:underline underline-offset-4">{project.name}</button>
                   </motion.div>
 
-                  <div className="flex shrink-0 items-center gap-1.5" onClick={event => event.stopPropagation()}>
+                  <div className="relative z-30 hidden shrink-0 items-center gap-1.5 sm:flex" onClick={event => event.stopPropagation()}>
+                    {actionChips(project, false, false)}
+                  </div>
+                  <div className="relative z-30 flex shrink-0 items-center gap-1.5 sm:hidden" onClick={event => event.stopPropagation()}>
                     {actionChips(project, true, false)}
                   </div>
                   </div>

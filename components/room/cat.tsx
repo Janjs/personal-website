@@ -9,6 +9,7 @@ import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room
 const fur = "#e8964a";
 const darkFur = "#cf7634";
 const paw = "#f6d2a8";
+const footScale = [1.12, 1.05, 1.22] as const;
 
 const spots = [[0.4, 0.4], [1.3, 1.1], [-0.6, 1.3], [1, -0.4], [-0.9, 0.3]] as const;
 const legs = [[-0.09, 0.14, 0], [0.09, 0.14, Math.PI], [-0.09, -0.2, Math.PI], [0.09, -0.2, 0]] as const;
@@ -102,7 +103,7 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
       const swing = walking ? Math.sin(t * 10 + legs[index][2]) * 0.5 : 0;
       leg.rotation.x += (swing - leg.rotation.x) * (1 - Math.exp(-delta * 14));
       const shown = Math.max(0.001, feet);
-      footRefs.current[index]?.scale.set(1.25 * shown, (0.82 * shown) / stand, 1.45 * shown);
+      footRefs.current[index]?.scale.set(footScale[0] * shown, (footScale[1] * shown) / stand, footScale[2] * shown);
     });
 
     head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease);
@@ -122,9 +123,9 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
       <Pickable active={active} {...props} tipY={0.85}>
         {legs.map(([x, z], index) => (
           <group key={index} ref={(leg) => { legRefs.current[index] = leg; }} position={[x, 0.24, z]}>
-            <Part color={fur} roughness={0.9} position={[0, -0.084, 0]}><capsuleGeometry args={[0.032, 0.1, 8, 16]} /></Part>
-            <group ref={(foot) => { footRefs.current[index] = foot; }} position={[Math.sign(x) * 0.01, -0.198, 0.018]} scale={[0.001, 0.82, 0.001]}>
-              <Part color={paw}><sphereGeometry args={[0.05, 16, 12]} /></Part>
+            <Part color={fur} roughness={0.9} position={[0, -0.102, 0]}><capsuleGeometry args={[0.032, 0.14, 8, 16]} /></Part>
+            <group ref={(foot) => { footRefs.current[index] = foot; }} position={[Math.sign(x) * 0.006, -0.187, 0.012]} scale={[0.001, footScale[1], 0.001]}>
+              <Part color={paw}><sphereGeometry args={[0.04, 16, 12]} /></Part>
             </group>
           </group>
         ))}
@@ -135,7 +136,7 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
           </mesh>
           <group ref={paws}>
             {[-0.08, 0.08].map((x) => (
-              <Part key={x} color={paw} position={[x, 0.04, 0.2]} scale={[1, 0.7, 1.4]}><sphereGeometry args={[0.05, 24, 16]} /></Part>
+              <Part key={x} color={paw} position={[x, 0.034, 0.2]} scale={[1, 0.7, 1.4]}><sphereGeometry args={[0.042, 24, 16]} /></Part>
             ))}
           </group>
           <group ref={head} position={[0, 0.3, 0.18]}>

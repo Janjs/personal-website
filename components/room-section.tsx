@@ -70,7 +70,7 @@ export function RoomSection() {
 
   return (
     <div className="flex min-h-[30rem] w-full flex-1 flex-col gap-3">
-      <div className="relative min-h-0 flex-1">
+      <div className="relative z-10 min-h-0 flex-1">
         <div
           role="status"
           aria-hidden={sceneReady}

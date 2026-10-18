@@ -113,13 +113,13 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
       >
         <SceneReady onReady={onReady} />
         <RoomControls finePointer={finePointer} />
-      <hemisphereLight args={[dark ? "#6372b0" : "#fff6e5", dark ? "#332319" : "#d9be98", dark ? 0.52 : 1.35]} />
+      <hemisphereLight args={[dark ? "#ffe1a8" : "#ffe0b2", dark ? "#332319" : "#d9be98", dark ? 0.4 : 1.1]} />
       <ambientLight intensity={dark ? 0.22 : 0.65} color={dark ? "#ffcf96" : "#fff4e2"} />
       <directionalLight
         castShadow
         position={dark ? [5.5, 9, 4] : [1.4, 4.2, -5.2]}
-        intensity={dark ? 0.35 : 1.5}
-        color={dark ? "#8da2e8" : "#ffe0b2"}
+        intensity={dark ? 0.26 : 1.2}
+        color={dark ? "#ffe1a8" : "#ffe0b2"}
         shadow-mapSize={[2048, 2048]}
         shadow-camera-near={1}
         shadow-camera-far={16}
@@ -151,7 +151,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
             intensity={dark ? 22 : 8}
             distance={7}
             decay={2}
-            color={dark ? "#ffe1a8" : "#fff6e5"}
+            color={dark ? "#ffe1a8" : "#ffe0b2"}
           >
             <object3D attach="target" position={[0.35, 0.03, 0.35]} />
           </spotLight>

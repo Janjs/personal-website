@@ -260,11 +260,12 @@ html {
 .workspace-preview { position: absolute; inset: 32px -16px -12px; pointer-events: none; }
 .workspace-preview img { object-fit: contain; }
 .portfolio-column { flex: 0 0 480px; width: 480px; overflow-y: auto; border-right: 0.75px solid var(--portfolio-divider); background: var(--background); scroll-snap-align: start; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.portfolio-column#projects { position: relative; z-index: 2; }
 @media (min-width: 701px) {
   .portfolio-column#projects { flex-basis: 540px; width: 540px; }
   .portfolio-column#workspace { flex-basis: clamp(560px, calc(100dvh - 60px), 980px); width: clamp(560px, calc(100dvh - 60px), 980px); }
 }
-.portfolio-column#workspace { position: relative; z-index: 1; display: flex; flex-direction: column; overflow: visible; }
+.portfolio-column#workspace { position: relative; z-index: 5; display: flex; flex-direction: column; overflow: visible; }
 .portfolio-column#workspace .column-content { display: flex; flex: 1; padding-bottom: 30px; }
 .column-heading { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; font-family: var(--font-portfolio), sans-serif; padding: 28px 30px 25px; }
 .column-heading h2 { font-size: 24px; font-weight: 600; letter-spacing: -.8px; line-height: 36px; margin: 0; }

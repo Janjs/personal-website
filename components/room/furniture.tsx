@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { useMemo } from "react";
 import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3 } from "three";
 
@@ -63,20 +64,18 @@ function StringLights({ dark }: { dark: boolean }) {
       <mesh geometry={wire} castShadow>
         <meshStandardMaterial color="#3d352e" roughness={0.8} />
       </mesh>
-      {stringBulbs.map(([x, y, z], index) => (
+      {stringBulbs.map(([x, y, z]) => (
         <group key={z} position={[x, y, z]}>
           <Part color="#3d352e" position={[0, 0.022, 0]}><cylinderGeometry args={[0.008, 0.01, 0.018, 12]} /></Part>
           <mesh>
             <sphereGeometry args={[0.022, 16, 12]} />
             {dark ? (
-              <meshBasicMaterial color="#ffe094" toneMapped={false} />
+              <meshBasicMaterial color="#c48a38" toneMapped={false} />
             ) : (
               <meshStandardMaterial color="#f6efe2" roughness={0.35} />
             )}
           </mesh>
-          {dark && index % 4 === 1 && (
-            <pointLight position={[0.14, -0.05, 0]} intensity={0.95} distance={2.8} decay={1.5} color="#ffad47" />
-          )}
+          {dark && <pointLight intensity={0.1} distance={1.05} decay={2} color="#e8a050" />}
         </group>
       ))}
     </group>
@@ -84,8 +83,24 @@ function StringLights({ dark }: { dark: boolean }) {
 }
 
 function DeskLamp({ dark }: { dark: boolean }) {
+  const { setTheme } = useTheme();
+
   return (
-    <group position={[0.38, 1.15, -1.68]}>
+    <group
+      position={[0.38, 1.15, -1.68]}
+      onClick={(event) => {
+        event.stopPropagation();
+        if (event.delta > 4) return;
+        setTheme(dark ? "light" : "dark");
+      }}
+      onPointerOver={(event) => {
+        event.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = "";
+      }}
+    >
       <Part color="#e3ded3" roughness={0.85} position={[0, 0.125, 0]}><cylinderGeometry args={[0.025, 0.098, 0.25, 36]} /></Part>
       <Part color="#dbd5c9" roughness={0.7} position={[0, 0.285, 0]}><cylinderGeometry args={[0.007, 0.007, 0.08, 16]} /></Part>
       <Part color="#e3ded3" roughness={0.65} position={[0, 0.34, 0]}><cylinderGeometry args={[0.018, 0.018, 0.04, 24]} /></Part>
@@ -98,20 +113,19 @@ function DeskLamp({ dark }: { dark: boolean }) {
           <meshStandardMaterial color="#f5efe2" roughness={0.4} />
         )}
       </mesh>
-      <group position={[0, 0.34, 0]} rotation={[0.2, 0.25, -0.12]}>
-        <Part color="#2b2f2d" roughness={0.55}>
-          <sphereGeometry args={[0.165, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
-        </Part>
-        <mesh>
-          <sphereGeometry args={[0.161, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
-          {dark ? (
-            <meshBasicMaterial color="#ffd466" side={BackSide} toneMapped={false} />
-          ) : (
-            <meshStandardMaterial color="#f0e7d5" side={BackSide} roughness={0.6} />
-          )}
-        </mesh>
-      </group>
-      {dark && <pointLight position={[0.06, 0.22, 0.12]} intensity={0.95} distance={2.2} decay={2} color="#ffad47" />}
+      <mesh castShadow receiveShadow position={[0, 0.34, 0]}>
+        <sphereGeometry args={[0.165, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
+        <meshStandardMaterial color="#e3ded3" emissive={dark ? "#e8d7b0" : "#000000"} emissiveIntensity={dark ? 0.55 : 0} roughness={0.85} />
+      </mesh>
+      <mesh position={[0, 0.34, 0]}>
+        <sphereGeometry args={[0.161, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
+        {dark ? (
+          <meshBasicMaterial color="#ffd466" side={BackSide} toneMapped={false} />
+        ) : (
+          <meshStandardMaterial color="#f0e7d5" side={BackSide} roughness={0.6} />
+        )}
+      </mesh>
+      {dark && <pointLight position={[0.06, 0.22, 0.12]} intensity={0.4} distance={2.2} decay={2} color="#ffad47" />}
     </group>
   );
 }
