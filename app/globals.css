@@ -327,8 +327,8 @@ html {
   .portfolio-column [data-slot="badge"] { height: auto; min-height: 1.25rem; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
   .project-card .truncate { overflow: visible; text-overflow: clip; white-space: normal; }
   .portfolio-column#about .column-content { flex: none; min-height: 0; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
-  .portfolio-column#about .column-content > * { flex: none; min-height: 0; }
-  .about-globe-stage { position: relative; display: flex; flex-direction: column; flex: none; height: auto; min-height: 0; margin: 0; pointer-events: none; }
+  .portfolio-column#about .column-content > * { flex: none; min-height: 0; gap: 8px; }
+  .about-globe-stage { position: relative; display: flex; flex-direction: column; flex: none; height: auto; min-height: 0; margin: -16px 0 0; pointer-events: none; }
   .about-globe-planet { position: relative; inset: auto; width: min(70vw, 21rem); max-width: none; height: min(70vw, 21rem); margin-bottom: max(-35vw, -10.5rem); flex-shrink: 0; pointer-events: auto; transform: none; }
   #about [data-globe-label] > span:first-child { height: 1.25rem; }
   .about-globe-stage blockquote { position: relative; bottom: auto; margin-top: 24px; flex-shrink: 0; font-size: 12px; }
