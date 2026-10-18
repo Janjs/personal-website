@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AiBrain01Icon,
@@ -15,6 +14,7 @@ import {
   Typescript01Icon,
 } from "@hugeicons/core-free-icons";
 
+import { ProjectScreenshot } from "@/components/project-screenshot";
 import { Globe } from "@/components/ui/globe";
 import { Badge } from "@/components/ui/badge";
 import type { AboutGlobeItem } from "@/components/about-globe-section";
@@ -145,7 +145,7 @@ export function ProjectsPreview({ projects }: { projects: Project[] }) {
           <div className="projects-preview-set" key={set}>
             {featured.map((project) => (
               <div className="projects-preview-card" key={project.github}>
-                <Image src={project.screenshotSrc!} alt="" fill sizes="280px" />
+                <ProjectScreenshot src={project.screenshotSrc!} alt="" fill sizes="280px" wrapperClassName="absolute inset-0" />
               </div>
             ))}
           </div>
@@ -158,8 +158,8 @@ export function ProjectsPreview({ projects }: { projects: Project[] }) {
 export function WorkspacePreview() {
   return (
     <div className="workspace-preview" aria-hidden="true">
-      <Image src="/workspace/preview-light.png" alt="" fill sizes="280px" className="dark:hidden" />
-      <Image src="/workspace/preview-dark.png" alt="" fill sizes="280px" className="hidden dark:block" />
+      <ProjectScreenshot src="/workspace/preview-light.png" alt="" fill sizes="280px" wrapperClassName="absolute inset-0 dark:hidden" className="object-contain" />
+      <ProjectScreenshot src="/workspace/preview-dark.png" alt="" fill sizes="280px" wrapperClassName="absolute inset-0 hidden dark:block" className="object-contain" />
     </div>
   );
 }

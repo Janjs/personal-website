@@ -1,6 +1,7 @@
 "use client";
 
 import { LiveProjectButton } from "@/components/live-project-button";
+import { ProjectScreenshot } from "@/components/project-screenshot";
 import { Button } from "@/components/ui/button";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import type { Project, ProjectKind } from "@/lib/projects";
@@ -241,7 +242,7 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                       aria-label={`Open ${project.name}`}
                       className="mx-3 mt-3 block overflow-hidden rounded-xl bg-muted"
                     >
-                      <Image src={project.screenshotSrc} alt={`${project.name} preview`} sizes="(max-width: 700px) 100vw, 480px" className="h-auto w-full" />
+                      <ProjectScreenshot src={project.screenshotSrc} alt={`${project.name} preview`} sizes="(max-width: 700px) 100vw, 480px" />
                     </a>
                   )}
                   <div className="space-y-4 p-5">
@@ -361,7 +362,7 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                           >
                             {active.screenshotSrc ? (
                               <motion.div layoutId={`project-image-${active.github}`} transition={{ layout: modalTransition }}>
-                                <Image
+                                <ProjectScreenshot
                                   src={active.screenshotSrc}
                                   alt={`${active.name} screenshot`}
                                   width={typeof active.screenshotSrc === "string" ? 1200 : active.screenshotSrc.width}
@@ -369,7 +370,6 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                                   quality={60}
                                   sizes="(max-width: 768px) 100vw, 768px"
                                   loading="eager"
-                                  className="h-auto w-full"
                                 />
                               </motion.div>
                             ) : (

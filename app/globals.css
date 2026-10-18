@@ -360,6 +360,32 @@ html {
   box-shadow: inset 0 1px 2px #ffffff14, inset 0 0 18px #ffffff0c, inset 0 -1px 3px #ffffff08;
 }
 
+.project-screenshot-skeleton {
+  z-index: 0;
+  background: var(--muted);
+  animation: project-screenshot-skeleton 1.35s ease-in-out infinite;
+  transition: opacity 380ms cubic-bezier(.22, 1, .36, 1);
+}
+.project-screenshot-skeleton.is-hidden {
+  opacity: 0;
+}
+.project-screenshot-image {
+  opacity: 0;
+  transition: opacity 480ms cubic-bezier(.22, 1, .36, 1);
+}
+.project-screenshot-image.is-loaded {
+  opacity: 1;
+}
+@keyframes project-screenshot-skeleton {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-screenshot-skeleton { animation: none; opacity: 0.65; }
+  .project-screenshot-image { transition: none; }
+  .project-screenshot-skeleton.is-hidden { transition: none; }
+}
+
 .project-card:hover {
   background: color-mix(in srgb, var(--project-card-bg) 96%, black);
 }

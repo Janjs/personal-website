@@ -285,7 +285,6 @@ export default function Home() {
         <div className="mobile-home-intro">
           <h1 id="home-title" className="sr-only">Home</h1>
           <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, and 3D.</p>
-          <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
         </div>
         <nav className="mobile-home-grid" aria-label="Explore the portfolio">
           <HomeTile id="about" title="About me"><AboutPreview items={aboutItems} /></HomeTile>

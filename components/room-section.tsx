@@ -64,7 +64,10 @@ export function RoomSection() {
       <div className="relative min-h-0 flex-1">
         <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} />
       </div>
-      <p className="text-sm text-muted-foreground">*Tip: click around</p>
+      <p className="text-sm text-muted-foreground">
+        <span className="min-[701px]:hidden">*Tip: tap around</span>
+        <span className="hidden min-[701px]:inline">*Tip: click around</span>
+      </p>
     </div>
   );
 }
