@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { Globe, type GlobeLocation } from "@/components/ui/globe";
-import { cn } from "@/lib/utils";
 
 export type AboutGlobeItem = GlobeLocation & {
   quote: string;
@@ -36,8 +35,8 @@ const aboutSections = [
 
 const TOUR_INTERVAL_MS = 5200;
 
-const linkButtonClass =
-  "about-globe-link inline cursor-pointer text-left text-foreground focus-visible:rounded-[0.2rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const rowButtonClass =
+  "cursor-pointer border-0 bg-transparent text-left font-inherit text-inherit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export function AboutGlobeSection({
   items,
@@ -233,6 +232,7 @@ export function AboutGlobeSection({
     <div
       ref={sectionRef}
       className="relative isolate flex min-h-0 w-full min-w-0 flex-1 flex-col gap-6"
+      data-direct={isListHovered ? "" : undefined}
     >
       <div
         ref={listRef}
@@ -254,7 +254,7 @@ export function AboutGlobeSection({
           }
         }}
       >
-        <span ref={highlightRef} className="about-globe-highlight backdrop-blur-xl" aria-hidden="true" />
+        <span ref={highlightRef} className="about-globe-highlight" aria-hidden="true" />
         {aboutSections.map((section) => {
           const sectionEntries = entries.filter(
             (entry) => (entry.section ?? "experience") === section.id
@@ -271,50 +271,51 @@ export function AboutGlobeSection({
               </h3>
               <ul className="space-y-1">
                 {sectionEntries.map((entry) => {
-                  const entryIsHighlighted =
-                    entry.parts.some(
-                      (part) => part.itemId !== undefined && part.itemId === activeItemId
-                    ) ||
-                    entry.details?.some((detail) => detail.itemId === activeItemId);
+                  const entryItemId = entry.parts.find((part) => part.itemId)?.itemId;
+                  const entryItemIndex = entryItemId ? itemIndexById.get(entryItemId) : undefined;
+                  const entryIsActive =
+                    entryItemIndex !== undefined && items[entryItemIndex]?.id === activeItemId;
+
                   return (
                     <li
                       key={entry.id}
-                      data-active-highlight={entryIsHighlighted ? "true" : undefined}
-                      className="about-globe-entry relative z-[1] grid w-full max-w-[38rem] grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 whitespace-pre-wrap rounded-lg px-3 py-2.5 -mx-3 text-sm leading-[1.45] tracking-[-0.015em] text-foreground/92"
+                      data-active-highlight={entryIsActive ? "true" : undefined}
+                      className="about-globe-entry relative z-[1] grid w-full max-w-[38rem] grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 whitespace-pre-wrap rounded-lg px-3 py-2.5 text-sm leading-[1.45] tracking-[-0.015em] text-foreground/92"
+                      onMouseEnter={() => {
+                        if (entryItemIndex !== undefined) activate(entryItemIndex);
+                      }}
                     >
-                      <p className="col-start-1 row-start-1 min-w-0">
-                        {entry.parts.map((part, partIndex) => {
-                          const itemIndex = part.itemId ? itemIndexById.get(part.itemId) : undefined;
-
-                          if (itemIndex === undefined) {
-                            return <span key={`${entry.id}-${partIndex}`}>{part.text}</span>;
-                          }
-
-                          const isActive = items[itemIndex]?.id === activeItemId;
-
-                          return (
-                            <button
-                              key={`${entry.id}-${part.itemId}-${partIndex}`}
-                              type="button"
-                              className={cn(linkButtonClass, part.className)}
-                              onMouseEnter={() => activate(itemIndex)}
-                              onFocus={() => activate(itemIndex)}
-                              onClick={() => togglePinned(itemIndex)}
-                              aria-pressed={isActive}
-                            >
+                      <button
+                        type="button"
+                        className={`${rowButtonClass} col-span-2 grid grid-cols-subgrid items-start focus-visible:rounded-lg`}
+                        onMouseEnter={() => {
+                          if (entryItemIndex !== undefined) activate(entryItemIndex);
+                        }}
+                        onFocus={() => {
+                          if (entryItemIndex !== undefined) activate(entryItemIndex);
+                        }}
+                        onClick={() => {
+                          if (entryItemIndex !== undefined) togglePinned(entryItemIndex);
+                        }}
+                        aria-pressed={entryIsActive}
+                        disabled={entryItemIndex === undefined}
+                      >
+                        <p className="col-start-1 row-start-1 min-w-0">
+                          {entry.parts.map((part, partIndex) => (
+                            <span key={`${entry.id}-${partIndex}`} className={part.className}>
                               {part.text}
-                            </button>
-                          );
-                        })}
-                      </p>
-                      {entry.date && (
-                        <span className="col-start-2 row-start-1 shrink-0 self-start pl-2 text-xs font-normal tracking-tight tabular-nums text-muted-foreground">
-                          {entry.date.replace("Present", "")}
-                          {entry.date.includes("Present") && (
-                            <span className="font-semibold">Present</span>
-                          )}
-                        </span>
-                      )}
+                            </span>
+                          ))}
+                        </p>
+                        {entry.date && (
+                          <span className="col-start-2 row-start-1 shrink-0 self-start pl-2 text-xs font-normal tracking-tight tabular-nums text-muted-foreground">
+                            {entry.date.replace("Present", "")}
+                            {entry.date.includes("Present") && (
+                              <span className="font-semibold">Present</span>
+                            )}
+                          </span>
+                        )}
+                      </button>
                       {entry.details && (
                         <div className="col-span-2 col-start-1 row-start-2 mt-1.5 space-y-1 pl-3">
                           {entry.details.map((detail) => {
@@ -324,30 +325,35 @@ export function AboutGlobeSection({
                             const isActive = items[itemIndex]?.id === activeItemId;
 
                             return (
-                              <div
+                              <button
                                 key={detail.itemId}
-                                className="about-globe-detail relative z-[1] -mx-2 grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2 rounded-md px-2 py-0.5"
+                                type="button"
+                                data-active-highlight={isActive ? "true" : undefined}
+                                className={`${rowButtonClass} about-globe-detail relative z-[1] grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2 rounded-md px-2 py-0.5 focus-visible:rounded-md`}
+                                onMouseEnter={(event) => {
+                                  event.stopPropagation();
+                                  activate(itemIndex);
+                                }}
+                                onFocus={() => activate(itemIndex)}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  togglePinned(itemIndex);
+                                }}
+                                aria-pressed={isActive}
                               >
                                 <span className="row-start-1 pt-px" aria-hidden="true">
                                   •
                                 </span>
-                                <button
-                                  type="button"
-                                  className={cn("col-start-2 row-start-1 min-w-0 text-left", linkButtonClass)}
-                                  onMouseEnter={() => activate(itemIndex)}
-                                  onFocus={() => activate(itemIndex)}
-                                  onClick={() => togglePinned(itemIndex)}
-                                  aria-pressed={isActive}
-                                >
+                                <span className="col-start-2 row-start-1 min-w-0">
                                   <span className="font-semibold">{detail.role}</span> at {detail.company}
-                                </button>
+                                </span>
                                 <span className="col-start-3 row-start-1 shrink-0 self-start pl-2 text-xs font-normal tracking-tight tabular-nums text-muted-foreground">
                                   {detail.date.replace("Present", "")}
                                   {detail.date.includes("Present") && (
                                     <span className="font-semibold">Present</span>
                                   )}
                                 </span>
-                              </div>
+                              </button>
                             );
                           })}
                         </div>
@@ -380,6 +386,7 @@ export function AboutGlobeSection({
               hasSpotlight || isDefaultView ? selectedLocationId : undefined
             }
             idleRotate={!hasSpotlight}
+            instantFocus={isListHovered}
             onLocationSelect={(itemId) => {
               const itemIndex = itemIndexById.get(itemId);
 

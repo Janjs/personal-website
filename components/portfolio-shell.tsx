@@ -10,9 +10,10 @@ const sections = [
   ["skills", "Skills"],
   ["elsewhere", "Elsewhere"],
 ];
+const trackedSections = ["home", ...sections.map(([id]) => id)];
 
 export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNode; footer: ReactNode; children: ReactNode }) {
-  const [active, setActive] = useState("about");
+  const [active, setActive] = useState("home");
   const pendingSection = useRef<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const highlightRef = useRef<HTMLSpanElement>(null);
@@ -109,14 +110,17 @@ export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNo
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stream = document.querySelector(".portfolio-stream");
     const update = () => {
       const edge = stream?.getBoundingClientRect().left ?? 0;
-      if (pendingSection.current) return;
-      const closest = sections.reduce((best, [id]) => {
-        const left = document.getElementById(id)?.getBoundingClientRect().left;
-        const distance = left === undefined ? Infinity : Math.abs(left - edge);
+      const pending = pendingSection.current ? document.getElementById(pendingSection.current) : null;
+      if (pending && pending.offsetWidth > 0) return;
+      pendingSection.current = null;
+      const closest = trackedSections.reduce((best, id) => {
+        const section = document.getElementById(id);
+        if (!section || section.offsetWidth === 0) return best;
+        const distance = Math.abs(section.getBoundingClientRect().left - edge);
         return distance < best.distance ? { id, distance } : best;
       }, { id: sections[0][0], distance: Infinity });
       setActive(closest.id);
@@ -146,7 +150,7 @@ export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNo
       <a className="skip-link" href="#about">Skip to content</a>
       <header className="mobile-header">
         <div className="mobile-header-top">
-          <strong className="mobile-header-name"><a href="#home" onClick={event => goToSection(event, "home")}>Jan J. Serra</a></strong>
+          <strong className="mobile-header-name"><a href="#home" aria-current={active === "home" ? "location" : undefined} onClick={event => goToSection(event, "home")}>Jan J. Serra</a></strong>
           <div className="mobile-header-actions">
             <ThemeToggle orientation="horizontal" />
           </div>

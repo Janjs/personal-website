@@ -19,6 +19,7 @@ type GlobeProps = {
   focusedLocation: [number, number];
   selectedLocationId?: string;
   idleRotate?: boolean;
+  instantFocus?: boolean;
   onLocationSelect?: (locationId: string) => void;
 };
 
@@ -145,6 +146,7 @@ export function Globe({
   focusedLocation,
   selectedLocationId,
   idleRotate = true,
+  instantFocus = false,
   onLocationSelect,
 }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -167,6 +169,8 @@ export function Globe({
   } | null>(null);
   const timeRef = useRef(0);
   const idleRotateRef = useRef(idleRotate);
+  const instantFocusRef = useRef(instantFocus);
+  instantFocusRef.current = instantFocus;
   const [, setHoveredMarkerKey] = useState<string | null>(null);
 
   useEffect(() => {
@@ -222,15 +226,16 @@ export function Globe({
         target.phi += IDLE_ROTATION_SPEED;
       }
 
+      const focusStep = instantFocusRef.current ? 1 : INTERPOLATION_FACTOR;
       currentRotationRef.current.phi = interpolateAngle(
         currentRotationRef.current.phi,
         target.phi,
-        INTERPOLATION_FACTOR
+        focusStep
       );
       currentRotationRef.current.theta = interpolate(
         currentRotationRef.current.theta,
         target.theta,
-        INTERPOLATION_FACTOR
+        focusStep
       );
       timeRef.current += 0.04;
 
