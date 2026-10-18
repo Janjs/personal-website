@@ -2,7 +2,7 @@
 
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group } from "three";
+import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group, type Mesh } from "three";
 
 import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
@@ -27,13 +27,17 @@ function stripes() {
   return texture;
 }
 
-const tailCurve = new CatmullRomCurve3([
-  new Vector3(0, 0.12, -0.3),
-  new Vector3(0.12, 0.05, -0.36),
-  new Vector3(0.24, 0.04, -0.22),
-  new Vector3(0.26, 0.04, 0),
-  new Vector3(0.2, 0.04, 0.16),
-]);
+const tailCurve = (points: number[][]) => new CatmullRomCurve3(points.map(([x, y, z]) => new Vector3(x, y, z)));
+const tuckedTail = tailCurve([[0, 0, 0], [0.12, -0.07, -0.06], [0.24, -0.08, 0.08], [0.26, -0.08, 0.3], [0.2, -0.08, 0.46]]);
+const raisedTail = tailCurve([[0, 0, 0], [0, 0.08, -0.12], [0, 0.24, -0.18], [0, 0.38, -0.14], [0.04, 0.44, -0.06]]);
+
+function tailShape() {
+  const geometry = new TubeGeometry(tuckedTail, 48, 0.035, 12);
+  const raised = new TubeGeometry(raisedTail, 48, 0.035, 12);
+  geometry.morphAttributes.position = [raised.attributes.position];
+  geometry.morphAttributes.normal = [raised.attributes.normal];
+  return geometry;
+}
 
 export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
   const walker = useRef<Group>(null);
@@ -48,7 +52,8 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
   const petStart = useRef(-10);
   const wander = useRef({ target: 1, sitUntil: 2, stand: 0 });
   const furTexture = useMemo(() => stripes(), []);
-  const tailGeometry = useMemo(() => new TubeGeometry(tailCurve, 48, 0.035, 12), []);
+  const tailGeometry = useMemo(() => tailShape(), []);
+  const tailMesh = useRef<Mesh>(null);
 
   useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
@@ -91,7 +96,8 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
 
     head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease);
     eyes.current?.scale.set(1, 1 - 0.85 * ease, 1);
-    tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : walking ? 4 : 1.5)) * 0.12, 0);
+    tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : walking ? 4 : 1.5)) * (0.12 + 0.2 * state.stand), 0);
+    if (tailMesh.current?.morphTargetInfluences) tailMesh.current.morphTargetInfluences[0] = state.stand;
     if (heart.current) {
       heart.current.visible = petting;
       heart.current.position.y = 0.62 + since * 0.25;
@@ -133,8 +139,8 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
             </group>
             <Part color="#d9707a" position={[0, 0.02, 0.14]} scale={[1.3, 0.8, 0.8]}><sphereGeometry args={[0.012, 16, 12]} /></Part>
           </group>
-          <group ref={tail}>
-            <mesh geometry={tailGeometry} castShadow receiveShadow>
+          <group ref={tail} position={[0, 0.12, -0.3]}>
+            <mesh ref={tailMesh} geometry={tailGeometry} morphTargetInfluences={[0]} castShadow receiveShadow>
               <meshStandardMaterial color={darkFur} roughness={0.9} />
             </mesh>
           </group>

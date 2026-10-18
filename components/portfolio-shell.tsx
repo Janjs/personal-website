@@ -79,6 +79,37 @@ export function PortfolioShell({ sidebar, footer, children }: { sidebar: ReactNo
   }, [active]);
 
   useEffect(() => {
+    const stream = document.querySelector<HTMLElement>(".portfolio-stream");
+    if (!stream) return;
+    let previousLeft = stream.scrollLeft;
+    let movingForward = false;
+    const trackDirection = () => {
+      if (stream.scrollLeft !== previousLeft) movingForward = stream.scrollLeft > previousLeft;
+      previousLeft = stream.scrollLeft;
+    };
+    const snapForward = () => {
+      if (!window.matchMedia("(min-width: 701px)").matches || !movingForward || pendingSection.current) return;
+      const edge = stream.getBoundingClientRect().left;
+      const columns = Array.from(stream.querySelectorAll<HTMLElement>(".portfolio-column"));
+      const nextIndex = columns.findIndex(column => column.getBoundingClientRect().left > edge + 1);
+      if (nextIndex < 1) return;
+      const previous = columns[nextIndex - 1].getBoundingClientRect().left;
+      const next = columns[nextIndex].getBoundingClientRect().left;
+      if (next - edge > (next - previous) * 0.2) return;
+      stream.scrollTo({
+        left: stream.scrollLeft + next - edge,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
+    };
+    stream.addEventListener("scroll", trackDirection, { passive: true });
+    stream.addEventListener("scrollend", snapForward);
+    return () => {
+      stream.removeEventListener("scroll", trackDirection);
+      stream.removeEventListener("scrollend", snapForward);
+    };
+  }, []);
+
+  useEffect(() => {
     const stream = document.querySelector(".portfolio-stream");
     const update = () => {
       const edge = stream?.getBoundingClientRect().left ?? 0;

@@ -330,7 +330,7 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                     transition={overlayTransition}
                     className="fixed inset-0 z-50 bg-black/30"
                   />
-                  <div className="fixed inset-0 z-[60] grid place-items-center p-4">
+                  <div className="fixed inset-0 z-[60] grid place-items-center p-4 max-[700px]:p-6">
                     <motion.div
                       ref={modalRef}
                       layoutId={`project-card-${active.github}`}
@@ -338,7 +338,7 @@ export function ProjectsExpandableList({ projects, idPrefix = "project" }: Proje
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.98, y: 4 }}
                       transition={modalTransition}
-                      className="w-full max-w-3xl overflow-hidden rounded-2xl border bg-background shadow-2xl"
+                      className="w-full max-w-3xl overflow-hidden rounded-2xl border bg-background shadow-2xl max-[700px]:rounded-3xl"
                     >
                       <div className="max-h-[90vh] overflow-y-auto p-3 sm:p-4">
                         <div className="mb-3 flex items-center justify-end">

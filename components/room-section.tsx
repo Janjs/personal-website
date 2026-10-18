@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
@@ -27,6 +26,7 @@ export function RoomSection() {
   const [playing, setPlaying] = useState(false);
   const [pets, setPets] = useState(0);
   const [sceneReady, setSceneReady] = useState(false);
+  const [sceneProgress, setSceneProgress] = useState(0);
 
   const select = (id: RoomItemId | null) => {
     setSelected(id);
@@ -35,15 +35,29 @@ export function RoomSection() {
   };
 
   const quotes: Record<RoomItemId, ReactNode> = {
-    guitar: <>I like music, so I made <QuoteLink name="Chordwise" /> to practise guitar with backing tracks and come up with chord progressions.</>,
-    vinyl: <>I like writing music as code with Strudel, so I built <QuoteLink name="Stroop" /> to generate live-coding patterns with AI.</>,
-    cat: pets > 3 ? "Okay, you have a friend for life now." : "My cat lives back home in Barcelona. Keep petting, that's the good spot.",
+    guitar: (
+      <>
+        I always keep a guitar nearby while my AI agents run. <QuoteLink name="Chordwise" /> helps me practice with AI-generated chord
+        progressions, for new ideas or backing tracks.
+      </>
+    ),
+    vinyl: (
+      <>
+        Strudel is a live-coding music tool I&apos;ve always tinkered with, so that&apos;s why I built <QuoteLink name="Stroop" /> to see how AI
+        writes music with it.
+      </>
+    ),
+    cat:
+      pets > 3
+        ? "Okay, you have a friend for life now."
+        : "My cat lives back home in Barcelona, otherwise working from home would be too distracting.",
     poster: (
       <>
-        <p>Latest movie I recommend.</p>
+        <p>Latest movie I recommend:</p>
         <Image src="/workspace/la-bola-negra.jpg" alt="La Bola Negra poster" width={399} height={501} className="mt-2 h-auto w-full rounded-md" />
         <p className="mt-3">
-          I love cinema enough that I built <QuoteLink name="3D Seat Selection" /> to preview seats from their actual viewpoint.
+          I love going to the movies, but I got the wrong seats by mistake too many times. That&apos;s why I built{" "}
+          <QuoteLink name="3D Seat Selection" />.
         </p>
       </>
     ),
@@ -60,12 +74,29 @@ export function RoomSection() {
         <div
           role="status"
           aria-hidden={sceneReady}
-          className={`absolute inset-0 z-10 flex items-center justify-center gap-2 bg-background text-sm text-muted-foreground transition-opacity duration-300 ${sceneReady ? "pointer-events-none opacity-0" : "opacity-100"}`}
+          className={`absolute inset-0 z-10 flex items-center justify-center bg-background transition-opacity duration-300 ${sceneReady ? "pointer-events-none opacity-0" : "opacity-100"}`}
         >
-          <Loader2 className="size-4 animate-spin" />
-          Loading workspace…
+          <div className="w-52">
+            <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+              <span>Loading workspace</span>
+              <span>{Math.round(sceneProgress)}%</span>
+            </div>
+            <div
+              role="progressbar"
+              aria-label="Loading workspace"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(sceneProgress)}
+              className="h-1 overflow-hidden rounded-full bg-muted"
+            >
+              <div
+                className="h-full rounded-full bg-foreground transition-[width] duration-300 ease-out"
+                style={{ width: `${sceneReady ? 100 : Math.max(6, sceneProgress)}%` }}
+              />
+            </div>
+          </div>
         </div>
-        <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} onReady={() => setSceneReady(true)} />
+        <RoomScene selected={selected} playing={playing} pets={pets} quotes={quotes} onSelect={select} onProgress={setSceneProgress} onReady={() => setSceneReady(true)} />
       </div>
       <p className="text-sm text-muted-foreground">
         <span className="min-[701px]:hidden">*Tip: tap around</span>

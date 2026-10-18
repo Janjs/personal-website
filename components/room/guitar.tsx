@@ -5,42 +5,45 @@ import { ExtrudeGeometry, Shape } from "three";
 
 import { Part, Pickable, RBox, type ItemProps } from "@/components/room/primitives";
 
-function bodyGeometry() {
-  const shape = new Shape();
-  shape.moveTo(0, -0.45);
-  shape.bezierCurveTo(0.34, -0.45, 0.36, -0.12, 0.2, -0.02);
-  shape.bezierCurveTo(0.28, 0.06, 0.28, 0.3, 0, 0.3);
-  shape.bezierCurveTo(-0.28, 0.3, -0.28, 0.06, -0.2, -0.02);
-  shape.bezierCurveTo(-0.36, -0.12, -0.34, -0.45, 0, -0.45);
-  return new ExtrudeGeometry(shape, { depth: 0.07, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 5, curveSegments: 64 });
-}
-
-const frets = Array.from({ length: 10 }, (_, index) => 0.33 + index * 0.055);
-const strings = [-0.021, -0.013, -0.004, 0.004, 0.013, 0.021];
+const SIDES = 20;
+const start = [0, -0.32];
+const curves = [
+  [0.15, -0.32, 0.25, -0.28, 0.25, -0.16],
+  [0.25, -0.06, 0.18, -0.03, 0.18, 0.05],
+  [0.18, 0.12, 0.195, 0.14, 0.195, 0.2],
+  [0.195, 0.29, 0.14, 0.34, 0, 0.34],
+];
+const strings = [-0.025, -0.015, -0.005, 0.005, 0.015, 0.025];
 
 export function Guitar(props: ItemProps) {
-  const body = useMemo(() => bodyGeometry(), []);
+  const body = useMemo(() => {
+    const shape = new Shape().moveTo(start[0], start[1]);
+    const ends = [start, ...curves.map((c) => c.slice(4))];
+    curves.forEach(([a, b, c, d, x, y]) => shape.bezierCurveTo(a, b, c, d, x, y));
+    curves.toReversed().forEach(([a, b, c, d], i) => {
+      const [x, y] = ends[curves.length - 1 - i];
+      shape.bezierCurveTo(-c, d, -a, b, -x, y);
+    });
+    return new ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false, curveSegments: 10 });
+  }, []);
 
   return (
-    <Pickable {...props} tipY={1.15} position={[-1.97, 1.95, -0.6]} rotation={[0.1, 0, 0]}>
-      <mesh geometry={body} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
-        <meshStandardMaterial attach="material-0" color="#e6bd82" roughness={0.45} />
-        <meshStandardMaterial attach="material-1" color="#8a4f2a" roughness={0.45} />
+    <Pickable {...props} tipY={1.15} position={[-1.85, 1.6, -0.6]}>
+      <mesh geometry={body} position={[-0.124, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+        <meshStandardMaterial attach="material-0" color="#e3c08e" roughness={0.75} />
+        <meshStandardMaterial attach="material-1" color="#6e3a26" roughness={0.75} />
       </mesh>
-      <Part color="#2b1d14" position={[0.086, 0.06, 0]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.07, 0.07, 0.002, 48]} /></Part>
-      <Part color="#7a4a2a" position={[0.086, 0.06, 0]} rotation={[0, Math.PI / 2, 0]}><torusGeometry args={[0.085, 0.007, 8, 48]} /></Part>
-      <RBox color="#3b2a1e" size={[0.02, 0.04, 0.17]} radius={0.008} position={[0.095, -0.26, 0]} />
-      <RBox color="#7b4a28" size={[0.05, 0.66, 0.07]} radius={0.015} position={[0.05, 0.6, 0]} />
-      <RBox color="#2e211a" size={[0.012, 0.62, 0.062]} radius={0.005} position={[0.08, 0.6, 0]} />
-      {frets.map((y) => (
-        <Part key={y} color="#d9d4c8" roughness={0.3} position={[0.087, y, 0]}><boxGeometry args={[0.003, 0.004, 0.062]} /></Part>
-      ))}
-      <RBox color="#2e211a" size={[0.035, 0.2, 0.1]} radius={0.012} position={[0.05, 1.02, 0]} />
-      {[0.97, 1.03, 1.09].flatMap((y) => [-0.06, 0.06].map((z) => (
-        <Part key={`${y}${z}`} color="#d9d4c8" roughness={0.3} position={[0.05, y, z]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.008, 0.008, 0.03, 12]} /></Part>
-      )))}
+      <group position={[0, 0.155, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <Part color="#c9b48a" position={[0, 0.022, 0]}><cylinderGeometry args={[0.085, 0.085, 0.004, SIDES]} /></Part>
+        <Part color="#4a2418" position={[0, 0.021, 0]}><cylinderGeometry args={[0.06, 0.06, 0.004, SIDES]} /></Part>
+      </group>
+      <RBox color="#6b4630" size={[0.04, 0.55, 0.07]} radius={0.01} position={[-0.05, 0.595, 0]} />
+      <RBox color="#2e2019" size={[0.012, 0.63, 0.075]} radius={0.004} position={[-0.024, 0.555, 0]} />
+      <RBox color="#6b4630" size={[0.03, 0.2, 0.1]} radius={0.01} position={[-0.055, 0.96, 0]} rotation={[0, 0, 0.2]} />
+      <RBox color="#6e3524" size={[0.012, 0.04, 0.2]} radius={0.004} position={[-0.02, -0.11, 0]} />
+      <Part color="#efe8da" position={[-0.013, -0.105, 0]}><boxGeometry args={[0.004, 0.006, 0.1]} /></Part>
       {strings.map((z) => (
-        <Part key={z} color="#efe9dd" roughness={0.3} position={[0.1, 0.33, z]}><cylinderGeometry args={[0.0012, 0.0012, 1.18, 6]} /></Part>
+        <Part key={z} color="#d9d4c7" roughness={0.3} position={[-0.01, 0.38, z]}><boxGeometry args={[0.002, 0.98, 0.002]} /></Part>
       ))}
     </Pickable>
   );
