@@ -86,6 +86,8 @@
 html {
   background-color: oklch(1 0 0);
   color-scheme: light;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
 }
 
 .dark {
@@ -302,7 +304,7 @@ html {
   .sidebar-footer { display: none; }
   .portfolio-stream { height: calc(100dvh - 108px - env(safe-area-inset-top)); scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
   .portfolio-stream::-webkit-scrollbar { display: none; }
-  .portfolio-column { flex-basis: 100%; width: 100%; scroll-snap-stop: always; overflow-x: clip; }
+  .portfolio-column { flex-basis: 100%; width: 100%; min-width: 0; overflow-wrap: anywhere; scroll-snap-stop: always; overflow-x: clip; }
   .portfolio-column#about { overflow: hidden; }
   #about canvas { opacity: 1; transition: none; }
   #about [data-globe-label],
@@ -324,7 +326,7 @@ html {
   .portfolio-column#about .column-content { min-height: 0; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   .portfolio-column#about .column-content > * { min-height: 0; }
   .about-globe-stage { position: absolute; inset: 0; z-index: auto; isolation: auto; flex: none; height: auto; min-height: 0; margin: 0; overflow: visible; pointer-events: none; }
-  .about-globe-planet { top: 50%; right: auto; bottom: auto; left: 50%; width: min(102vw, 31rem); max-width: none; height: min(102vw, 31rem); pointer-events: auto; transform: translate(-50%, -10%); }
+  .about-globe-planet { top: 58%; right: auto; bottom: auto; left: 50%; width: min(70vw, 21rem); max-width: none; height: min(70vw, 21rem); pointer-events: auto; transform: translate(-50%, -10%); }
   #about [data-globe-label] > span:first-child { height: 1.25rem; }
   .about-globe-stage blockquote { bottom: max(0.75rem, env(safe-area-inset-bottom)); }
   .about-globe-list { gap: 12px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 8.5rem; pointer-events: none; background: transparent; }
