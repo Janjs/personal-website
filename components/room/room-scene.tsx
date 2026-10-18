@@ -148,7 +148,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
             position={[0.35, 3.2, 0.35]}
             angle={0.7}
             penumbra={1}
-            intensity={dark ? 22 : 8}
+            intensity={dark ? 16 : 6}
             distance={7}
             decay={2}
             color={dark ? "#ffe1a8" : "#ffe0b2"}

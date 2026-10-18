@@ -1,7 +1,8 @@
 "use client";
 
+import { Select } from "@react-three/postprocessing";
 import { useTheme } from "next-themes";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3 } from "three";
 
 import { DeskSetup } from "@/components/room/desk-setup";
@@ -84,6 +85,7 @@ function StringLights({ dark }: { dark: boolean }) {
 
 function DeskLamp({ dark }: { dark: boolean }) {
   const { setTheme } = useTheme();
+  const [hovered, setHovered] = useState(false);
 
   return (
     <group
@@ -91,16 +93,20 @@ function DeskLamp({ dark }: { dark: boolean }) {
       onClick={(event) => {
         event.stopPropagation();
         if (event.delta > 4) return;
+        setHovered(false);
         setTheme(dark ? "light" : "dark");
       }}
       onPointerOver={(event) => {
         event.stopPropagation();
+        setHovered(true);
         document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
+        setHovered(false);
         document.body.style.cursor = "";
       }}
     >
+      <Select enabled={hovered}>
       <Part color="#e3ded3" roughness={0.85} position={[0, 0.125, 0]}><cylinderGeometry args={[0.025, 0.098, 0.25, 36]} /></Part>
       <Part color="#dbd5c9" roughness={0.7} position={[0, 0.285, 0]}><cylinderGeometry args={[0.007, 0.007, 0.08, 16]} /></Part>
       <Part color="#e3ded3" roughness={0.65} position={[0, 0.34, 0]}><cylinderGeometry args={[0.018, 0.018, 0.04, 24]} /></Part>
@@ -125,6 +131,7 @@ function DeskLamp({ dark }: { dark: boolean }) {
           <meshStandardMaterial color="#f0e7d5" side={BackSide} roughness={0.6} />
         )}
       </mesh>
+      </Select>
       {dark && <pointLight position={[0.06, 0.22, 0.12]} intensity={0.4} distance={2.2} decay={2} color="#ffad47" />}
     </group>
   );
