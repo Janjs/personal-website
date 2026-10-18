@@ -1,9 +1,11 @@
 "use client";
 
-import { useTexture } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useMemo, useRef } from "react";
-import { Plane, SRGBColorSpace, Vector3, type Group, type Object3D } from "three";
+import { MeshPortalMaterial, useTexture } from "@react-three/drei";
+import { Suspense } from "react";
+import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
+import { SRGBColorSpace } from "three";
+
+RectAreaLightUniformsLib.init();
 
 import { Canal } from "@/components/room/canal";
 import { Pickable, RBox, type ItemProps } from "@/components/room/primitives";
@@ -16,69 +18,39 @@ function PosterImage() {
   return (
     <mesh position={[0, 0, 0.021]}>
       <planeGeometry args={[0.85, 1.26]} />
-      <meshStandardMaterial map={texture} roughness={0.9} />
+      <meshStandardMaterial map={texture} roughness={0.85} metalness={0} />
     </mesh>
   );
 }
 
-export function Poster(props: ItemProps) {
+function PosterPictureLight({ dark }: { dark: boolean }) {
+  return (
+    <group position={[0, 0.64, 0.02]}>
+      <RBox color="#2a211b" size={[0.7, 0.028, 0.046]} radius={0.005} position={[0, 0.014, 0.016]} />
+      <mesh position={[0, -0.01, 0.04]} rotation={[-0.7, 0, 0]}>
+        <boxGeometry args={[0.6, 0.008, 0.01]} />
+        <meshStandardMaterial color={dark ? "#5c4a32" : "#cfc6b8"} emissive={dark ? "#e8b56a" : "#000000"} emissiveIntensity={dark ? 0.35 : 0} roughness={0.7} />
+      </mesh>
+      {dark ? (
+        <rectAreaLight position={[0, 0.01, 0.04]} rotation={[-0.45, 0, 0]} width={0.58} height={0.06} intensity={6} color="#ffd7a1" />
+      ) : null}
+    </group>
+  );
+}
+
+export function Poster({ dark, ...props }: ItemProps & { dark: boolean }) {
   return (
     <Pickable {...props} tipY={0.72} tipMinBottom={500} position={[1.4, 2.2, -1.97]}>
       <RBox color="#2a211b" size={[0.93, 1.34, 0.04]} radius={0.015} />
       <Suspense fallback={null}>
         <PosterImage />
       </Suspense>
+      <PosterPictureLight dark={dark} />
     </Pickable>
   );
 }
 
-const clipPoint = new Vector3();
-
 export function Window({ dark, ...props }: ItemProps & { dark: boolean }) {
-  const gl = useThree((state) => state.gl);
-  const canalRef = useRef<Group>(null);
-
-  const clipPlanes = useMemo(() => [
-    new Plane(new Vector3(0, -1, 0), 1.49),
-    new Plane(new Vector3(0, 1, 0), -0.15),
-    new Plane(new Vector3(1, 0, 0), 1.32),
-    new Plane(new Vector3(-1, 0, 0), -0.52),
-    new Plane(new Vector3(0, 0, -1), -2.14),
-  ], []);
-
-  useFrame(({ camera }) => {
-    gl.localClippingEnabled = true;
-    const dx = camera.position.x + 0.4;
-    const dy = camera.position.y - 0.81;
-    const dz = camera.position.z + 2.15;
-    const hx = 0.9;
-    const hy = 0.65;
-
-    clipPlanes[0].normal.set(0, -dz, dy).normalize();
-    clipPlanes[0].constant = -clipPlanes[0].normal.dot(clipPoint.set(-0.4, 0.81 + hy, -2.15));
-
-    clipPlanes[1].normal.set(0, dz, -dy).normalize();
-    clipPlanes[1].constant = -clipPlanes[1].normal.dot(clipPoint.set(-0.4, 0.81 - hy, -2.15));
-
-    clipPlanes[2].normal.set(dz, 0, -dx).normalize();
-    clipPlanes[2].constant = -clipPlanes[2].normal.dot(clipPoint.set(-0.4 - hx, 0.81, -2.15));
-
-    clipPlanes[3].normal.set(-dz, 0, dx).normalize();
-    clipPlanes[3].constant = -clipPlanes[3].normal.dot(clipPoint.set(-0.4 + hx, 0.81, -2.15));
-
-    clipPlanes[4].normal.set(0, 0, -1);
-    clipPlanes[4].constant = -2.15;
-
-    canalRef.current?.traverse((child: Object3D) => {
-      const mesh = child as Object3D & { material?: { clippingPlanes?: Plane[]; clipShadows?: boolean; needsUpdate?: boolean } };
-      if (mesh.material && mesh.material.clippingPlanes !== clipPlanes) {
-        mesh.material.clippingPlanes = clipPlanes;
-        mesh.material.clipShadows = true;
-        mesh.material.needsUpdate = true;
-      }
-    });
-  });
-
   return (
     <Pickable {...props} tipY={0.8} position={[-0.45, 2.46, -1.98]}>
       <RBox color="#d8cec0" castShadow={false} size={[1.92, 0.06, 0.24]} position={[0, 0.67, -0.1]} />
@@ -86,9 +58,14 @@ export function Window({ dark, ...props }: ItemProps & { dark: boolean }) {
       <RBox color="#d2c7b6" castShadow={false} size={[0.06, 1.38, 0.24]} position={[-0.93, 0, -0.1]} />
       <RBox color="#e5dccf" castShadow={false} size={[0.06, 1.38, 0.24]} position={[0.93, 0, -0.1]} />
 
-      <group ref={canalRef} position={[0, -0.38, -0.18]}>
-        <Canal dark={dark} />
-      </group>
+      <mesh position={[0, 0, -0.06]}>
+        <planeGeometry args={[1.68, 1.18]} />
+        <MeshPortalMaterial events={false}>
+          <ambientLight intensity={dark ? 0.45 : 0.9} color={dark ? "#b0c8ff" : "#fff6de"} />
+          <directionalLight position={[-2.2, 3, 1.4]} intensity={dark ? 1.6 : 2} color={dark ? "#b0c8ff" : "#fff6de"} />
+          <Canal dark={dark} />
+        </MeshPortalMaterial>
+      </mesh>
 
       <RBox color="#fbf6ee" size={[1.96, 0.08, 0.1]} position={[0, 0.68, 0.03]} />
       <RBox color="#fbf6ee" size={[1.98, 0.06, 0.16]} position={[0, -0.67, 0.06]} />

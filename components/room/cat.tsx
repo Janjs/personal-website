@@ -8,6 +8,7 @@ import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room
 
 const fur = "#e8964a";
 const darkFur = "#cf7634";
+const paw = "#f6d2a8";
 
 const spots = [[0.4, 0.4], [1.3, 1.1], [-0.6, 1.3], [1, -0.4], [-0.9, 0.3]] as const;
 const legs = [[-0.09, 0.14, 0], [0.09, 0.14, Math.PI], [-0.09, -0.2, Math.PI], [0.09, -0.2, 0]] as const;
@@ -30,6 +31,8 @@ function stripes() {
 const tailCurve = (points: number[][]) => new CatmullRomCurve3(points.map(([x, y, z]) => new Vector3(x, y, z)));
 const tuckedTail = tailCurve([[0, 0, 0], [0.12, -0.07, -0.06], [0.24, -0.08, 0.08], [0.26, -0.08, 0.3], [0.2, -0.08, 0.46]]);
 const raisedTail = tailCurve([[0, 0, 0], [0, 0.08, -0.12], [0, 0.24, -0.18], [0, 0.38, -0.14], [0.04, 0.44, -0.06]]);
+const tuckedTip = tuckedTail.getPoint(1);
+const raisedTip = raisedTail.getPoint(1);
 
 function tailShape() {
   const geometry = new TubeGeometry(tuckedTail, 48, 0.035, 12);
@@ -48,12 +51,14 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
   const heart = useRef<Group>(null);
   const paws = useRef<Group>(null);
   const legRefs = useRef<(Group | null)[]>([]);
+  const footRefs = useRef<(Group | null)[]>([]);
   const lastPets = useRef(pets);
   const petStart = useRef(-10);
   const wander = useRef({ target: 1, sitUntil: 2, stand: 0 });
   const furTexture = useMemo(() => stripes(), []);
   const tailGeometry = useMemo(() => tailShape(), []);
   const tailMesh = useRef<Mesh>(null);
+  const tailTip = useRef<Group>(null);
 
   useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
@@ -87,17 +92,24 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
     }
 
     state.stand += ((walking ? 1 : 0) - state.stand) * (1 - Math.exp(-delta * 6));
+    const stand = Math.max(0.001, state.stand);
+    const feet = Math.min(1, Math.max(0, (stand - 0.55) / 0.45));
     torso.current?.position.set(0, 0.12 * state.stand, 0);
-    paws.current?.scale.setScalar(Math.max(0.001, 1 - state.stand));
+    paws.current?.scale.setScalar(Math.max(0.001, Math.min(1, (0.45 - stand) / 0.45)));
     legRefs.current.forEach((leg, index) => {
-      leg?.scale.set(1, Math.max(0.001, state.stand), 1);
-      leg?.rotation.set(walking ? Math.sin(t * 10 + legs[index][2]) * 0.5 : 0, 0, 0);
+      if (!leg) return;
+      leg.scale.set(1, stand, 1);
+      const swing = walking ? Math.sin(t * 10 + legs[index][2]) * 0.5 : 0;
+      leg.rotation.x += (swing - leg.rotation.x) * (1 - Math.exp(-delta * 14));
+      const shown = Math.max(0.001, feet);
+      footRefs.current[index]?.scale.set(1.25 * shown, (0.82 * shown) / stand, 1.45 * shown);
     });
 
     head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease);
     eyes.current?.scale.set(1, 1 - 0.85 * ease, 1);
     tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : walking ? 4 : 1.5)) * (0.12 + 0.2 * state.stand), 0);
     if (tailMesh.current?.morphTargetInfluences) tailMesh.current.morphTargetInfluences[0] = state.stand;
+    tailTip.current?.position.lerpVectors(tuckedTip, raisedTip, state.stand);
     if (heart.current) {
       heart.current.visible = petting;
       heart.current.position.y = 0.62 + since * 0.25;
@@ -110,7 +122,10 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
       <Pickable active={active} {...props} tipY={0.85}>
         {legs.map(([x, z], index) => (
           <group key={index} ref={(leg) => { legRefs.current[index] = leg; }} position={[x, 0.24, z]}>
-            <Part color={fur} roughness={0.9} position={[0, -0.12, 0]}><capsuleGeometry args={[0.035, 0.17, 8, 16]} /></Part>
+            <Part color={fur} roughness={0.9} position={[0, -0.084, 0]}><capsuleGeometry args={[0.032, 0.1, 8, 16]} /></Part>
+            <group ref={(foot) => { footRefs.current[index] = foot; }} position={[Math.sign(x) * 0.01, -0.198, 0.018]} scale={[0.001, 0.82, 0.001]}>
+              <Part color={paw}><sphereGeometry args={[0.05, 16, 12]} /></Part>
+            </group>
           </group>
         ))}
         <group ref={torso}>
@@ -120,12 +135,12 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
           </mesh>
           <group ref={paws}>
             {[-0.08, 0.08].map((x) => (
-              <Part key={x} color="#f6d2a8" position={[x, 0.04, 0.2]} scale={[1, 0.7, 1.4]}><sphereGeometry args={[0.05, 24, 16]} /></Part>
+              <Part key={x} color={paw} position={[x, 0.04, 0.2]} scale={[1, 0.7, 1.4]}><sphereGeometry args={[0.05, 24, 16]} /></Part>
             ))}
           </group>
           <group ref={head} position={[0, 0.3, 0.18]}>
             <Part color={fur} roughness={0.9} position={[0, 0.04, 0]} scale={[1.08, 0.95, 1]}><sphereGeometry args={[0.14, 48, 32]} /></Part>
-            <Part color="#f6d2a8" position={[0, -0.01, 0.1]} scale={[1.3, 0.8, 0.8]}><sphereGeometry args={[0.055, 24, 16]} /></Part>
+            <Part color={paw} position={[0, -0.01, 0.1]} scale={[1.3, 0.8, 0.8]}><sphereGeometry args={[0.055, 24, 16]} /></Part>
             {[-1, 1].map((side) => (
               <group key={side} position={[side * 0.08, 0.16, -0.01]} rotation={[0, 0, -side * 0.3]}>
                 <Part color={darkFur} scale={[1, 1, 0.55]}><coneGeometry args={[0.05, 0.1, 24]} /></Part>
@@ -143,6 +158,9 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
             <mesh ref={tailMesh} geometry={tailGeometry} morphTargetInfluences={[0]} castShadow receiveShadow>
               <meshStandardMaterial color={darkFur} roughness={0.9} />
             </mesh>
+            <group ref={tailTip} position={tuckedTip.toArray()}>
+              <Part color={darkFur} roughness={0.9}><sphereGeometry args={[0.037, 16, 12]} /></Part>
+            </group>
           </group>
           <group ref={heart} visible={false} position={[0, 0.62, 0.15]}>
             {[-0.03, 0.03].map((x) => (

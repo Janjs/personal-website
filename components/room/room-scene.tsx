@@ -44,7 +44,7 @@ function RoomControls({ finePointer }: { finePointer: boolean }) {
       minZoom={fit}
       maxZoom={fit}
       minAzimuthAngle={0.2}
-      maxAzimuthAngle={Math.PI / 2 - 0.2}
+      maxAzimuthAngle={1.05}
       minPolarAngle={0.55}
       maxPolarAngle={1.35}
       rotateSpeed={0.6}
@@ -101,7 +101,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
       <ProgressReporter onProgress={onProgress} />
       <Canvas
         style={{ position: "absolute", inset: "-20%", width: "140%", height: "140%", background: "transparent" }}
-        gl={{ alpha: true, stencil: true, localClippingEnabled: true }}
+        gl={{ alpha: true, stencil: true }}
         orthographic
         flat
         shadows
@@ -144,13 +144,24 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
           />
         </EffectComposer>
         <group position={[0.05, -1.65, 0.05]}>
+          <spotLight
+            position={[0.35, 3.2, 0.35]}
+            angle={0.7}
+            penumbra={1}
+            intensity={dark ? 22 : 8}
+            distance={7}
+            decay={2}
+            color={dark ? "#ffe1a8" : "#fff6e5"}
+          >
+            <object3D attach="target" position={[0.35, 0.03, 0.35]} />
+          </spotLight>
           <Furniture dark={dark} />
           <Guitar {...pick("guitar")} />
           <Cat {...pick("cat")} pets={pets} />
           <RecordPlayer {...pick("vinyl")} playing={playing} />
           <Basketball {...pick("basketball")} />
           <NoShadowGroup>
-            <Poster {...pick("poster")} />
+            <Poster {...pick("poster")} dark={dark} />
             <Window {...pick("window")} dark={dark} />
           </NoShadowGroup>
           <SagradaFamilia {...pick("barcelona")} />

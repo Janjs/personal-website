@@ -278,7 +278,7 @@ export default function Home() {
     <PortfolioShell sidebar={
       <div className="sidebar-intro" id="intro">
         <h1><a href="#intro"><EncryptedText text="Jan J. Serra" revealDelayMs={120} /></a><JanPronunciation showName={false} /></h1>
-        <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, and 3D.</p>
+        <p>Software engineer with 6+ years of experience, combining artificial intelligence with the things I&apos;m into: music, sports, cinema, and 3D.</p>
         <p>Originally from Barcelona. Now in Utrecht, building AI systems.</p>
       </div>
     } footer={<ThemeToggle />}>
