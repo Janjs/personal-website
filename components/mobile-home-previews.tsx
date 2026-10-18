@@ -6,11 +6,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AiBrain01Icon,
   BrowserIcon,
-  CloudServerIcon,
-  ContainerIcon,
+  CloudIcon,
+  DatabaseIcon,
   DatabaseSearchIcon,
   PythonIcon,
   ReactIcon,
+  SparklesIcon,
   Typescript01Icon,
 } from "@hugeicons/core-free-icons";
 
@@ -24,14 +25,14 @@ const PREVIEW_CITY_INTERVAL_MS = 3400;
 const skillsPreviewItems = [
   { name: "TypeScript", icon: Typescript01Icon, left: "6%", top: "10%" },
   { name: "React", icon: ReactIcon, left: "52%", top: "6%", dimmed: true },
-  { name: "Python", icon: PythonIcon, left: "78%", top: "18%", dimmed: true },
+  { name: "PostgreSQL", icon: DatabaseIcon, left: "78%", top: "18%", dimmed: true },
   { name: "Next.js", icon: BrowserIcon, left: "24%", top: "28%" },
-  { name: "LLMs", icon: AiBrain01Icon, left: "68%", top: "34%" },
-  { name: "RAG", icon: DatabaseSearchIcon, left: "10%", top: "52%", dimmed: true },
-  { name: "Docker", icon: ContainerIcon, left: "44%", top: "48%" },
-  { name: "Azure", icon: CloudServerIcon, left: "72%", top: "62%", dimmed: true },
-  { name: "TypeScript", icon: Typescript01Icon, left: "30%", top: "72%" },
-  { name: "React", icon: ReactIcon, left: "58%", top: "78%", dimmed: true },
+  { name: "RAG", icon: DatabaseSearchIcon, left: "68%", top: "34%" },
+  { name: "LLMs", icon: AiBrain01Icon, left: "10%", top: "52%", dimmed: true },
+  { name: "AI", icon: SparklesIcon, left: "44%", top: "48%", main: true },
+  { name: "TypeScript", icon: Typescript01Icon, left: "72%", top: "62%", dimmed: true },
+  { name: "Azure", icon: CloudIcon, left: "30%", top: "72%" },
+  { name: "Python", icon: PythonIcon, left: "58%", top: "78%", dimmed: true },
 ] as const;
 
 function SkillsPreviewChips({ dimmed }: { dimmed?: boolean }) {
@@ -41,10 +42,10 @@ function SkillsPreviewChips({ dimmed }: { dimmed?: boolean }) {
         <Badge
           key={`${item.name}-${index}`}
           variant="secondary"
-          className={`skills-preview-chip${dimmed && "dimmed" in item ? " is-dim" : ""}`}
+          className={`skills-preview-chip${"main" in item ? " is-main" : ""}${dimmed && "dimmed" in item ? " is-dim" : ""}`}
           style={{ left: item.left, top: item.top }}
         >
-          <HugeiconsIcon icon={item.icon} size={11} strokeWidth={2} aria-hidden="true" />
+          <HugeiconsIcon icon={item.icon} size={"main" in item ? 12 : 11} strokeWidth={2} aria-hidden="true" />
           {item.name}
         </Badge>
       ))}
