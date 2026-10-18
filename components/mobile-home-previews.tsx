@@ -172,17 +172,18 @@ export function WorkspacePreview() {
         alt=""
         fill
         priority
-        sizes="160px"
+        sizes="320px"
         wrapperClassName="absolute inset-0 dark:hidden"
-        className="object-cover object-center"
+        className="object-contain object-bottom"
       />
       <ProjectScreenshot
         src={workspacePreviewDark}
         alt=""
         fill
-        sizes="160px"
+        loading="eager"
+        sizes="320px"
         wrapperClassName="absolute inset-0 hidden dark:block"
-        className="object-cover object-center"
+        className="object-contain object-bottom"
       />
     </div>
   );
