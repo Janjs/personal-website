@@ -390,7 +390,7 @@ export function AboutGlobeSection({
           />
         </div>
 
-        <blockquote className="pointer-events-none absolute bottom-0 z-30 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:bottom-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom)))]">
+        <blockquote className="pointer-events-none absolute bottom-0 z-30 w-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:bottom-[max(2.5rem,calc(1.25rem+env(safe-area-inset-bottom)))]">
           <p>{displayedQuote}</p>
         </blockquote>
       </div>

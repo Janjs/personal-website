@@ -321,7 +321,7 @@ html {
   .home-contact-phrase { display: block; margin-top: 25px; font-size: 14px; }
   .column-heading { display: none; }
   .column-content { padding: 12px 24px 24px; }
-  .portfolio-column#about .column-content { min-height: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .portfolio-column#about .column-content { min-height: 0; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   .portfolio-column#about .column-content > * { min-height: 0; }
   .about-globe-list { gap: 12px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
   .about-globe-entry { font-size: 12px; padding-block: 4px; }
