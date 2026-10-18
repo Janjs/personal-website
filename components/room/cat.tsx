@@ -43,7 +43,7 @@ function tailShape() {
   return geometry;
 }
 
-export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
+export function Cat({ pets, playing, active, ...props }: ItemProps & { pets: number; playing: boolean }) {
   const walker = useRef<Group>(null);
   const torso = useRef<Group>(null);
   const head = useRef<Group>(null);
@@ -55,7 +55,7 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
   const footRefs = useRef<(Group | null)[]>([]);
   const lastPets = useRef(pets);
   const petStart = useRef(-10);
-  const wander = useRef({ target: 1, sitUntil: 2, stand: 0 });
+  const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0 });
   const furTexture = useMemo(() => stripes(), []);
   const tailGeometry = useMemo(() => tailShape(), []);
   const tailMesh = useRef<Mesh>(null);
@@ -78,7 +78,9 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
     const dx = targetX - cat.position.x;
     const dz = targetZ - cat.position.z;
     const distance = Math.hypot(dx, dz);
-    const free = !active && !petting && t > state.sitUntil;
+    const dancing = playing && !petting;
+    if (playing) state.sitUntil = t + 3;
+    const free = !active && !petting && !playing && t > state.sitUntil;
     const walking = free && distance > 0.02;
 
     if (walking) {
@@ -92,23 +94,28 @@ export function Cat({ pets, active, ...props }: ItemProps & { pets: number }) {
       state.target = (state.target + 1 + Math.floor(Math.random() * (spots.length - 1))) % spots.length;
     }
 
-    state.stand += ((walking ? 1 : 0) - state.stand) * (1 - Math.exp(-delta * 6));
+    state.dance = dancing ? state.dance + (1 - state.dance) * (1 - Math.exp(-delta * 8)) : 0;
+    state.stand += ((walking || dancing ? 1 : 0) - state.stand) * (1 - Math.exp(-delta * 6));
     const stand = Math.max(0.001, state.stand);
     const feet = Math.min(1, Math.max(0, (stand - 0.55) / 0.45));
-    torso.current?.position.set(0, 0.12 * state.stand, 0);
+    const beat = t * 5;
+    torso.current?.position.set(0, 0.12 * state.stand + state.dance * 0.01 * Math.sin(beat), 0);
+    torso.current?.rotation.set(0, 0, state.dance * Math.sin(beat) * 0.06);
     paws.current?.scale.setScalar(Math.max(0.001, Math.min(1, (0.45 - stand) / 0.45)));
     legRefs.current.forEach((leg, index) => {
       if (!leg) return;
       leg.scale.set(1, stand, 1);
-      const swing = walking ? Math.sin(t * 10 + legs[index][2]) * 0.5 : 0;
+      const swing = walking
+        ? Math.sin(t * 10 + legs[index][2]) * 0.5
+        : index < 2 ? -state.dance * (0.15 + 1.25 * (1 + Math.sin(beat + legs[index][2])) / 2) : 0;
       leg.rotation.x += (swing - leg.rotation.x) * (1 - Math.exp(-delta * 14));
       const shown = Math.max(0.001, feet);
       footRefs.current[index]?.scale.set(footScale[0] * shown, (footScale[1] * shown) / stand, footScale[2] * shown);
     });
 
-    head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease);
+    head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease - state.dance * Math.sin(beat) * 0.08);
     eyes.current?.scale.set(1, 1 - 0.85 * ease, 1);
-    tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : walking ? 4 : 1.5)) * (0.12 + 0.2 * state.stand), 0);
+    tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : dancing ? 4 : walking ? 4 : 1.5)) * (0.12 + 0.2 * state.stand), 0);
     if (tailMesh.current?.morphTargetInfluences) tailMesh.current.morphTargetInfluences[0] = state.stand;
     tailTip.current?.position.lerpVectors(tuckedTip, raisedTip, state.stand);
     if (heart.current) {

@@ -160,7 +160,7 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
           </spotLight>
           <Furniture dark={dark} />
           <Guitar {...pick("guitar")} />
-          <Cat {...pick("cat")} pets={pets} />
+          <Cat {...pick("cat")} pets={pets} playing={playing} />
           <RecordPlayer {...pick("vinyl")} playing={playing} />
           <Basketball {...pick("basketball")} />
           <NoShadowGroup>

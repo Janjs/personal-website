@@ -32,7 +32,7 @@ export function RoomSection() {
   const select = (id: RoomItemId | null) => {
     setSelected(id);
     if (id === "cat") setPets((count) => count + 1);
-    if (id === "vinyl") setPlaying((spinning) => !spinning);
+    setPlaying((playing) => id === "vinyl" && !playing);
   };
 
   const quotes: Record<RoomItemId, ReactNode> = {
