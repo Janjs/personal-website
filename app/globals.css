@@ -323,10 +323,11 @@ html {
   .column-content { padding: 12px 24px 24px; }
   .portfolio-column#about .column-content { min-height: 0; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   .portfolio-column#about .column-content > * { min-height: 0; }
-  .about-globe-stage { position: absolute; inset-inline: 0; bottom: 0; z-index: 0; height: min(68%, 32rem); container-type: size; }
-  .about-globe-planet { top: auto; right: auto; bottom: 0; left: 50%; width: min(100cqw, 100cqh); max-width: none; height: min(100cqw, 100cqh); transform: translate(-50%, 6%); }
-  .about-globe-list { gap: 12px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 9rem; pointer-events: none; }
-  .about-globe-list button, .about-globe-entry { pointer-events: auto; }
+  .about-globe-stage { position: relative; inset: auto; z-index: 0; flex: 1 1 auto; height: auto; min-height: 13.5rem; margin-top: 0.25rem; overflow: hidden; container-type: size; }
+  .about-globe-planet { top: 1.75rem; right: auto; bottom: auto; left: 50%; width: min(100cqw, calc(100cqh - 1.75rem)); max-width: none; height: min(100cqw, calc(100cqh - 1.75rem)); aspect-ratio: 1; transform: translateX(-50%); }
+  .about-globe-stage blockquote { bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+  #about [data-globe-label] > span:first-child { height: 1.25rem; }
+  .about-globe-list { gap: 12px; flex: 0 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 0.25rem; }
   .about-globe-entry { font-size: 12px; padding-block: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
