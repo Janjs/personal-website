@@ -254,7 +254,7 @@ export function AboutGlobeSection({
           }
         }}
       >
-        <span ref={highlightRef} className="about-globe-highlight" aria-hidden="true" />
+        <span ref={highlightRef} className="about-globe-highlight backdrop-blur-xl" aria-hidden="true" />
         {aboutSections.map((section) => {
           const sectionEntries = entries.filter(
             (entry) => (entry.section ?? "experience") === section.id
@@ -362,7 +362,7 @@ export function AboutGlobeSection({
       </div>
 
       <div
-        className="relative mt-1 shrink-0 h-[min(19rem,calc(100vw-3rem))] sm:mt-2 sm:h-[17rem]"
+        className="about-globe-stage relative z-0 isolate mt-1 shrink-0 h-[min(19rem,calc(100vw-3rem))] sm:mt-2 sm:h-[17rem]"
         onMouseLeave={resetGlobeHover}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -370,7 +370,7 @@ export function AboutGlobeSection({
           }
         }}
       >
-        <div className="absolute inset-x-0 -top-10 z-0 mx-auto aspect-square w-[min(18rem,100%)] max-w-[20rem] sm:-top-12">
+        <div className="about-globe-planet absolute inset-x-0 -top-10 z-0 mx-auto aspect-square w-[min(18rem,100%)] max-w-[20rem] sm:-top-12">
           <div aria-hidden="true" className="pointer-events-none absolute inset-[10%] rounded-full bg-background" />
           <Globe
             className="z-10"
