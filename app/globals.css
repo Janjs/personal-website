@@ -269,6 +269,7 @@ html {
 .portfolio-column { flex: 0 0 480px; width: 480px; overflow-y: auto; border-right: 0.75px solid var(--portfolio-divider); background: var(--background); scroll-snap-align: start; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .portfolio-column#projects { position: relative; z-index: 2; }
 @media (min-width: 701px) {
+  .portfolio-stream { scroll-snap-type: x mandatory; }
   .portfolio-column#projects { flex-basis: 540px; width: 540px; }
   .portfolio-column#workspace { flex-basis: clamp(560px, calc(100dvh - 60px), 980px); width: clamp(560px, calc(100dvh - 60px), 980px); }
 }
