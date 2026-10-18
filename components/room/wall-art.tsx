@@ -60,7 +60,7 @@ export function Window({ dark, ...props }: ItemProps & { dark: boolean }) {
 
       <mesh position={[0, 0, -0.06]}>
         <planeGeometry args={[1.68, 1.18]} />
-        <MeshPortalMaterial events={false}>
+        <MeshPortalMaterial blur={0} resolution={512} events={false}>
           <ambientLight intensity={dark ? 0.45 : 0.9} color={dark ? "#b0c8ff" : "#fff6de"} />
           <directionalLight position={[-2.2, 3, 1.4]} intensity={dark ? 1.6 : 2} color={dark ? "#b0c8ff" : "#fff6de"} />
           <Canal dark={dark} />
