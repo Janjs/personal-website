@@ -172,6 +172,8 @@ export function Globe({
   const instantFocusRef = useRef(instantFocus);
   instantFocusRef.current = instantFocus;
   const [, setHoveredMarkerKey] = useState<string | null>(null);
+  const [isGlobeReady, setIsGlobeReady] = useState(false);
+  const isGlobeReadyRef = useRef(false);
 
   useEffect(() => {
     idleRotateRef.current = idleRotate;
@@ -299,10 +301,10 @@ export function Globe({
         const label = markerElement.querySelector<HTMLElement>("[data-globe-label]");
 
         if (label) {
-          if (isSelectedMarker) {
+          if (isSelectedMarker && isGlobeReadyRef.current) {
             label.style.opacity = projected.isVisible ? "1" : "0";
           } else {
-            label.style.opacity = "";
+            label.style.opacity = isGlobeReadyRef.current ? "" : "0";
           }
         }
       }
@@ -313,6 +315,8 @@ export function Globe({
     frameId = window.requestAnimationFrame(render);
     requestAnimationFrame(() => {
       canvas.style.opacity = "1";
+      isGlobeReadyRef.current = true;
+      setIsGlobeReady(true);
     });
 
     const syncSize = () => {
@@ -328,6 +332,7 @@ export function Globe({
       window.cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
       globe.destroy();
+      isGlobeReadyRef.current = false;
     };
   }, []);
 
@@ -451,28 +456,28 @@ export function Globe({
               aria-pressed={isSelected}
             >
               <span className="absolute inset-1 rounded-full" />
-              {isSelected && (
+              {isSelected && isGlobeReady ? (
                 <span className="pointer-events-none absolute left-1/2 top-1/2 z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-sm dark:bg-emerald-400" />
-              )}
+              ) : null}
               <span
                 data-globe-label=""
                 className={cn(
                   "pointer-events-none absolute left-1/2 bottom-1/2 flex -translate-x-1/2 flex-col-reverse items-center transition-opacity duration-500 ease-out motion-reduce:transition-none",
-                  isSelected ? "opacity-100" : "opacity-0"
+                  isSelected && isGlobeReady ? "opacity-100" : "opacity-0"
                 )}
               >
                 <span
                   className={cn(
                     "h-9 w-px origin-bottom transition-transform duration-500 ease-out motion-reduce:transition-none",
                     LABEL_LINE_CLASS,
-                    isSelected ? "scale-y-100" : "scale-y-0"
+                    isSelected && isGlobeReady ? "scale-y-100" : "scale-y-0"
                   )}
                 />
                 <span
                   className={cn(
                     "mb-0 flex items-baseline transition-all duration-500 ease-out motion-reduce:transition-none motion-reduce:delay-0",
                     LABEL_CHIP_CLASS,
-                    isSelected
+                    isSelected && isGlobeReady
                       ? "translate-y-0 scale-100 delay-200"
                       : "translate-y-1 scale-95 delay-0"
                   )}
