@@ -1,29 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
+import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef, type ReactNode, type Ref } from "react";
+import type { Group, Object3D } from "three";
 
+import { getRoomFx } from "@/components/room/room-fx";
+import { getTerminalScreen } from "@/components/room/terminal-screen";
 import { Part, Pickable, RBox, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
-const codeLines = [[0, 180, "#c792ea"], [1, 260, "#82aaff"], [2, 140, "#c3e88d"], [1, 300, "#f2c66d"], [2, 220, "#82aaff"], [3, 160, "#c3e88d"], [2, 240, "#f78c6c"], [1, 120, "#c792ea"], [0, 90, "#82aaff"], [1, 280, "#c3e88d"], [2, 200, "#f2c66d"], [1, 150, "#c792ea"]] as const;
-
-function screenTexture() {
-  return canvasTexture(640, 360, (ctx) => {
-    ctx.fillStyle = "#1e1f2b";
-    ctx.fillRect(0, 0, 640, 360);
-    ctx.fillStyle = "#272838";
-    ctx.fillRect(0, 0, 120, 360);
-    ctx.fillRect(0, 0, 640, 24);
-    ctx.fillStyle = "#3a3c52";
-    for (let y = 44; y < 200; y += 22) ctx.fillRect(16, y, 70 + (y % 3) * 10, 8);
-    codeLines.forEach(([indent, width, color], index) => {
-      const y = 44 + index * 24;
-      ctx.fillStyle = "#4b4d66";
-      ctx.fillRect(132, y, 14, 8);
-      ctx.fillStyle = color;
-      ctx.fillRect(160 + indent * 24, y, width, 8);
-    });
-  });
-}
+const screenPx = [640, 360] as const;
+const screenSize = [0.91, 0.51] as const;
 
 function keyboardTexture() {
   return canvasTexture(620, 200, (ctx) => {
@@ -56,20 +43,59 @@ function OfficeChair() {
   );
 }
 
-function DeskPeripherals({ dark }: { dark: boolean }) {
-  const screen = useMemo(() => screenTexture(), []);
+function Sandwich() {
+  const ref = useRef<Group>(null);
+  useFrame(() => {
+    if (ref.current) ref.current.visible = getRoomFx().sandwich;
+  });
+
+  return (
+    <group ref={ref} visible={false} position={[0.18, 0.03, 0.08]}>
+      <RBox color="#e8d2a8" size={[0.09, 0.012, 0.07]} radius={0.004} position={[0, 0, 0]} />
+      <RBox color="#6a9a4a" size={[0.082, 0.008, 0.062]} radius={0.003} position={[0, 0.01, 0]} />
+      <RBox color="#c45c3a" size={[0.078, 0.01, 0.058]} radius={0.003} position={[0, 0.018, 0]} />
+      <RBox color="#f0e2c4" size={[0.09, 0.012, 0.07]} radius={0.004} position={[0, 0.028, 0]} />
+    </group>
+  );
+}
+
+function DeskPeripherals({ dark, monitorRef, onOpenMonitor, terminal, hot }: { dark: boolean; monitorRef?: Ref<Object3D>; onOpenMonitor?: () => void; terminal?: ReactNode; hot?: boolean }) {
+  const screen = useMemo(() => getTerminalScreen(), []);
   const keys = useMemo(() => keyboardTexture(), []);
 
   return (
     <>
-      <group position={[0, 0, -0.27]}>
+      <group
+        position={[0, 0, -0.27]}
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenMonitor?.();
+        }}
+      >
         <RBox color="#2b2b2e" size={[0.3, 0.02, 0.2]} radius={0.008} position={[0, 0.01, 0]} />
         <RBox color="#2b2b2e" size={[0.06, 0.3, 0.035]} radius={0.01} position={[0, 0.17, -0.03]} />
         <RBox color="#232326" size={[0.95, 0.56, 0.035]} radius={0.015} position={[0, 0.4, 0]} />
-        <mesh position={[0, 0.405, 0.018]}>
-          <planeGeometry args={[0.91, 0.51]} />
-          <meshBasicMaterial map={screen} toneMapped={false} color={dark ? "#ffffff" : "#d9d9d9"} />
-        </mesh>
+        <group position={[0, 0.405, 0.018]}>
+          <mesh ref={monitorRef}>
+            <planeGeometry args={[0.91, 0.51]} />
+            <meshBasicMaterial map={screen} toneMapped={false} color={dark ? "#ffffff" : "#d9d9d9"} />
+          </mesh>
+          {terminal ? (
+            <group visible={hot}>
+              <Html
+                transform
+                distanceFactor={400}
+                position={[0, 0, 0.001]}
+                scale={[screenSize[0] / screenPx[0], screenSize[1] / screenPx[1], 1]}
+                pointerEvents={hot ? "auto" : "none"}
+                zIndexRange={[40, 0]}
+                style={{ background: "transparent", display: hot ? "block" : "none" }}
+              >
+                {terminal}
+              </Html>
+            </group>
+          ) : null}
+        </group>
       </group>
       <group position={[-0.05, 0, 0.25]}>
         <RBox color="#d9d4ca" size={[0.62, 0.025, 0.2]} radius={0.008} position={[0, 0.0125, 0]} />
@@ -80,15 +106,16 @@ function DeskPeripherals({ dark }: { dark: boolean }) {
       </group>
       <RBox color="#3a3f4a" size={[0.3, 0.006, 0.24]} radius={0.002} position={[0.47, 0.003, 0.25]} />
       <Part color="#e8e4dc" roughness={0.4} position={[0.47, 0.02, 0.25]} scale={[0.75, 0.45, 1.1]}><sphereGeometry args={[0.045, 32, 16]} /></Part>
+      <Sandwich />
     </>
   );
 }
 
-export function Desk({ dark, ...props }: ItemProps & { dark: boolean }) {
+export function Desk({ dark, monitorRef, onOpenMonitor, terminal, hot, ...props }: ItemProps & { dark: boolean; monitorRef?: Ref<Object3D>; onOpenMonitor?: () => void; terminal?: ReactNode; hot?: boolean }) {
   return (
     <>
       <Pickable {...props} tipY={0.62} position={[-0.45, 1.15, -1.45]}>
-        <DeskPeripherals dark={dark} />
+        <DeskPeripherals dark={dark} monitorRef={monitorRef} onOpenMonitor={onOpenMonitor} terminal={terminal} hot={hot} />
       </Pickable>
       <OfficeChair />
     </>

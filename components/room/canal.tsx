@@ -2,8 +2,9 @@
 
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import type { Group } from "three";
+import type { Group, Mesh } from "three";
 
+import { getRoomFx } from "@/components/room/room-fx";
 import { Part, RBox } from "@/components/room/primitives";
 
 const houses = [
@@ -131,27 +132,65 @@ function Tree({ x, z, dark }: { x: number; z: number; dark: boolean }) {
   );
 }
 
+function Rain() {
+  const ref = useRef<Group>(null);
+  useFrame((_, delta) => {
+    const group = ref.current;
+    if (!group) return;
+    const raining = getRoomFx().weather === "utrecht";
+    group.visible = raining;
+    if (!raining) return;
+    group.children.forEach((child) => {
+      child.position.y -= delta * 2.4;
+      if (child.position.y < -0.6) child.position.y = 0.7;
+    });
+  });
+
+  return (
+    <group ref={ref} visible={false}>
+      {Array.from({ length: 22 }, (_, index) => (
+        <mesh key={index} position={[-1.6 + (index % 11) * 0.32, 0.5 - (index % 5) * 0.18, -0.5 - (index % 3) * 0.12]}>
+          <boxGeometry args={[0.008, 0.08, 0.008]} />
+          <meshBasicMaterial color="#c5d7e8" transparent opacity={0.55} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export function Canal({ dark }: { dark: boolean }) {
   const boatRef = useRef<Group>(null);
+  const sky = useRef<Mesh>(null);
+  const sun = useRef<Mesh>(null);
 
   useFrame(({ clock }) => {
     const boat = boatRef.current;
-    if (!boat) return;
-    const t = clock.getElapsedTime();
-    boat.position.x = Math.sin(t * 0.35) * 0.22;
-    boat.rotation.z = Math.sin(t * 1.4) * 0.03;
+    if (boat) {
+      const t = clock.getElapsedTime();
+      boat.position.x = Math.sin(t * 0.35) * 0.22;
+      boat.rotation.z = Math.sin(t * 1.4) * 0.03;
+    }
+    const weather = getRoomFx().weather;
+    const barcelona = weather === "barcelona";
+    const utrecht = weather === "utrecht";
+    const skyMat = sky.current?.material as { color?: { set: (color: string) => void } } | undefined;
+    const sunMat = sun.current?.material as { color?: { set: (color: string) => void } } | undefined;
+    skyMat?.color?.set(barcelona ? "#7ec8f0" : utrecht ? "#6d7f93" : dark ? "#17223b" : "#8ec6eb");
+    sunMat?.color?.set(barcelona ? "#ffe27a" : dark ? "#f7efd9" : "#fff5c0");
+    if (sun.current) sun.current.scale.setScalar(barcelona ? 1.6 : 1);
   });
 
   return (
     <group>
-      <mesh position={[0, 0.05, -1.7]} frustumCulled={false}>
+      <mesh ref={sky} position={[0, 0.05, -1.7]} frustumCulled={false}>
         <planeGeometry args={[12, 8]} />
         <meshBasicMaterial color={dark ? "#17223b" : "#8ec6eb"} toneMapped={false} />
       </mesh>
-      <mesh position={[0.7, 0.55, -1.65]}>
+      <mesh ref={sun} position={[0.7, 0.55, -1.65]}>
         <circleGeometry args={[dark ? 0.07 : 0.09, 28]} />
         <meshBasicMaterial color={dark ? "#f7efd9" : "#fff5c0"} toneMapped={false} />
       </mesh>
+      <Rain />
       <group position={[0, -0.52, 0]}>
       <group position={[0, -0.08, 0]}>
       <RBox color={dark ? "#5d5a7a" : "#b09a82"} size={[span, 0.06, 0.16]} radius={0.006} position={[0, 0.02, -0.06]} />

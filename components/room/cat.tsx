@@ -6,7 +6,10 @@ import { useMemo, useRef, useState, type RefObject } from "react";
 import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group, type Mesh } from "three";
 
 import { encounterActive, encounterDuration, moveOutsideBox, type EncounterState } from "@/components/room/floor-collision";
+import { getRoomFx } from "@/components/room/room-fx";
 import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room/primitives";
+
+const deskVisit = [0.15, -0.7] as const;
 
 const fur = "#e8964a";
 const darkFur = "#cf7634";
@@ -56,8 +59,9 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
   const legRefs = useRef<(Group | null)[]>([]);
   const footRefs = useRef<(Group | null)[]>([]);
   const lastPets = useRef(pets);
+  const lastSummon = useRef(0);
   const petStart = useRef(-10);
-  const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0 });
+  const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0, summoned: false });
   const furTexture = useMemo(() => stripes(), []);
   const tailGeometry = useMemo(() => tailShape(), []);
   const tailMesh = useRef<Mesh>(null);
@@ -71,6 +75,12 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
       lastPets.current = pets;
       petStart.current = t;
     }
+    const summoned = getRoomFx().catToken;
+    if (summoned !== lastSummon.current) {
+      lastSummon.current = summoned;
+      wander.current.summoned = true;
+      wander.current.sitUntil = 0;
+    }
     const since = t - petStart.current;
     const clicked = since < 1.6;
 
@@ -79,13 +89,13 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
     const duck = duckPosition.current;
     const state = wander.current;
     const meeting = encounterActive(encounter.current, cat.position, duck, t);
-    const [targetX, targetZ] = spots[state.target];
+    const [targetX, targetZ] = state.summoned ? deskVisit : spots[state.target];
     const dx = targetX - cat.position.x;
     const dz = targetZ - cat.position.z;
     const distance = Math.hypot(dx, dz);
     if (playing) state.sitUntil = t + 3;
     const free = !active && !clicked && !playing && t > state.sitUntil;
-    let walking = free && !meeting && distance > 0.02;
+    const walking = free && !meeting && distance > 0.02;
 
     if (walking) {
       const step = Math.min(distance, Math.min(delta, 0.05) * 0.45);
@@ -93,6 +103,7 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
       const turn = Math.atan2(dx, dz) - cat.rotation.y;
       cat.rotation.y += Math.atan2(Math.sin(turn), Math.cos(turn)) * (1 - Math.exp(-delta * 8));
     } else if (free && !meeting) {
+      if (state.summoned) state.summoned = false;
       state.sitUntil = t + 3 + Math.random() * 4;
       state.target = (state.target + 1 + Math.floor(Math.random() * (spots.length - 1))) % spots.length;
     }

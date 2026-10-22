@@ -6,7 +6,7 @@ import { Select } from "@react-three/postprocessing";
 import { useState, type ComponentProps, type ReactNode } from "react";
 import { CanvasTexture, SRGBColorSpace, Vector3 } from "three";
 
-export type ItemProps = { active: boolean; onSelect: () => void; tip: ReactNode };
+export type ItemProps = { active: boolean; onSelect: () => void; tip: ReactNode; mute?: boolean };
 
 export function Part({ color, roughness = 0.75, children, ...props }: ThreeElements["mesh"] & { color: string; roughness?: number }) {
   return (
@@ -33,6 +33,7 @@ export function Pickable({
   active,
   onSelect,
   tip,
+  mute,
   tipY = 0.5,
   tipMinBottom = TIP_MIN_BOTTOM,
   children,
@@ -50,6 +51,7 @@ export function Pickable({
       }}
       onPointerOver={(event) => {
         event.stopPropagation();
+        if (mute) return;
         setHovered(true);
         document.body.style.cursor = "pointer";
       }}
@@ -58,8 +60,8 @@ export function Pickable({
         document.body.style.cursor = "";
       }}
     >
-      <Select enabled={hovered || active}>{children}</Select>
-      {active && tip != null && (
+      <Select enabled={!mute && (hovered || active)}>{children}</Select>
+      {active && !mute && tip != null && (
         <Html
           position={[0, tipY, 0]}
           zIndexRange={[30, 0]}

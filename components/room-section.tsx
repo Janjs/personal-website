@@ -12,6 +12,10 @@ const RoomScene = dynamic(() => import("@/components/room/room-scene").then((m) 
   ssr: false,
 });
 
+const RoomTerminal = dynamic(() => import("@/components/room/terminal").then((m) => m.RoomTerminal), {
+  ssr: false,
+});
+
 const projectUrl = (name: string) => portfolioProjects.find((project) => project.name === name)?.liveUrl ?? undefined;
 
 function QuoteLink({ name }: { name: string }) {
@@ -29,16 +33,36 @@ export function RoomSection() {
   const [sceneReady, setSceneReady] = useState(false);
   const [sceneProgress, setSceneProgress] = useState(0);
   const [duckIntro, setDuckIntro] = useState(true);
+  const [monitor, setMonitor] = useState<"idle" | "in" | "open" | "out">("idle");
+  const [booted, setBooted] = useState(false);
+  const live = monitor === "in" || monitor === "open";
+
+  const closeMonitor = () => {
+    if (monitor !== "open" && monitor !== "in") return;
+    queueMicrotask(() => setMonitor("out"));
+  };
 
   const select = (id: RoomItemId | null) => {
+    if (monitor !== "idle") {
+      if (id !== "desk") closeMonitor();
+      return;
+    }
     setSelected(id);
     if (id !== "microduck") setDuckIntro(true);
     if (id === "cat") setPets((count) => count + 1);
     setPlaying((playing) => id === "vinyl" && !playing);
   };
 
+  const openMonitor = () => {
+    if (live) return;
+    void import("@/components/room/terminal");
+    setBooted(true);
+    setSelected(null);
+    setMonitor("in");
+  };
+
   const quotes: Record<RoomItemId, ReactNode> = {
-    desk: "This is where I spend most of my time. Don't forget to stretch every once in a while, or look somewhere else so your eyes don't get tired.",
+    desk: "This is where I spend most of my time. Click the monitor to open the terminal, and stretch every once in a while.",
     guitar: (
       <>
         I always keep a guitar nearby while my AI agents run. <QuoteLink name="Chordwise" /> helps me practice with AI-generated chord
@@ -121,12 +145,17 @@ export function RoomSection() {
           playing={playing}
           pets={pets}
           quotes={quotes}
+          focus={monitor === "in" || monitor === "open" ? "monitor" : "room"}
           onSelect={select}
           onDuckMet={() => setDuckIntro(false)}
           onProgress={setSceneProgress}
           onReady={() => setSceneReady(true)}
+          onOpenMonitor={openMonitor}
+          onFocusSettled={() => setMonitor((state) => (state === "in" ? "open" : state === "out" ? "idle" : state))}
+          terminal={booted ? <RoomTerminal active={monitor === "open"} onExit={closeMonitor} onEnter={openMonitor} /> : null}
+          terminalHot={monitor === "open"}
         />
-        {selected && quotes[selected] ? (
+        {selected && quotes[selected] && monitor === "idle" ? (
           <blockquote
             className={cn(
               "absolute bottom-0 left-0 z-30 hidden w-full overflow-y-auto overflow-x-hidden rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:block",
@@ -138,8 +167,8 @@ export function RoomSection() {
         ) : null}
       </div>
       <p className="text-sm text-muted-foreground">
-        <span className="min-[701px]:hidden">*Tip: drag to rotate, tap items</span>
-        <span className="hidden min-[701px]:inline">*Tip: click around</span>
+        <span className="min-[701px]:hidden">*Tip: drag to rotate, tap items, tap the monitor</span>
+        <span className="hidden min-[701px]:inline">*Tip: click around, or click the monitor</span>
       </p>
     </div>
   );

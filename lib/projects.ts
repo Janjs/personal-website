@@ -30,6 +30,33 @@ export type Project = {
   techStack: string[];
 };
 
+export function projectHref(project: Project) {
+  return project.liveUrl ?? `https://github.com/Janjs/${project.github}`;
+}
+
+export function normalizeProjectKey(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+export function projectKeys(project: Project) {
+  return [project.name, project.github, project.tag, ...project.github.split("-"), ...project.name.split(/\s+/)];
+}
+
+export function findProjects(query: string) {
+  const q = normalizeProjectKey(query);
+  if (!q) return [];
+  const exact = portfolioProjects.filter((project) => {
+    const name = normalizeProjectKey(project.name);
+    const slug = normalizeProjectKey(project.github);
+    return name === q || slug === q;
+  });
+  if (exact.length) return exact;
+  return portfolioProjects.filter((project) => {
+    const keys = projectKeys(project).map(normalizeProjectKey).filter((key) => key.length > 2);
+    return keys.some((key) => key === q || key.includes(q) || (q.length > 3 && q.includes(key)));
+  });
+}
+
 export const portfolioProjects: Project[] = [
   {
     name: "Stroop",

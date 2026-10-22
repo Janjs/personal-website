@@ -1,11 +1,13 @@
 "use client";
 
 import { Select } from "@react-three/postprocessing";
+import { useFrame } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { useMemo, useState } from "react";
-import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3 } from "three";
+import { useMemo, useRef, useState } from "react";
+import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3, type Group, type PointLight } from "three";
 
 import { plantSpot } from "@/components/room/floor-collision";
+import { getRoomFx } from "@/components/room/room-fx";
 import { Part, RBox } from "@/components/room/primitives";
 
 const books = [
@@ -54,14 +56,61 @@ const stringBulbs = Array.from({ length: 14 }, (_, index) => {
   return [-1.98, 2.95 - (span === 1 || span === 2 ? 0.14 : 0) - t * 0.08, -1.75 + t * 3.45] as const;
 });
 
+function CoffeeSteam() {
+  const ref = useRef<Group>(null);
+  useFrame(({ clock }) => {
+    const group = ref.current;
+    if (!group) return;
+    const live = performance.now() < getRoomFx().coffeeUntil;
+    group.visible = live;
+    if (!live) return;
+    const t = clock.elapsedTime;
+    group.children.forEach((child, index) => {
+      const rise = ((t * 0.35 + index * 0.28) % 1);
+      child.position.set((index - 1) * 0.018, 0.16 + rise * 0.22, 0);
+      child.scale.setScalar(0.4 + rise * 0.8);
+      const material = (child as { material?: { opacity: number } }).material;
+      if (material) material.opacity = 0.35 * (1 - rise);
+    });
+  });
+
+  return (
+    <group ref={ref} visible={false} position={[-1.25, 1.15, -1.15]}>
+      {[0, 1, 2].map((index) => (
+        <mesh key={index}>
+          <sphereGeometry args={[0.025, 10, 8]} />
+          <meshBasicMaterial color="#f4efe6" transparent opacity={0.3} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function StringLights({ dark }: { dark: boolean }) {
+  const lights = useRef<Group>(null);
   const wire = useMemo(
     () => new TubeGeometry(new CatmullRomCurve3(stringBulbs.map(([x, y, z]) => new Vector3(x, y + 0.032, z))), 72, 0.004, 8, false),
     [],
   );
 
+  useFrame(({ clock }) => {
+    const { lights: mode, konami } = getRoomFx();
+    const party = mode === "party" || konami;
+    lights.current?.traverse((object) => {
+      if (!("isPointLight" in object) || !object.isPointLight) return;
+      const light = object as PointLight;
+      if (party) {
+        light.color.setHSL((clock.elapsedTime * 0.18 + light.position.z) % 1, 0.75, 0.6);
+        light.intensity = 0.22;
+      } else {
+        light.color.set("#e8a050");
+        light.intensity = dark ? 0.1 : 0;
+      }
+    });
+  });
+
   return (
-    <group>
+    <group ref={lights}>
       <mesh geometry={wire} castShadow>
         <meshStandardMaterial color="#3d352e" roughness={0.8} />
       </mesh>
@@ -181,6 +230,7 @@ export function Furniture({ dark }: { dark: boolean }) {
       ))}
       <StringLights dark={dark} />
       <Plant />
+      <CoffeeSteam />
     </>
   );
 }
