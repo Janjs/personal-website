@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { useMemo, useState } from "react";
 import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3 } from "three";
 
-import { DeskSetup } from "@/components/room/desk-setup";
+import { plantSpot } from "@/components/room/floor-collision";
 import { Part, RBox } from "@/components/room/primitives";
 
 const books = [
@@ -31,7 +31,7 @@ function Plant() {
   ].map(([x, y]) => new Vector2(x, y)), 48), []);
 
   return (
-    <group position={[-1.5, 0, 0.5]}>
+    <group position={[plantSpot.x, 0, plantSpot.z]}>
       <mesh geometry={pot} castShadow receiveShadow>
         <meshStandardMaterial color="#c46f4b" roughness={0.8} />
       </mesh>
@@ -160,7 +160,6 @@ export function Furniture({ dark }: { dark: boolean }) {
       {[[-1.45, -1.85], [0.55, -1.85], [-1.45, -1.05], [0.55, -1.05]].map(([x, z]) => (
         <RBox key={`${x}${z}`} color="#aa8d6b" size={[0.07, 1.07, 0.07]} radius={0.02} position={[x, 0.535, z]} />
       ))}
-      <DeskSetup dark={dark} />
       <group position={[-1.25, 1.15, -1.15]}>
         <Part color="#e9e2d6" roughness={0.4} position={[0, 0.06, 0]}><cylinderGeometry args={[0.055, 0.05, 0.12, 32]} /></Part>
         <Part color="#e9e2d6" roughness={0.4} position={[0.06, 0.06, 0]}><torusGeometry args={[0.03, 0.008, 12, 24]} /></Part>

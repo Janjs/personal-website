@@ -16,7 +16,7 @@ const projectUrl = (name: string) => portfolioProjects.find((project) => project
 
 function QuoteLink({ name }: { name: string }) {
   return (
-    <a href={projectUrl(name)} target="_blank" rel="noreferrer" className="underline underline-offset-2">
+    <a href={projectUrl(name)} target="_blank" rel="noreferrer" className="pointer-events-auto underline underline-offset-2">
       {name}
     </a>
   );
@@ -28,14 +28,17 @@ export function RoomSection() {
   const [pets, setPets] = useState(0);
   const [sceneReady, setSceneReady] = useState(false);
   const [sceneProgress, setSceneProgress] = useState(0);
+  const [duckIntro, setDuckIntro] = useState(true);
 
   const select = (id: RoomItemId | null) => {
     setSelected(id);
+    if (id !== "microduck") setDuckIntro(true);
     if (id === "cat") setPets((count) => count + 1);
     setPlaying((playing) => id === "vinyl" && !playing);
   };
 
   const quotes: Record<RoomItemId, ReactNode> = {
+    desk: "This is where I spend most of my time. Don't forget to stretch every once in a while, or look somewhere else so your eyes don't get tired.",
     guitar: (
       <>
         I always keep a guitar nearby while my AI agents run. <QuoteLink name="Chordwise" /> helps me practice with AI-generated chord
@@ -52,6 +55,15 @@ export function RoomSection() {
       pets > 3
         ? "Okay, you have a friend for life now."
         : "My cat lives back home in Barcelona, otherwise working from home would be too distracting.",
+    microduck: duckIntro ? (
+      <>
+        <p>
+          I&apos;ve always liked robots, so I got a little one for my room. Meet my{" "}
+          <a href="https://pollen-robotics.com/microduck/" target="_blank" rel="noopener noreferrer" className="pointer-events-auto font-medium underline underline-offset-2">Microduck</a>.
+        </p>
+        <p className="mt-2">Click it, then move your pointer around the floor to guide it.</p>
+      </>
+    ) : null,
     poster: (
       <>
         <p>Latest movie I recommend:</p>
@@ -110,10 +122,11 @@ export function RoomSection() {
           pets={pets}
           quotes={quotes}
           onSelect={select}
+          onDuckMet={() => setDuckIntro(false)}
           onProgress={setSceneProgress}
           onReady={() => setSceneReady(true)}
         />
-        {selected ? (
+        {selected && quotes[selected] ? (
           <blockquote
             className={cn(
               "absolute bottom-0 left-0 z-30 hidden w-full overflow-y-auto overflow-x-hidden rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 max-[700px]:block",

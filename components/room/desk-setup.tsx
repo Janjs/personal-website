@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { Part, RBox, canvasTexture } from "@/components/room/primitives";
+import { Part, Pickable, RBox, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
 const codeLines = [[0, 180, "#c792ea"], [1, 260, "#82aaff"], [2, 140, "#c3e88d"], [1, 300, "#f2c66d"], [2, 220, "#82aaff"], [3, 160, "#c3e88d"], [2, 240, "#f78c6c"], [1, 120, "#c792ea"], [0, 90, "#82aaff"], [1, 280, "#c3e88d"], [2, 200, "#f2c66d"], [1, 150, "#c792ea"]] as const;
 
@@ -56,13 +56,13 @@ function OfficeChair() {
   );
 }
 
-export function DeskSetup({ dark }: { dark: boolean }) {
+function DeskPeripherals({ dark }: { dark: boolean }) {
   const screen = useMemo(() => screenTexture(), []);
   const keys = useMemo(() => keyboardTexture(), []);
 
   return (
     <>
-      <group position={[-0.45, 1.15, -1.72]}>
+      <group position={[0, 0, -0.27]}>
         <RBox color="#2b2b2e" size={[0.3, 0.02, 0.2]} radius={0.008} position={[0, 0.01, 0]} />
         <RBox color="#2b2b2e" size={[0.06, 0.3, 0.035]} radius={0.01} position={[0, 0.17, -0.03]} />
         <RBox color="#232326" size={[0.95, 0.56, 0.035]} radius={0.015} position={[0, 0.4, 0]} />
@@ -71,15 +71,25 @@ export function DeskSetup({ dark }: { dark: boolean }) {
           <meshBasicMaterial map={screen} toneMapped={false} color={dark ? "#ffffff" : "#d9d9d9"} />
         </mesh>
       </group>
-      <group position={[-0.5, 1.15, -1.2]}>
+      <group position={[-0.05, 0, 0.25]}>
         <RBox color="#d9d4ca" size={[0.62, 0.025, 0.2]} radius={0.008} position={[0, 0.0125, 0]} />
         <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.6, 0.19]} />
           <meshStandardMaterial map={keys} roughness={0.6} />
         </mesh>
       </group>
-      <RBox color="#3a3f4a" size={[0.3, 0.006, 0.24]} radius={0.002} position={[0.02, 1.153, -1.2]} />
-      <Part color="#e8e4dc" roughness={0.4} position={[0.02, 1.17, -1.2]} scale={[0.75, 0.45, 1.1]}><sphereGeometry args={[0.045, 32, 16]} /></Part>
+      <RBox color="#3a3f4a" size={[0.3, 0.006, 0.24]} radius={0.002} position={[0.47, 0.003, 0.25]} />
+      <Part color="#e8e4dc" roughness={0.4} position={[0.47, 0.02, 0.25]} scale={[0.75, 0.45, 1.1]}><sphereGeometry args={[0.045, 32, 16]} /></Part>
+    </>
+  );
+}
+
+export function Desk({ dark, ...props }: ItemProps & { dark: boolean }) {
+  return (
+    <>
+      <Pickable {...props} tipY={0.62} position={[-0.45, 1.15, -1.45]}>
+        <DeskPeripherals dark={dark} />
+      </Pickable>
       <OfficeChair />
     </>
   );

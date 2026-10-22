@@ -1,9 +1,11 @@
 "use client";
 
+import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, type RefObject } from "react";
 import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group, type Mesh } from "three";
 
+import { encounterActive, encounterDuration, moveOutsideBox, type EncounterState } from "@/components/room/floor-collision";
 import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
 const fur = "#e8964a";
@@ -11,7 +13,7 @@ const darkFur = "#cf7634";
 const paw = "#f6d2a8";
 const footScale = [1.12, 1.05, 1.22] as const;
 
-const spots = [[0.4, 0.4], [1.3, 1.1], [-0.6, 1.3], [1, -0.4], [-0.9, 0.3]] as const;
+const spots = [[0.65, 0.4], [1.55, 1.1], [-0.35, 1.3], [1.25, -0.4], [0, 0.3]] as const;
 const legs = [[-0.09, 0.14, 0], [0.09, 0.14, Math.PI], [-0.09, -0.2, Math.PI], [0.09, -0.2, 0]] as const;
 
 function stripes() {
@@ -43,7 +45,7 @@ function tailShape() {
   return geometry;
 }
 
-export function Cat({ pets, playing, active, ...props }: ItemProps & { pets: number; playing: boolean }) {
+export function Cat({ pets, playing, active, position, duckPosition, encounter, ...props }: ItemProps & { pets: number; playing: boolean; position: RefObject<Vector3>; duckPosition: RefObject<Vector3>; encounter: RefObject<EncounterState> }) {
   const walker = useRef<Group>(null);
   const torso = useRef<Group>(null);
   const head = useRef<Group>(null);
@@ -60,6 +62,8 @@ export function Cat({ pets, playing, active, ...props }: ItemProps & { pets: num
   const tailGeometry = useMemo(() => tailShape(), []);
   const tailMesh = useRef<Mesh>(null);
   const tailTip = useRef<Group>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const speakingRef = useRef(false);
 
   useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
@@ -68,31 +72,41 @@ export function Cat({ pets, playing, active, ...props }: ItemProps & { pets: num
       petStart.current = t;
     }
     const since = t - petStart.current;
-    const petting = since < 1.6;
-    const ease = petting ? Math.sin((since / 1.6) * Math.PI) : 0;
+    const clicked = since < 1.6;
 
     const cat = walker.current;
     if (!cat) return;
+    const duck = duckPosition.current;
     const state = wander.current;
+    const meeting = encounterActive(encounter.current, cat.position, duck, t);
     const [targetX, targetZ] = spots[state.target];
     const dx = targetX - cat.position.x;
     const dz = targetZ - cat.position.z;
     const distance = Math.hypot(dx, dz);
-    const dancing = playing && !petting;
     if (playing) state.sitUntil = t + 3;
-    const free = !active && !petting && !playing && t > state.sitUntil;
-    const walking = free && distance > 0.02;
+    const free = !active && !clicked && !playing && t > state.sitUntil;
+    let walking = free && !meeting && distance > 0.02;
 
     if (walking) {
-      const step = Math.min(distance, delta * 0.45);
-      cat.position.x += (dx / distance) * step;
-      cat.position.z += (dz / distance) * step;
+      const step = Math.min(distance, Math.min(delta, 0.05) * 0.45);
+      moveOutsideBox(cat.position, cat.position.x + (dx / distance) * step, cat.position.z + (dz / distance) * step, duck);
       const turn = Math.atan2(dx, dz) - cat.rotation.y;
       cat.rotation.y += Math.atan2(Math.sin(turn), Math.cos(turn)) * (1 - Math.exp(-delta * 8));
-    } else if (free) {
+    } else if (free && !meeting) {
       state.sitUntil = t + 3 + Math.random() * 4;
       state.target = (state.target + 1 + Math.floor(Math.random() * (spots.length - 1))) % spots.length;
     }
+    position.current.set(cat.position.x, 0, cat.position.z);
+    if (meeting !== speakingRef.current) {
+      speakingRef.current = meeting;
+      setSpeaking(meeting);
+    }
+    const petting = clicked || meeting;
+    const petEase = clicked ? Math.sin((since / 1.6) * Math.PI) : 0;
+    const meetingTime = t - encounter.current.startedAt;
+    const meetingEase = meeting ? Math.sin((meetingTime / encounterDuration) * Math.PI) : 0;
+    const ease = Math.max(petEase, meetingEase);
+    const dancing = playing && !petting;
 
     state.dance = dancing ? state.dance + (1 - state.dance) * (1 - Math.exp(-delta * 8)) : 0;
     state.stand += ((walking || dancing ? 1 : 0) - state.stand) * (1 - Math.exp(-delta * 6));
@@ -113,20 +127,26 @@ export function Cat({ pets, playing, active, ...props }: ItemProps & { pets: num
       footRefs.current[index]?.scale.set(footScale[0] * shown, (footScale[1] * shown) / stand, footScale[2] * shown);
     });
 
-    head.current?.rotation.set(-0.45 * ease, 0, 0.15 * ease - state.dance * Math.sin(beat) * 0.08);
+    const duckAngle = Math.atan2(duck.x - cat.position.x, duck.z - cat.position.z) - cat.rotation.y;
+    if (head.current) {
+      head.current.rotation.x = -0.45 * ease;
+      head.current.rotation.y += ((meeting ? Math.max(-0.52, Math.min(0.52, Math.atan2(Math.sin(duckAngle), Math.cos(duckAngle)))) : 0) - head.current.rotation.y) * (1 - Math.exp(-delta * 8));
+      head.current.rotation.z = 0.15 * ease - state.dance * Math.sin(beat) * 0.08 + (meeting ? 0.1 : 0);
+    }
     eyes.current?.scale.set(1, 1 - 0.85 * ease, 1);
     tail.current?.rotation.set(0, Math.sin(t * (petting ? 9 : dancing ? 4 : walking ? 4 : 1.5)) * (0.12 + 0.2 * state.stand), 0);
     if (tailMesh.current?.morphTargetInfluences) tailMesh.current.morphTargetInfluences[0] = state.stand;
     tailTip.current?.position.lerpVectors(tuckedTip, raisedTip, state.stand);
     if (heart.current) {
       heart.current.visible = petting;
-      heart.current.position.y = 0.62 + since * 0.25;
-      heart.current.scale.setScalar(ease);
+      heart.current.position.y = petting ? 0.62 + (clicked ? since : meetingTime) * 0.25 : 0.62 + (t * 0.25) % 0.3;
+      heart.current.scale.setScalar(petting ? ease : 0.7);
     }
   });
 
   return (
     <group ref={walker} position={[spots[0][0], 0, spots[0][1]]} rotation={[0, Math.PI / 4, 0]}>
+      {speaking && <Html center position={[0, 0.91, 0]} style={{ pointerEvents: "none" }}><div className="rounded-lg bg-card px-2 py-1 text-sm font-medium text-card-foreground shadow-sm">Miaw!</div></Html>}
       <Pickable active={active} {...props} tipY={0.85}>
         {legs.map(([x, z], index) => (
           <group key={index} ref={(leg) => { legRefs.current[index] = leg; }} position={[x, 0.24, z]}>

@@ -5,7 +5,7 @@ import { EffectComposer, Outline, Selection } from "@react-three/postprocessing"
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, type ReactNode } from "react";
-import { DoubleSide, setConsoleFunction, type Group, type Material } from "three";
+import { DoubleSide, Vector3, setConsoleFunction, type Group, type Material } from "three";
 
 setConsoleFunction((type, message, ...params) => {
   if (message.startsWith("THREE.Clock:")) return;
@@ -13,21 +13,24 @@ setConsoleFunction((type, message, ...params) => {
 });
 
 import { Basketball } from "@/components/room/basketball";
+import { Desk } from "@/components/room/desk-setup";
 import { Cat } from "@/components/room/cat";
 import { Furniture } from "@/components/room/furniture";
+import { duckHome } from "@/components/room/floor-collision";
 import { Guitar } from "@/components/room/guitar";
+import { Microduck } from "@/components/room/microduck";
 import { RecordPlayer } from "@/components/room/record-player";
 import { GuinnessPint, SagradaFamilia, SeoulTower } from "@/components/room/souvenirs";
 import { Poster, Window } from "@/components/room/wall-art";
 
-export type RoomItemId = "guitar" | "vinyl" | "cat" | "poster" | "basketball" | "window" | "barcelona" | "seoul" | "dublin";
+export type RoomItemId = "desk" | "guitar" | "vinyl" | "cat" | "microduck" | "poster" | "basketball" | "window" | "barcelona" | "seoul" | "dublin";
 
 function fitZoom(size: { width: number; height: number }) {
   // Keep the room at its original scale inside the canvas's 20% bleed on each side.
   return Math.min(size.width, size.height) / 1.4 / 6.1;
 }
 
-function RoomControls() {
+function RoomControls({ locked }: { locked: boolean }) {
   const size = useThree((state) => state.size);
   const fitRef = useRef(0);
   const fit = fitZoom(size);
@@ -43,6 +46,7 @@ function RoomControls() {
 
   return (
     <OrbitControls
+      enabled={!locked}
       enableZoom={false}
       enablePan={false}
       minZoom={fit}
@@ -86,15 +90,19 @@ function ProgressReporter({ onProgress }: { onProgress: (progress: number) => vo
   return null;
 }
 
-export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgress, onReady }: {
+export function RoomScene({ selected, playing, pets, quotes, onSelect, onDuckMet, onProgress, onReady }: {
   selected: RoomItemId | null;
   playing: boolean;
   pets: number;
   quotes: Record<RoomItemId, ReactNode>;
   onSelect: (id: RoomItemId | null) => void;
+  onDuckMet: () => void;
   onProgress: (progress: number) => void;
   onReady: () => void;
 }) {
+  const catPosition = useRef(new Vector3(0.65, 0, 0.4));
+  const duckPosition = useRef(duckHome.clone());
+  const encounter = useRef({ startedAt: -10, touching: false, met: false });
   const dark = useTheme().resolvedTheme === "dark";
   const glow = dark ? 0xffd28a : 0xffffff;
   const pick = (id: RoomItemId) => ({ active: selected === id, onSelect: () => onSelect(id), tip: quotes[id] });
@@ -112,10 +120,10 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
         camera={{ position: [10, 8.5, 10], zoom: 40 }}
         onPointerMissed={() => onSelect(null)}
         role="img"
-        aria-label="Isometric 3D workspace with a desk setup, guitar, cat, record player, poster, basketball, and souvenirs"
+        aria-label="Isometric 3D workspace with a desk setup, guitar, cat, Microduck robot, record player, poster, basketball, and souvenirs"
       >
         <SceneReady onReady={onReady} />
-        <RoomControls />
+        <RoomControls locked={selected === "microduck"} />
       <hemisphereLight args={[dark ? "#ffe1a8" : "#ffe0b2", dark ? "#332319" : "#d9be98", dark ? 0.4 : 1.1]} />
       <ambientLight intensity={dark ? 0.22 : 0.65} color={dark ? "#ffcf96" : "#fff4e2"} />
       <directionalLight
@@ -159,8 +167,10 @@ export function RoomScene({ selected, playing, pets, quotes, onSelect, onProgres
             <object3D attach="target" position={[0.35, 0.03, 0.35]} />
           </spotLight>
           <Furniture dark={dark} />
+          <Desk {...pick("desk")} dark={dark} />
           <Guitar {...pick("guitar")} />
-          <Cat {...pick("cat")} pets={pets} playing={playing} />
+          <Cat {...pick("cat")} pets={pets} playing={playing} position={catPosition} duckPosition={duckPosition} encounter={encounter} />
+          <Microduck {...pick("microduck")} catPosition={catPosition} position={duckPosition} encounter={encounter} onMet={onDuckMet} />
           <RecordPlayer {...pick("vinyl")} playing={playing} />
           <Basketball {...pick("basketball")} />
           <NoShadowGroup>

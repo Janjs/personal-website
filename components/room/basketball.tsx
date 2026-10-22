@@ -4,6 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import type { Group } from "three";
 
+import { basketballSpot } from "@/components/room/floor-collision";
 import { Pickable, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
 function ballTexture() {
@@ -41,7 +42,7 @@ export function Basketball({ active, ...props }: ItemProps) {
   });
 
   return (
-    <Pickable active={active} {...props} tipY={0.75} position={[-1.3, 0.26, 1.4]}>
+    <Pickable active={active} {...props} tipY={0.75} position={[basketballSpot.x, 0.26, basketballSpot.z]}>
       <group ref={ball}>
         <mesh rotation={[0.4, 0.6, 0.2]} castShadow receiveShadow>
           <sphereGeometry args={[0.26, 64, 48]} />

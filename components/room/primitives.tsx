@@ -59,10 +59,12 @@ export function Pickable({
       }}
     >
       <Select enabled={hovered || active}>{children}</Select>
-      {active && (
+      {active && tip != null && (
         <Html
           position={[0, tipY, 0]}
           zIndexRange={[30, 0]}
+          pointerEvents="none"
+          wrapperClass="pointer-events-none"
           calculatePosition={(object, camera, size) => {
             projected.setFromMatrixPosition(object.matrixWorld).project(camera);
             const x = ((projected.x + 1) / 2) * size.width;
