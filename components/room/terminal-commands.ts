@@ -178,7 +178,7 @@ export const commands: Command[] = [
   { names: ["exit"], help: "Leave the terminal", run: () => ({ exit: true, lines: [{ text: "Later.", tone: "muted" }] }) },
   {
     names: ["coffee"],
-    help: "Steam the mug",
+    help: "Fill the mug",
     run: () => {
       dispatchRoom({ type: "coffee" });
       return { lines: [{ text: "Fresh pot.", tone: "good" }] };

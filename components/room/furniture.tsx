@@ -4,19 +4,11 @@ import { Select } from "@react-three/postprocessing";
 import { useFrame } from "@react-three/fiber";
 import { useTheme } from "next-themes";
 import { useMemo, useRef, useState } from "react";
-import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3, type Group, type PointLight } from "three";
+import { BackSide, CatmullRomCurve3, LatheGeometry, TubeGeometry, Vector2, Vector3, type Group, type Mesh, type PointLight } from "three";
 
 import { plantSpot } from "@/components/room/floor-collision";
 import { getRoomFx } from "@/components/room/room-fx";
 import { Part, RBox } from "@/components/room/primitives";
-
-const books = [
-  [0.35, "#a3553f"],
-  [0.3, "#5f7a8c"],
-  [0.38, "#d9b25f"],
-  [0.28, "#7d8f62"],
-  [0.33, "#c98a6b"],
-] as const;
 
 const floorBoards = ["#c9ad88", "#d2b995", "#c5a57f", "#d8c09e", "#cbae88", "#d4ba96", "#c2a17a", "#d1b58e", "#c7a781", "#d6bd99"];
 
@@ -56,6 +48,56 @@ const stringBulbs = Array.from({ length: 14 }, (_, index) => {
   return [-1.98, 2.95 - (span === 1 || span === 2 ? 0.14 : 0) - t * 0.08, -1.75 + t * 3.45] as const;
 });
 
+const mugSpot = [-0.98, 1.18, -1.28] as const;
+
+function CoffeeMug() {
+  const fill = useRef<Mesh>(null);
+  const level = useRef(0);
+  const cup = useMemo(
+    () =>
+      new LatheGeometry(
+        [
+          [0, 0],
+          [0.05, 0],
+          [0.055, 0.12],
+          [0.047, 0.12],
+          [0.042, 0.018],
+          [0, 0.018],
+        ].map(([x, y]) => new Vector2(x, y)),
+        32,
+      ),
+    [],
+  );
+
+  useFrame((_, delta) => {
+    const mesh = fill.current;
+    if (!mesh) return;
+    const target = performance.now() < getRoomFx().coffeeUntil ? 1 : 0;
+    level.current += (target - level.current) * Math.min(1, delta * 2.4);
+    const amount = level.current;
+    mesh.visible = amount > 0.02;
+    if (!mesh.visible) return;
+    const height = 0.08 * amount;
+    mesh.scale.y = amount;
+    mesh.position.y = 0.018 + height / 2;
+  });
+
+  return (
+    <group position={mugSpot}>
+      <mesh geometry={cup} castShadow receiveShadow>
+        <meshStandardMaterial color="#e9e2d6" roughness={0.4} />
+      </mesh>
+      <mesh ref={fill} visible={false} position={[0, 0.058, 0]}>
+        <cylinderGeometry args={[0.04, 0.041, 0.08, 32]} />
+        <meshStandardMaterial color="#3c2415" roughness={0.45} />
+      </mesh>
+      <Part color="#e9e2d6" roughness={0.4} position={[0.06, 0.06, 0]}>
+        <torusGeometry args={[0.03, 0.008, 12, 24]} />
+      </Part>
+    </group>
+  );
+}
+
 function CoffeeSteam() {
   const ref = useRef<Group>(null);
   useFrame(({ clock }) => {
@@ -75,7 +117,7 @@ function CoffeeSteam() {
   });
 
   return (
-    <group ref={ref} visible={false} position={[-1.02, 1.15, -1.28]}>
+    <group ref={ref} visible={false} position={mugSpot}>
       {[0, 1, 2].map((index) => (
         <mesh key={index}>
           <sphereGeometry args={[0.025, 10, 8]} />
@@ -221,10 +263,7 @@ export function Furniture({ dark }: { dark: boolean }) {
       {[[-1.45, -1.85], [0.55, -1.85], [-1.45, -1.05], [0.55, -1.05]].map(([x, z]) => (
         <RBox key={`${x}${z}`} color="#aa8d6b" size={[0.07, 1.07, 0.07]} radius={0.02} position={[x, 0.535, z]} />
       ))}
-      <group position={[-1.02, 1.15, -1.28]}>
-        <Part color="#e9e2d6" roughness={0.4} position={[0, 0.06, 0]}><cylinderGeometry args={[0.055, 0.05, 0.12, 32]} /></Part>
-        <Part color="#e9e2d6" roughness={0.4} position={[0.06, 0.06, 0]}><torusGeometry args={[0.03, 0.008, 12, 24]} /></Part>
-      </group>
+      <CoffeeMug />
       <DeskLamp dark={dark} />
 
       <RBox color="#d2bea1" size={[1.1, 0.9, 0.9]} radius={0.03} position={[1.4, 0.45, -1.5]} />
@@ -237,9 +276,6 @@ export function Furniture({ dark }: { dark: boolean }) {
       <RBox color="#fbf6ee" castShadow={false} size={[2.1, 0.06, 0.3]} position={[-0.45, 1.88, -1.85]} />
 
       <RBox color="#bfa17c" size={[0.35, 0.05, 1.4]} radius={0.015} position={[-1.82, 2.2, 0.9]} />
-      {books.map(([height, color], index) => (
-        <RBox key={color} color={color} size={[0.26, height, 0.08]} radius={0.01} position={[-1.85, 2.225 + height / 2, 0.3 + index * 0.09]} />
-      ))}
       <StringLights dark={dark} />
       <Plant />
       <CoffeeSteam />

@@ -4,7 +4,7 @@ import { OrbitControls, useProgress } from "@react-three/drei";
 import { EffectComposer, Outline, Selection } from "@react-three/postprocessing";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, type ComponentRef, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useSyncExternalStore, type ComponentRef, type ReactNode, type RefObject } from "react";
 import { DoubleSide, Quaternion, Vector3, setConsoleFunction, type AmbientLight, type DirectionalLight, type Group, type HemisphereLight, type Material, type Object3D, type PointLight, type SpotLight } from "three";
 
 import { bindRoomTheme, getRoomFx } from "@/components/room/room-fx";
@@ -15,6 +15,7 @@ setConsoleFunction((type, message, ...params) => {
 });
 
 import { Basketball } from "@/components/room/basketball";
+import { Books } from "@/components/room/books";
 import { Desk } from "@/components/room/desk-setup";
 import { Cat } from "@/components/room/cat";
 import { Furniture } from "@/components/room/furniture";
@@ -25,15 +26,22 @@ import { RecordPlayer } from "@/components/room/record-player";
 import { GuinnessPint, SagradaFamilia, SeoulTower } from "@/components/room/souvenirs";
 import { Poster, Window } from "@/components/room/wall-art";
 
-export type RoomItemId = "desk" | "guitar" | "vinyl" | "cat" | "microduck" | "poster" | "basketball" | "window" | "barcelona" | "seoul" | "dublin";
+export type RoomItemId = "desk" | "guitar" | "vinyl" | "cat" | "microduck" | "poster" | "basketball" | "books" | "window" | "barcelona" | "seoul" | "dublin";
 
 function fitZoom(size: { width: number; height: number }) {
   // Keep the room at its original scale inside the canvas's 20% bleed on each side.
   return Math.min(size.width, size.height) / 1.4 / 6.1;
 }
 
+function subscribeMobile(onChange: () => void) {
+  const mq = window.matchMedia("(max-width: 700px)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
 function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; focus: "room" | "monitor"; monitor: RefObject<Object3D | null>; onSettled: () => void }) {
   const size = useThree((state) => state.size);
+  const mobile = useSyncExternalStore(subscribeMobile, () => window.matchMedia("(max-width: 700px)").matches, () => false);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const home = useRef({ pos: new Vector3(10, 8.5, 10), zoom: 40, target: new Vector3() });
   const progress = useRef(0);
@@ -82,13 +90,13 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
     }
 
     monitor.current?.getWorldPosition(screen.current);
-    focusPos.current.set(screen.current.x, screen.current.y + 0.22, screen.current.z + 0.95);
-    focusTarget.current.set(screen.current.x, screen.current.y - 0.2, screen.current.z);
+    focusPos.current.set(screen.current.x - 0.08, screen.current.y + 0.22, screen.current.z + 0.95);
+    focusTarget.current.set(screen.current.x - 0.08, screen.current.y - 0.2, screen.current.z);
 
     const t = progress.current;
     if (t > 0.001 || !idle) {
       camera.position.lerpVectors(home.current.pos, focusPos.current, t);
-      const destZoom = Math.max(nextFit * 4.4, 170);
+      const destZoom = Math.max(nextFit * 5.8, 225);
       camera.zoom = Math.exp(Math.log(Math.max(home.current.zoom, 1)) * (1 - t) + Math.log(destZoom) * t);
       camera.updateProjectionMatrix();
       if (orbit) {
@@ -121,7 +129,7 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
       ref={controls}
       makeDefault
       enabled={!locked}
-      enableZoom
+      enableZoom={mobile}
       enablePan={false}
       minZoom={fit}
       maxZoom={fit * 8}
@@ -309,7 +317,7 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
         camera={{ position: [10, 8.5, 10], zoom: 40 }}
         onPointerMissed={() => onSelect(null)}
         role="img"
-        aria-label="Isometric 3D workspace with a desk setup, guitar, cat, Microduck robot, record player, poster, basketball, and souvenirs"
+        aria-label="Isometric 3D workspace with a desk setup, guitar, cat, Microduck robot, record player, poster, basketball, books, and souvenirs"
       >
         <SceneReady onReady={onReady} />
         <RoomControls locked={selected === "microduck" || focus !== "room"} focus={focus} monitor={monitor} onSettled={onFocusSettled} />
@@ -336,6 +344,7 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
           <Microduck {...pick("microduck")} catPosition={catPosition} position={duckPosition} encounter={encounter} onMet={onDuckMet} />
           <RecordPlayer {...pick("vinyl")} playing={playing} />
           <Float seed={2}><Basketball {...pick("basketball")} /></Float>
+          <Books {...pick("books")} />
           <NoShadowGroup>
             <Poster {...pick("poster")} dark={dark} />
             <Window {...pick("window")} dark={dark} />

@@ -36,9 +36,21 @@ export function Pickable({
   mute,
   tipY = 0.5,
   tipMinBottom = TIP_MIN_BOTTOM,
+  tipBelow = false,
+  tipInteractive = false,
+  tipWidth = "w-64",
+  tipHalfWidth = TIP_HALF_WIDTH,
   children,
   ...props
-}: ThreeElements["group"] & ItemProps & { tipY?: number; tipMinBottom?: number }) {
+}: ThreeElements["group"] &
+  ItemProps & {
+    tipY?: number;
+    tipMinBottom?: number;
+    tipBelow?: boolean;
+    tipInteractive?: boolean;
+    tipWidth?: string;
+    tipHalfWidth?: number;
+  }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -65,16 +77,23 @@ export function Pickable({
         <Html
           position={[0, tipY, 0]}
           zIndexRange={[30, 0]}
-          pointerEvents="none"
-          wrapperClass="pointer-events-none"
+          pointerEvents={tipInteractive ? "auto" : "none"}
+          wrapperClass={tipInteractive ? undefined : "pointer-events-none"}
           calculatePosition={(object, camera, size) => {
             projected.setFromMatrixPosition(object.matrixWorld).project(camera);
             const x = ((projected.x + 1) / 2) * size.width;
             const y = ((1 - projected.y) / 2) * size.height;
-            return [Math.min(Math.max(x, TIP_HALF_WIDTH + 8), size.width - TIP_HALF_WIDTH - 8), Math.max(y, tipMinBottom)];
+            return [
+              Math.min(Math.max(x, tipHalfWidth + 8), size.width - tipHalfWidth - 8),
+              tipBelow ? Math.min(y, size.height - 24) : Math.max(y, tipMinBottom),
+            ];
           }}
         >
-          <blockquote className="w-64 max-[700px]:hidden -translate-x-1/2 -translate-y-full rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 animate-in fade-in-0 zoom-in-95">
+          <blockquote
+            className={`${tipWidth} max-[700px]:hidden -translate-x-1/2 ${tipBelow ? "mt-3" : "-translate-y-full"} rounded-xl bg-card px-4 py-3 text-sm leading-relaxed text-card-foreground shadow-sm ring-1 ring-foreground/10 animate-in fade-in-0 zoom-in-95`}
+            onClick={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+          >
             {tip}
           </blockquote>
         </Html>

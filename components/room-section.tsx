@@ -6,6 +6,7 @@ import { useState, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import { portfolioProjects } from "@/lib/projects";
+import { BooksTip } from "@/components/room/books";
 import type { RoomItemId } from "@/components/room/room-scene";
 import { terminalKb } from "@/components/room/terminal-keyboard";
 
@@ -106,6 +107,7 @@ export function RoomSection() {
       </>
     ),
     basketball: <>I play basketball, so I built <QuoteLink name="Highlights AI" /> to cut highlight reels from game footage with computer vision.</>,
+    books: <BooksTip />,
     window: "Outside is Utrecht, my adoptive city. I moved to the Netherlands in 2021 and have been building software here since.",
     barcelona: "From Barcelona, where I grew up and studied Computer Engineering at UPF.",
     seoul: "From my semester at Ajou University in South Korea, still one of the trips that changed how I see the world.",

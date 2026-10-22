@@ -58,10 +58,10 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
     }, 40);
     return () => window.clearInterval(id);
   }, [active, mashing]);
-  const painted = useRef(false);
-  if (!painted.current) {
-    painted.current = true;
-    paintTerminalScreen([], false);
+  const painted = useRef<{ mashing: boolean; lines: Line[] } | null>(null);
+  if (painted.current?.mashing !== mashing || (mashing && painted.current.lines !== lines)) {
+    painted.current = { mashing, lines };
+    paintTerminalScreen(mashing ? lines : [], mashing, false);
   }
   const wasActive = useRef<boolean | null>(null);
   if (wasActive.current !== active) {
@@ -151,6 +151,8 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
     if (node.value !== value) node.value = value;
   }
 
+  if (mashing) return null;
+
   return (
     <form
       className={cn(
@@ -164,7 +166,6 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
           onEnter();
           return;
         }
-        if (mashing) return;
         submit(value);
       }}
       onPointerDown={(event) => {
@@ -199,16 +200,13 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
               if (!scroller || scroller.clientHeight < 8) return;
               if (scroller.scrollHeight > scroller.clientHeight + 1) scroller.scrollTop = scroller.scrollHeight;
             }}
+            className="flex items-baseline gap-2"
           >
-            {mashing ? null : (
-              <div className="flex items-baseline gap-2">
-                <span className="shrink-0 text-[#c3e88d]">{prompt}</span>
-                <span className="text-[#e8e4dc]">
-                  {value}
-                  {active ? <span className="ml-px inline-block h-[1em] w-[2px] align-text-bottom animate-pulse bg-[#c3e88d]" /> : null}
-                </span>
-              </div>
-            )}
+            <span className="shrink-0 text-[#c3e88d]">{prompt}</span>
+            <span className="text-[#e8e4dc]">
+              {value}
+              {active ? <span className="ml-px inline-block h-[1em] w-[2px] align-text-bottom animate-pulse bg-[#c3e88d]" /> : null}
+            </span>
           </div>
         </div>
       </div>
