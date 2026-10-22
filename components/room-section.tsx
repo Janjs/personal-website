@@ -56,7 +56,6 @@ export function RoomSection() {
 
   const openMonitor = () => {
     if (live) return;
-    void import("@/components/room/terminal");
     setBooted(true);
     setSelected(null);
     setMonitor("in");
@@ -165,7 +164,10 @@ export function RoomSection() {
           onSelect={select}
           onDuckMet={() => setDuckIntro(false)}
           onProgress={setSceneProgress}
-          onReady={() => setSceneReady(true)}
+          onReady={() => {
+            setSceneReady(true);
+            void import("@/components/room/terminal").then(() => setBooted(true));
+          }}
           onOpenMonitor={openMonitor}
           onFocusSettled={() => setMonitor((state) => (state === "in" ? "open" : state === "out" ? "idle" : state))}
           terminal={booted ? <RoomTerminal active={monitor === "open"} onExit={closeMonitor} onEnter={openMonitor} /> : null}

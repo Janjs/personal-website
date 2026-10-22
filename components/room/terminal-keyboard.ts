@@ -3,9 +3,14 @@ export const terminalKb = {
 };
 
 export function armTerminalKeyboard() {
-  terminalKb.node?.focus({ preventScroll: true });
+  const node = terminalKb.node;
+  if (!node) return;
+  if (document.activeElement === node) return;
+  node.focus({ preventScroll: true });
 }
 
 export function blurTerminalKeyboard() {
-  terminalKb.node?.blur();
+  const node = terminalKb.node;
+  if (!node || document.activeElement !== node) return;
+  node.blur();
 }

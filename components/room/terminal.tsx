@@ -167,8 +167,12 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
         if (mashing) return;
         submit(value);
       }}
-      onMouseDown={(event) => {
-        if (!active) event.preventDefault();
+      onPointerDown={(event) => {
+        if (!active) {
+          event.preventDefault();
+          return;
+        }
+        armTerminalKeyboard();
       }}
       onClick={() => {
         if (!active) onEnter();

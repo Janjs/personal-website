@@ -73,8 +73,13 @@ function DeskPeripherals({ dark, monitorRef, onOpenMonitor, terminal, hot }: { d
           armTerminalKeyboard();
           onOpenMonitor?.();
         }}
+        onPointerUp={(event) => {
+          event.stopPropagation();
+          armTerminalKeyboard();
+        }}
         onClick={(event) => {
           event.stopPropagation();
+          armTerminalKeyboard();
           onOpenMonitor?.();
         }}
       >
