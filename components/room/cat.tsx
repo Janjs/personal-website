@@ -3,13 +3,11 @@
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState, type RefObject } from "react";
-import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group, type Mesh } from "three";
+import { CatmullRomCurve3, RepeatWrapping, TubeGeometry, Vector3, type Group, type Mesh, type MeshBasicMaterial } from "three";
 
 import { encounterActive, encounterDuration, moveOutsideBox, type EncounterState } from "@/components/room/floor-collision";
 import { getRoomFx } from "@/components/room/room-fx";
 import { Part, Pickable, canvasTexture, type ItemProps } from "@/components/room/primitives";
-
-const deskVisit = [0.15, -0.7] as const;
 
 const fur = "#e8964a";
 const darkFur = "#cf7634";
@@ -61,7 +59,10 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
   const lastPets = useRef(pets);
   const lastSummon = useRef(0);
   const petStart = useRef(-10);
-  const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0, summoned: false });
+  const onKeys = useRef(false);
+  const puffAt = useRef(-10);
+  const puff = useRef<Group>(null);
+  const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0 });
   const furTexture = useMemo(() => stripes(), []);
   const tailGeometry = useMemo(() => tailShape(), []);
   const tailMesh = useRef<Mesh>(null);
@@ -78,36 +79,54 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
     const summoned = getRoomFx().catToken;
     if (summoned !== lastSummon.current) {
       lastSummon.current = summoned;
-      wander.current.summoned = true;
-      wander.current.sitUntil = 0;
+      onKeys.current = true;
+      puffAt.current = t;
+      wander.current.sitUntil = t + 999;
     }
     const since = t - petStart.current;
     const clicked = since < 1.6;
 
     const cat = walker.current;
     if (!cat) return;
+    const pinned = onKeys.current;
+    if (pinned) {
+      const appear = Math.min(1, Math.max(0, (t - puffAt.current - 0.12) / 0.4));
+      cat.scale.setScalar(Math.max(0.001, 0.62 * appear));
+      cat.position.set(-0.5, 1.19, -1.26);
+      cat.rotation.y = Math.PI;
+    }
+    const puffAge = t - puffAt.current;
+    const puffing = puffAt.current > 0 && puffAge < 1.45;
+    if (puff.current) {
+      puff.current.visible = puffing;
+      puff.current.children.forEach((child, index) => {
+        const u = Math.min(1, Math.max(0, (puffAge - index * 0.05) / 1.05));
+        child.scale.setScalar(0.04 + u * (0.28 + index * 0.06));
+        child.position.y = 0.04 + u * 0.22;
+        ((child as Mesh).material as MeshBasicMaterial).opacity = puffing ? 0.5 * (1 - u) : 0;
+      });
+    }
     const duck = duckPosition.current;
     const state = wander.current;
     const meeting = encounterActive(encounter.current, cat.position, duck, t);
-    const [targetX, targetZ] = state.summoned ? deskVisit : spots[state.target];
+    const [targetX, targetZ] = spots[state.target];
     const dx = targetX - cat.position.x;
     const dz = targetZ - cat.position.z;
     const distance = Math.hypot(dx, dz);
     if (playing) state.sitUntil = t + 3;
     const free = !active && !clicked && !playing && t > state.sitUntil;
-    const walking = free && !meeting && distance > 0.02;
+    const walking = !pinned && free && !meeting && distance > 0.02;
 
     if (walking) {
       const step = Math.min(distance, Math.min(delta, 0.05) * 0.45);
       moveOutsideBox(cat.position, cat.position.x + (dx / distance) * step, cat.position.z + (dz / distance) * step, duck);
       const turn = Math.atan2(dx, dz) - cat.rotation.y;
       cat.rotation.y += Math.atan2(Math.sin(turn), Math.cos(turn)) * (1 - Math.exp(-delta * 8));
-    } else if (free && !meeting) {
-      if (state.summoned) state.summoned = false;
+    } else if (free && !meeting && !pinned) {
       state.sitUntil = t + 3 + Math.random() * 4;
       state.target = (state.target + 1 + Math.floor(Math.random() * (spots.length - 1))) % spots.length;
     }
-    position.current.set(cat.position.x, 0, cat.position.z);
+    if (!pinned) position.current.set(cat.position.x, 0, cat.position.z);
     if (meeting !== speakingRef.current) {
       speakingRef.current = meeting;
       setSpeaking(meeting);
@@ -156,6 +175,15 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
   });
 
   return (
+    <>
+    <group ref={puff} visible={false} position={[-0.5, 1.32, -1.26]}>
+      {[0, 1, 2, 3].map((index) => (
+        <mesh key={index} position={[(index - 1.5) * 0.07, 0, index % 2 ? 0.05 : -0.04]}>
+          <sphereGeometry args={[0.08, 12, 10]} />
+          <meshBasicMaterial color="#f7f1e6" transparent opacity={0} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
     <group ref={walker} position={[spots[0][0], 0, spots[0][1]]} rotation={[0, Math.PI / 4, 0]}>
       {speaking && <Html center position={[0, 0.91, 0]} style={{ pointerEvents: "none" }}><div className="rounded-lg bg-card px-2 py-1 text-sm font-medium text-card-foreground shadow-sm">Miaw!</div></Html>}
       <Pickable active={active} {...props} tipY={0.85}>
@@ -210,5 +238,6 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
         </group>
       </Pickable>
     </group>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-export type RoomLights = "on" | "party";
+export type RoomLights = "on" | "off" | "party";
 export type RoomWeather = "none" | "barcelona" | "utrecht";
 
 export type RoomFx = {
@@ -12,11 +12,14 @@ export type RoomFx = {
   catToken: number;
 };
 
+export const keyMash = "aaaaaaaaaaaaa";
+
 export type RoomAction =
   | { type: "weather"; place: Exclude<RoomWeather, "none"> }
   | { type: "konami" }
   | { type: "cat" }
   | { type: "coffee" }
+  | { type: "lights"; mode: RoomLights }
   | { type: "hire" }
   | { type: "melt" }
   | { type: "sandwich" };
@@ -33,9 +36,14 @@ export const initialRoomFx: RoomFx = {
 };
 
 let fx: RoomFx = initialRoomFx;
+let setSiteTheme: ((theme: "light" | "dark") => void) | null = null;
 
 export function getRoomFx() {
   return fx;
+}
+
+export function bindRoomTheme(setTheme: (theme: "light" | "dark") => void) {
+  setSiteTheme = setTheme;
 }
 
 export function dispatchRoom(action: RoomAction) {
@@ -51,7 +59,12 @@ export function dispatchRoom(action: RoomAction) {
       fx = { ...fx, catToken: fx.catToken + 1 };
       break;
     case "coffee":
-      fx = { ...fx, coffeeUntil: now + 4500 };
+      fx = { ...fx, coffeeUntil: Infinity };
+      break;
+    case "lights":
+      fx = { ...fx, lights: action.mode };
+      if (action.mode === "off") setSiteTheme?.("dark");
+      if (action.mode === "on") setSiteTheme?.("light");
       break;
     case "hire":
       fx = { ...fx, celebrateUntil: now + 2800, lights: "party" };

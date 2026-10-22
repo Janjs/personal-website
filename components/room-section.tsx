@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { portfolioProjects } from "@/lib/projects";
 import type { RoomItemId } from "@/components/room/room-scene";
+import { terminalKb } from "@/components/room/terminal-keyboard";
 
 const RoomScene = dynamic(() => import("@/components/room/room-scene").then((m) => m.RoomScene), {
   ssr: false,
@@ -140,6 +141,21 @@ export function RoomSection() {
             </div>
           </div>
         </div>
+        <input
+          ref={(node) => {
+            terminalKb.node = node;
+          }}
+          aria-label="Terminal command"
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect="off"
+          enterKeyHint="send"
+          inputMode="text"
+          spellCheck={false}
+          tabIndex={-1}
+          className="pointer-events-none absolute bottom-0 left-0 h-6 w-full opacity-[0.01]"
+          style={{ fontSize: 16 }}
+        />
         <RoomScene
           selected={selected}
           playing={playing}

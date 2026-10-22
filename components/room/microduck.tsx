@@ -57,7 +57,7 @@ export function Microduck({ active, catPosition, position, encounter, onMet, ...
   const floorPlane = useRef(new Plane());
   const floorOrigin = useRef(new Vector3());
   const cursorTarget = useRef(new Vector3());
-  const gait = useRef({ phase: 0, walk: 0 });
+  const gait = useRef({ phase: 0, walk: 0, guided: false });
   const chatter = useRef({ next: 2.8, until: 0 });
   const [speaking, setSpeaking] = useState(false);
   const speakingRef = useRef(false);
@@ -95,9 +95,9 @@ export function Microduck({ active, catPosition, position, encounter, onMet, ...
     const moveZ = meeting ? cat.z - duck.position.z : targetZ - duck.position.z;
     const distance = Math.hypot(moveX, moveZ);
     const frameTime = Math.min(delta, 0.05);
-    const yawError = distance > 0.001 ? shortestTurn(duck.rotation.y, Math.atan2(moveX, moveZ)) : 0;
-    if (meeting || (active && distance > 0.03)) {
-      duck.rotation.y += yawError * (1 - Math.exp(-frameTime * 7));
+    const seeking = meeting || (active && distance > 0.03);
+    if (seeking && distance > 0.001) {
+      duck.rotation.y += shortestTurn(duck.rotation.y, Math.atan2(moveX, moveZ)) * (1 - Math.exp(-frameTime * 7));
     }
     const facingError = distance > 0.001 ? shortestTurn(duck.rotation.y, Math.atan2(moveX, moveZ)) : 0;
 
@@ -110,7 +110,10 @@ export function Microduck({ active, catPosition, position, encounter, onMet, ...
       moveOutsideBox(duck.position, duck.position.x, duck.position.z, basketballSpot, 0.44, 0.44);
       moveOutsideBox(duck.position, duck.position.x, duck.position.z, plantSpot, 0.42, 0.42);
       walking = Math.hypot(duck.position.x - previousX, duck.position.z - previousZ) > 0.0002;
-      if (walking) gait.current.phase = (gait.current.phase + step * 0.62 / 0.15) % 1;
+      if (walking) {
+        gait.current.guided = true;
+        gait.current.phase = (gait.current.phase + step * 0.62 / 0.15) % 1;
+      }
     }
     gait.current.walk = MathUtils.damp(gait.current.walk, walking ? 1 : 0, 7, delta);
 
@@ -129,7 +132,15 @@ export function Microduck({ active, catPosition, position, encounter, onMet, ...
     if (rightHip.current && rightKnee.current && rightFoot.current) ikLeg(rightHip.current, rightKnee.current, rightFoot.current, strideFoot(1, gait.current.phase, walk), walk);
     if (head.current) {
       head.current.rotation.x = -0.32 + Math.sin(t * 1.5) * 0.03 + meet * 0.18;
-      head.current.rotation.y = meet * Math.sin(meetT * 6) * 0.2;
+      if (meeting) {
+        head.current.rotation.y = meet * Math.sin(meetT * 6) * 0.2;
+      } else {
+        duck.getWorldPosition(floorOrigin.current);
+        const glance = gait.current.guided && !seeking
+          ? MathUtils.clamp(shortestTurn(duck.rotation.y, Math.atan2(camera.position.x - floorOrigin.current.x, camera.position.z - floorOrigin.current.z)), -1.1, 1.1)
+          : 0;
+        head.current.rotation.y = MathUtils.damp(head.current.rotation.y, glance, 6, delta);
+      }
       head.current.rotation.z = Math.sin(t * 1.1) * 0.02 + meet * Math.sin(meetT * 8) * 0.16;
     }
     if (upperJaw.current) upperJaw.current.rotation.x = MathUtils.damp(upperJaw.current.rotation.x, -chomp * 0.4, 14, delta);

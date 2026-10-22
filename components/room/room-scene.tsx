@@ -5,9 +5,9 @@ import { EffectComposer, Outline, Selection } from "@react-three/postprocessing"
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, type ComponentRef, type ReactNode, type RefObject } from "react";
-import { DoubleSide, Vector3, setConsoleFunction, type AmbientLight, type DirectionalLight, type Group, type HemisphereLight, type Material, type Object3D, type PointLight } from "three";
+import { DoubleSide, Quaternion, Vector3, setConsoleFunction, type AmbientLight, type DirectionalLight, type Group, type HemisphereLight, type Material, type Object3D, type PointLight, type SpotLight } from "three";
 
-import { getRoomFx } from "@/components/room/room-fx";
+import { bindRoomTheme, getRoomFx } from "@/components/room/room-fx";
 
 setConsoleFunction((type, message, ...params) => {
   if (message.startsWith("THREE.Clock:")) return;
@@ -35,7 +35,7 @@ function fitZoom(size: { width: number; height: number }) {
 function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; focus: "room" | "monitor"; monitor: RefObject<Object3D | null>; onSettled: () => void }) {
   const size = useThree((state) => state.size);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const home = useRef({ pos: new Vector3(10, 8.5, 10), zoom: 40, target: new Vector3() });
+  const home = useRef({ pos: new Vector3(1.8, 7.2, 15), zoom: 40, target: new Vector3() });
   const progress = useRef(0);
   const announced = useRef<"room" | "monitor" | null>(null);
   const screen = useRef(new Vector3(-0.4, -0.1, -1.65));
@@ -115,8 +115,8 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
       enablePan={false}
       minZoom={fit}
       maxZoom={fit * 8}
-      minAzimuthAngle={0.2}
-      maxAzimuthAngle={1.05}
+      minAzimuthAngle={-0.25}
+      maxAzimuthAngle={0.95}
       minPolarAngle={0.55}
       maxPolarAngle={1.35}
       rotateSpeed={0.6}
@@ -150,12 +150,22 @@ function Float({ seed, children }: { seed: number; children: ReactNode }) {
 }
 
 function RoomSpot({ dark }: { dark: boolean }) {
+  const spot = useRef<SpotLight>(null);
+  useFrame(() => {
+    if (!spot.current) return;
+    spot.current.intensity = getRoomFx().lights === "off" ? 2 : dark ? 16 : 6;
+  });
   return (
-    <spotLight position={[0.35, 3.2, 0.35]} angle={0.7} penumbra={1} intensity={dark ? 16 : 6} distance={7} decay={2} color={dark ? "#ffe1a8" : "#ffe0b2"}>
+    <spotLight ref={spot} position={[0.35, 3.2, 0.35]} angle={0.7} penumbra={1} intensity={dark ? 16 : 6} distance={7} decay={2} color={dark ? "#ffe1a8" : "#ffe0b2"}>
       <object3D attach="target" position={[0.35, 0.03, 0.35]} />
     </spotLight>
   );
 }
+
+const sunHome = new Vector3(1.8, 7.2, 15).normalize();
+const sunFrom = new Vector3();
+const sunRest = new Vector3(1.4, 4.2, -5.2);
+const sunTurn = new Quaternion();
 
 function SceneLights({ dark }: { dark: boolean }) {
   const hemi = useRef<HemisphereLight>(null);
@@ -165,16 +175,25 @@ function SceneLights({ dark }: { dark: boolean }) {
   const partyB = useRef<PointLight>(null);
   const glow = useRef<PointLight>(null);
 
-  useFrame(({ clock }) => {
+  useFrame(({ camera, clock }) => {
     const { lights, konami, celebrateUntil } = getRoomFx();
     const party = lights === "party" || konami || performance.now() < celebrateUntil;
+    const off = lights === "off";
     if (hemi.current) {
-      hemi.current.intensity = party ? 0.7 : dark ? 0.4 : 1.1;
+      hemi.current.intensity = off ? 0.06 : party ? 0.7 : dark ? 0.4 : 1.1;
       if (party) hemi.current.color.setHSL((clock.elapsedTime * 0.12) % 1, 0.55, 0.7);
       else hemi.current.color.set(dark ? "#ffe1a8" : "#ffe0b2");
     }
-    if (ambient.current) ambient.current.intensity = dark ? 0.22 : 0.65;
-    if (sun.current) sun.current.intensity = party ? (dark ? 0.5 : 1.4) : dark ? 0.26 : 1.2;
+    if (ambient.current) ambient.current.intensity = off ? 0.04 : dark ? 0.22 : 0.65;
+    if (sun.current) {
+      sun.current.intensity = off ? 0.04 : party ? (dark ? 0.5 : 1.4) : dark ? 0.26 : 1.2;
+      if (!dark && camera.position.lengthSq() > 64) {
+        sunFrom.copy(camera.position).normalize();
+        sunTurn.setFromUnitVectors(sunHome, sunFrom);
+        sun.current.position.copy(sunRest).applyQuaternion(sunTurn);
+      }
+    }
+    if (glow.current) glow.current.intensity = off ? 1.4 : 0.15;
     if (partyA.current && partyB.current) {
       const on = party ? 1.8 : 0;
       partyA.current.intensity = on;
@@ -260,7 +279,9 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
   const duckPosition = useRef(duckHome.clone());
   const encounter = useRef({ startedAt: -10, touching: false, met: false });
   const monitor = useRef<Object3D>(null);
-  const dark = useTheme().resolvedTheme === "dark";
+  const { resolvedTheme, setTheme } = useTheme();
+  bindRoomTheme(setTheme);
+  const dark = resolvedTheme === "dark";
   const glow = dark ? 0xffd28a : 0xffffff;
   const pick = (id: RoomItemId) => ({ active: selected === id, onSelect: () => onSelect(id), tip: quotes[id], mute: focus !== "room" });
 
@@ -274,7 +295,7 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
         flat
         shadows="percentage"
         dpr={[1, 2]}
-        camera={{ position: [10, 8.5, 10], zoom: 40 }}
+        camera={{ position: [1.8, 7.2, 15], zoom: 40 }}
         onPointerMissed={() => onSelect(null)}
         role="img"
         aria-label="Isometric 3D workspace with a desk setup, guitar, cat, Microduck robot, record player, poster, basketball, and souvenirs"

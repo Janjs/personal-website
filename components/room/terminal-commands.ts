@@ -1,6 +1,6 @@
 import { contactLinks, experience, profile, skillGroups } from "@/lib/portfolio";
 import { findProjects, portfolioProjects, projectHref } from "@/lib/projects";
-import { dispatchRoom } from "@/components/room/room-fx";
+import { dispatchRoom, keyMash } from "@/components/room/room-fx";
 
 export type LineTone = "muted" | "accent" | "good" | "warn" | "error" | "cmd";
 
@@ -27,7 +27,6 @@ const pad = (label: string, width = 18) => label.padEnd(width, " ");
 function helpLines(): Line[] {
   return [
     { text: "Available commands", tone: "accent" },
-    { text: "" },
     ...commands.filter((command) => command.help).map((command) => ({
       text: `${pad(command.names[0])}${command.help}`,
     })),
@@ -64,6 +63,14 @@ export const commands: Command[] = [
         { text: `   ${job.company}  ·  ${job.dates}` },
         { text: `   ${job.place}`, tone: "muted" },
         { text: `   ${job.summary}` },
+        ...("clients" in job
+          ? job.clients.flatMap((client) => [
+              { text: `   ●  ${client.role}`, tone: "accent" as const },
+              { text: `      ${client.company}  ·  ${client.dates}` },
+              { text: `      ${client.place}`, tone: "muted" as const },
+              { text: `      ${client.summary}` },
+            ])
+          : []),
       ]),
     }),
   },
@@ -136,7 +143,7 @@ export const commands: Command[] = [
     run: (args) => {
       if (!args) {
         dispatchRoom({ type: "cat" });
-        return { lines: [{ text: "Here, kitty.", tone: "good" }] };
+        return { exit: true, lines: [{ text: keyMash }] };
       }
       if (args === "skills.txt" || args === "skills") {
         return {
@@ -174,7 +181,23 @@ export const commands: Command[] = [
     help: "Steam the mug",
     run: () => {
       dispatchRoom({ type: "coffee" });
-      return { lines: [{ text: "Fresh pot.", tone: "good" }] };
+      return { lines: [{ text: "Fresh pot. Press Esc and look at the mug.", tone: "good" }] };
+    },
+  },
+  {
+    names: ["lights off"],
+    help: "Dim the room, keep the monitor on",
+    run: () => {
+      dispatchRoom({ type: "lights", mode: "off" });
+      return { lines: [{ text: "Lights out. The screen stays up.", tone: "muted" }] };
+    },
+  },
+  {
+    names: ["lights on"],
+    help: "Restore the original lighting",
+    run: () => {
+      dispatchRoom({ type: "lights", mode: "on" });
+      return { lines: [{ text: "Lights back on.", tone: "good" }] };
     },
   },
   {
@@ -309,6 +332,7 @@ if (process.env.NODE_ENV === "development") {
   console.assert(findProjects("3D Seat Selection")[0]?.github === "cinema-3d-seat-selection", "project spaces");
   console.assert(findProjects("this website")[0]?.github === "personal-website", "this website");
   console.assert(autocomplete("who") === "whoami", "autocomplete whoami");
-  console.assert(!publicCommandNames().some((name) => /lights|party|gravity|guitar|matrix/.test(name)), "removed scene commands");
+  console.assert(matchCommand("lights off")?.command.names[0] === "lights off", "lights off");
+  console.assert(!publicCommandNames().some((name) => /party|gravity|guitar|matrix/.test(name)), "removed scene commands");
   console.assert(runCommand("party").lines?.[0]?.text.includes("not found"), "party gone");
 }

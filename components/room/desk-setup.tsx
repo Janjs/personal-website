@@ -5,25 +5,44 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef, type ReactNode, type Ref } from "react";
 import type { Group, Object3D } from "three";
 
-import { getRoomFx } from "@/components/room/room-fx";
+import { getRoomFx, keyMash } from "@/components/room/room-fx";
+import { armTerminalKeyboard } from "@/components/room/terminal-keyboard";
 import { getTerminalScreen } from "@/components/room/terminal-screen";
 import { Part, Pickable, RBox, canvasTexture, type ItemProps } from "@/components/room/primitives";
 
 const screenPx = [640, 360] as const;
 const screenSize = [0.91, 0.51] as const;
 
-function keyboardTexture() {
-  return canvasTexture(620, 200, (ctx) => {
-    ctx.fillStyle = "#d9d4ca";
-    ctx.fillRect(0, 0, 620, 200);
-    ctx.fillStyle = "#f7f4ee";
-    for (let row = 0; row < 3; row++) {
-      for (let col = 0; col < 14; col++) ctx.fillRect(12 + col * 43, 14 + row * 44, 36, 36);
+function drawKeyboard(ctx: CanvasRenderingContext2D, stuck: boolean) {
+  ctx.clearRect(0, 0, 620, 200);
+  ctx.fillStyle = "#d9d4ca";
+  ctx.fillRect(0, 0, 620, 200);
+  ctx.font = "bold 22px ui-monospace, monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 14; col++) {
+      const x = 12 + col * 43;
+      const y = 14 + row * 44;
+      ctx.fillStyle = "#f7f4ee";
+      ctx.fillRect(x, y, 36, 36);
+      if (!stuck) continue;
+      ctx.fillStyle = "#2b2b2e";
+      ctx.fillText("a", x + 18, y + 20);
     }
-    ctx.fillRect(12, 146, 122, 36);
-    ctx.fillRect(141, 146, 338, 36);
-    ctx.fillRect(486, 146, 122, 36);
-  });
+  }
+  ctx.fillStyle = "#f7f4ee";
+  ctx.fillRect(12, 146, 122, 36);
+  ctx.fillRect(141, 146, 338, 36);
+  ctx.fillRect(486, 146, 122, 36);
+  if (!stuck) return;
+  ctx.fillStyle = "#2b2b2e";
+  ctx.font = "bold 18px ui-monospace, monospace";
+  ctx.fillText(keyMash, 310, 164);
+}
+
+function keyboardTexture() {
+  return canvasTexture(620, 200, (ctx) => drawKeyboard(ctx, false));
 }
 
 function OfficeChair() {
@@ -62,11 +81,23 @@ function Sandwich() {
 function DeskPeripherals({ dark, monitorRef, onOpenMonitor, terminal, hot }: { dark: boolean; monitorRef?: Ref<Object3D>; onOpenMonitor?: () => void; terminal?: ReactNode; hot?: boolean }) {
   const screen = useMemo(() => getTerminalScreen(), []);
   const keys = useMemo(() => keyboardTexture(), []);
+  const mashed = useRef(false);
+  useFrame(() => {
+    if (mashed.current || !getRoomFx().catToken) return;
+    mashed.current = true;
+    drawKeyboard(keys.image.getContext("2d")!, true);
+    keys.needsUpdate = true;
+  });
 
   return (
     <>
       <group
         position={[0, 0, -0.27]}
+        onPointerDown={(event) => {
+          event.stopPropagation();
+          armTerminalKeyboard();
+          onOpenMonitor?.();
+        }}
         onClick={(event) => {
           event.stopPropagation();
           onOpenMonitor?.();
@@ -89,7 +120,7 @@ function DeskPeripherals({ dark, monitorRef, onOpenMonitor, terminal, hot }: { d
                 scale={[screenSize[0] / screenPx[0], screenSize[1] / screenPx[1], 1]}
                 pointerEvents={hot ? "auto" : "none"}
                 zIndexRange={[40, 0]}
-                style={{ background: "transparent", display: hot ? "block" : "none" }}
+                style={{ background: "transparent", visibility: hot ? "visible" : "hidden" }}
               >
                 {terminal}
               </Html>

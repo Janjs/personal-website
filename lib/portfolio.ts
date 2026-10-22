@@ -12,31 +12,33 @@ export const experience = [
   {
     role: "Software Engineering Associate Manager",
     company: "Accenture",
-    dates: "December 2025 – Present",
+    dates: "since 2021",
     place: "Utrecht, Netherlands",
     summary:
       "Leading the architecture and delivery of production AI platforms, while working directly with clients to identify and implement automation opportunities.",
-  },
-  {
-    role: "Senior AI Software Engineer",
-    company: "Merz Pharma",
-    dates: "2026–Present",
-    place: "Frankfurt, Germany",
-    summary: "Developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
-  },
-  {
-    role: "AI Platform Engineer",
-    company: "Medtronic",
-    dates: "2023–2025",
-    place: "Michigan, United States",
-    summary: "Building AI chatbot platforms with Next.js, used by 50,000+ internal employees.",
-  },
-  {
-    role: "Software Engineer",
-    company: "Rabobank",
-    dates: "2021–2023",
-    place: "Amsterdam, Netherlands",
-    summary: "Designing and building high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure.",
+    clients: [
+      {
+        role: "Senior AI Software Engineer",
+        company: "Merz Pharma",
+        dates: "2026–Present",
+        place: "Frankfurt, Germany",
+        summary: "Developing Next.js-based agentic systems with LLMs, RAG, and enterprise integrations.",
+      },
+      {
+        role: "AI Platform Engineer",
+        company: "Medtronic",
+        dates: "2023–2025",
+        place: "Michigan, United States",
+        summary: "Building AI chatbot platforms with Next.js, used by 50,000+ internal employees.",
+      },
+      {
+        role: "Software Engineer",
+        company: "Rabobank",
+        dates: "2021–2023",
+        place: "Amsterdam, Netherlands",
+        summary: "Designing and building high-availability backend systems handling 1,000+ QPS across Kotlin, Java, and Azure.",
+      },
+    ],
   },
   {
     role: "AI video analytics intern",

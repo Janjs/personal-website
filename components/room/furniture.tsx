@@ -99,7 +99,8 @@ function StringLights({ dark }: { dark: boolean }) {
     lights.current?.traverse((object) => {
       if (!("isPointLight" in object) || !object.isPointLight) return;
       const light = object as PointLight;
-      if (party) {
+      if (mode === "off") light.intensity = 0.02;
+      else if (party) {
         light.color.setHSL((clock.elapsedTime * 0.18 + light.position.z) % 1, 0.75, 0.6);
         light.intensity = 0.22;
       } else {
@@ -138,7 +139,7 @@ function DeskLamp({ dark }: { dark: boolean }) {
 
   return (
     <group
-      position={[0.38, 1.15, -1.68]}
+      position={[0.5, 1.15, -1.28]}
       onClick={(event) => {
         event.stopPropagation();
         if (event.delta > 4) return;

@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useRef, useState } from "react";
 
 import { autocomplete, runCommand, type Line } from "@/components/room/terminal-commands";
+import { getRoomFx, keyMash } from "@/components/room/room-fx";
+import { armTerminalKeyboard, blurTerminalKeyboard, terminalKb } from "@/components/room/terminal-keyboard";
 import { paintTerminalScreen } from "@/components/room/terminal-screen";
 import { cn } from "@/lib/utils";
 
@@ -36,10 +38,9 @@ function OutputLine({ line }: { line: Line }) {
 
 export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onExit: () => void; onEnter: () => void }) {
   const [lines, setLines] = useState<Line[]>(welcome);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(() => terminalKb.node?.value ?? "");
   const history = useRef<string[]>([]);
   const historyAt = useRef(-1);
-  const input = useRef<HTMLInputElement>(null);
   const painted = useRef<Line[] | null>(null);
   if (painted.current !== lines) {
     painted.current = lines;
@@ -47,11 +48,10 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
   }
   const wasActive = useRef<boolean | null>(null);
   if (wasActive.current !== active) {
+    const prev = wasActive.current;
     wasActive.current = active;
-    queueMicrotask(() => {
-      if (active) input.current?.focus({ preventScroll: true });
-      else input.current?.blur();
-    });
+    if (active) armTerminalKeyboard();
+    else if (prev === true) blurTerminalKeyboard();
   }
 
   const submit = (raw: string) => {
@@ -66,55 +66,80 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
       return;
     }
     setLines((current) => [...current, { text: command, tone: "cmd" }, ...(result.lines ?? [])]);
-    setValue("");
+    setValue(getRoomFx().catToken > 0 ? keyMash : "");
     if (result.exit) onExit();
   };
 
-  const onKeyDown = (event: KeyboardEvent<HTMLFormElement | HTMLInputElement>) => {
-    event.stopPropagation();
-    if (event.key === "Escape") {
-      event.preventDefault();
-      onExit();
-      return;
-    }
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setValue(autocomplete(value));
-      return;
-    }
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      const log = history.current;
-      if (!log.length) return;
-      const next = historyAt.current < 0 ? log.length - 1 : Math.max(0, historyAt.current - 1);
-      historyAt.current = next;
-      setValue(log[next] ?? "");
-      return;
-    }
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      const log = history.current;
-      if (historyAt.current < 0) return;
-      const next = historyAt.current + 1;
-      if (next >= log.length) {
-        historyAt.current = -1;
-        setValue("");
+  const node = terminalKb.node;
+  if (node) {
+    node.oninput = () => {
+      if (getRoomFx().catToken > 0) {
+        node.value = keyMash;
+        setValue(keyMash);
         return;
       }
-      historyAt.current = next;
-      setValue(log[next] ?? "");
-    }
-  };
-
-  const focusInput = () => input.current?.focus({ preventScroll: true });
+      setValue(node.value);
+    };
+    node.onkeydown = (event) => {
+      event.stopPropagation();
+      if (getRoomFx().catToken > 0 && event.key !== "Escape") {
+        event.preventDefault();
+        node.value = keyMash;
+        setValue(keyMash);
+        return;
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        submit(node.value);
+        return;
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onExit();
+        return;
+      }
+      if (event.key === "Tab") {
+        event.preventDefault();
+        const next = autocomplete(node.value);
+        node.value = next;
+        setValue(next);
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        const log = history.current;
+        if (!log.length) return;
+        const next = historyAt.current < 0 ? log.length - 1 : Math.max(0, historyAt.current - 1);
+        historyAt.current = next;
+        node.value = log[next] ?? "";
+        setValue(node.value);
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        const log = history.current;
+        if (historyAt.current < 0) return;
+        const at = historyAt.current + 1;
+        if (at >= log.length) {
+          historyAt.current = -1;
+          node.value = "";
+          setValue("");
+          return;
+        }
+        historyAt.current = at;
+        node.value = log[at] ?? "";
+        setValue(node.value);
+      }
+    };
+    if (node.value !== value) node.value = value;
+  }
 
   return (
     <form
       className={cn(
-        "room-terminal flex h-[360px] w-[640px] flex-col overflow-hidden bg-[#1e1f2b] font-mono text-[13px] leading-snug text-[#e8e4dc]",
+        "room-terminal flex h-[360px] w-[640px] flex-col overflow-hidden bg-[#1e1f2b] font-mono text-[13px] leading-[17px] text-[#e8e4dc]",
         !active && "cursor-pointer select-none",
       )}
-      onKeyDown={onKeyDown}
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -129,7 +154,7 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
       }}
       onClick={() => {
         if (!active) onEnter();
-        else focusInput();
+        else armTerminalKeyboard();
       }}
     >
       <div className={cn("min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5", !active && "pointer-events-none")}>
@@ -149,24 +174,16 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
           <div
             ref={(node) => {
               const scroller = node?.parentElement?.parentElement;
-              if (scroller) scroller.scrollTop = scroller.scrollHeight;
+              if (!scroller || scroller.clientHeight < 8) return;
+              if (scroller.scrollHeight > scroller.clientHeight + 1) scroller.scrollTop = scroller.scrollHeight;
             }}
             className="flex items-baseline gap-2"
           >
             <span className="shrink-0 text-[#c3e88d]">{prompt}</span>
-            <input
-              ref={input}
-              tabIndex={active ? 0 : -1}
-              value={value}
-              onChange={(event) => setValue(event.target.value)}
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              enterKeyHint="send"
-              inputMode="text"
-              aria-label="Terminal command"
-              className="min-w-0 flex-1 bg-transparent p-0 leading-snug text-[#e8e4dc] caret-[#c3e88d] outline-none"
-            />
+            <span className="text-[#e8e4dc]">
+              {value}
+              {active ? <span className="ml-px inline-block h-[1em] w-[2px] align-text-bottom animate-pulse bg-[#c3e88d]" /> : null}
+            </span>
           </div>
         </div>
       </div>
