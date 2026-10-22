@@ -75,7 +75,7 @@ function CoffeeSteam() {
   });
 
   return (
-    <group ref={ref} visible={false} position={[-1.25, 1.15, -1.15]}>
+    <group ref={ref} visible={false} position={[-1.02, 1.15, -1.28]}>
       {[0, 1, 2].map((index) => (
         <mesh key={index}>
           <sphereGeometry args={[0.025, 10, 8]} />
@@ -88,6 +88,7 @@ function CoffeeSteam() {
 
 function StringLights({ dark }: { dark: boolean }) {
   const lights = useRef<Group>(null);
+  const [lit, setLit] = useState(false);
   const wire = useMemo(
     () => new TubeGeometry(new CatmullRomCurve3(stringBulbs.map(([x, y, z]) => new Vector3(x, y + 0.032, z))), 72, 0.004, 8, false),
     [],
@@ -96,10 +97,12 @@ function StringLights({ dark }: { dark: boolean }) {
   useFrame(({ clock }) => {
     const { lights: mode, konami } = getRoomFx();
     const party = mode === "party" || konami;
+    const next = dark && mode !== "off";
+    setLit((current) => (current === next ? current : next));
     lights.current?.traverse((object) => {
       if (!("isPointLight" in object) || !object.isPointLight) return;
       const light = object as PointLight;
-      if (mode === "off") light.intensity = 0.02;
+      if (mode === "off") light.intensity = 0;
       else if (party) {
         light.color.setHSL((clock.elapsedTime * 0.18 + light.position.z) % 1, 0.75, 0.6);
         light.intensity = 0.22;
@@ -120,13 +123,13 @@ function StringLights({ dark }: { dark: boolean }) {
           <Part color="#3d352e" position={[0, 0.022, 0]}><cylinderGeometry args={[0.008, 0.01, 0.018, 12]} /></Part>
           <mesh>
             <sphereGeometry args={[0.022, 16, 12]} />
-            {dark ? (
+            {lit ? (
               <meshBasicMaterial color="#c48a38" toneMapped={false} />
             ) : (
               <meshStandardMaterial color="#f6efe2" roughness={0.35} />
             )}
           </mesh>
-          {dark && <pointLight intensity={0.1} distance={1.05} decay={2} color="#e8a050" />}
+          {lit && <pointLight intensity={0.1} distance={1.05} decay={2} color="#e8a050" />}
         </group>
       ))}
     </group>
@@ -136,10 +139,18 @@ function StringLights({ dark }: { dark: boolean }) {
 function DeskLamp({ dark }: { dark: boolean }) {
   const { setTheme } = useTheme();
   const [hovered, setHovered] = useState(false);
+  const [lit, setLit] = useState(false);
+  const light = useRef<PointLight>(null);
+
+  useFrame(() => {
+    const next = dark && getRoomFx().lights !== "off";
+    setLit((current) => (current === next ? current : next));
+    if (light.current) light.current.intensity = next ? 0.4 : 0;
+  });
 
   return (
     <group
-      position={[0.5, 1.15, -1.28]}
+      position={[0.38, 1.15, -1.68]}
       onClick={(event) => {
         event.stopPropagation();
         if (event.delta > 4) return;
@@ -163,7 +174,7 @@ function DeskLamp({ dark }: { dark: boolean }) {
       <Part color="#efebe2" roughness={0.6} position={[0, 0.365, 0]}><cylinderGeometry args={[0.034, 0.034, 0.01, 24]} /></Part>
       <mesh position={[0, 0.385, 0]}>
         <sphereGeometry args={[0.024, 16, 12]} />
-        {dark ? (
+        {lit ? (
           <meshBasicMaterial color="#ffe8a3" toneMapped={false} />
         ) : (
           <meshStandardMaterial color="#f5efe2" roughness={0.4} />
@@ -171,18 +182,18 @@ function DeskLamp({ dark }: { dark: boolean }) {
       </mesh>
       <mesh castShadow receiveShadow position={[0, 0.34, 0]}>
         <sphereGeometry args={[0.165, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
-        <meshStandardMaterial color="#e3ded3" emissive={dark ? "#e8d7b0" : "#000000"} emissiveIntensity={dark ? 0.55 : 0} roughness={0.85} />
+        <meshStandardMaterial color="#e3ded3" emissive={lit ? "#e8d7b0" : "#000000"} emissiveIntensity={lit ? 0.55 : 0} roughness={0.85} />
       </mesh>
       <mesh position={[0, 0.34, 0]}>
         <sphereGeometry args={[0.161, 36, 20, 0, Math.PI * 2, 0, Math.PI * 0.45]} />
-        {dark ? (
+        {lit ? (
           <meshBasicMaterial color="#ffd466" side={BackSide} toneMapped={false} />
         ) : (
           <meshStandardMaterial color="#f0e7d5" side={BackSide} roughness={0.6} />
         )}
       </mesh>
       </Select>
-      {dark && <pointLight position={[0.06, 0.22, 0.12]} intensity={0.4} distance={2.2} decay={2} color="#ffad47" />}
+      <pointLight ref={light} position={[0.06, 0.22, 0.12]} intensity={0} distance={2.2} decay={2} color="#ffad47" />
     </group>
   );
 }
@@ -210,7 +221,7 @@ export function Furniture({ dark }: { dark: boolean }) {
       {[[-1.45, -1.85], [0.55, -1.85], [-1.45, -1.05], [0.55, -1.05]].map(([x, z]) => (
         <RBox key={`${x}${z}`} color="#aa8d6b" size={[0.07, 1.07, 0.07]} radius={0.02} position={[x, 0.535, z]} />
       ))}
-      <group position={[-1.25, 1.15, -1.15]}>
+      <group position={[-1.02, 1.15, -1.28]}>
         <Part color="#e9e2d6" roughness={0.4} position={[0, 0.06, 0]}><cylinderGeometry args={[0.055, 0.05, 0.12, 32]} /></Part>
         <Part color="#e9e2d6" roughness={0.4} position={[0.06, 0.06, 0]}><torusGeometry args={[0.03, 0.008, 12, 24]} /></Part>
       </group>

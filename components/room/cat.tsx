@@ -46,7 +46,7 @@ function tailShape() {
   return geometry;
 }
 
-export function Cat({ pets, playing, active, position, duckPosition, encounter, ...props }: ItemProps & { pets: number; playing: boolean; position: RefObject<Vector3>; duckPosition: RefObject<Vector3>; encounter: RefObject<EncounterState> }) {
+export function Cat({ pets, playing, active, focus, position, duckPosition, encounter, ...props }: ItemProps & { pets: number; playing: boolean; focus: "room" | "monitor"; position: RefObject<Vector3>; duckPosition: RefObject<Vector3>; encounter: RefObject<EncounterState> }) {
   const walker = useRef<Group>(null);
   const torso = useRef<Group>(null);
   const head = useRef<Group>(null);
@@ -61,6 +61,7 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
   const petStart = useRef(-10);
   const onKeys = useRef(false);
   const puffAt = useRef(-10);
+  const leaveAt = useRef(-10);
   const puff = useRef<Group>(null);
   const wander = useRef({ target: 1, sitUntil: 2, stand: 0, dance: 0 });
   const furTexture = useMemo(() => stripes(), []);
@@ -80,6 +81,7 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
     if (summoned !== lastSummon.current) {
       lastSummon.current = summoned;
       onKeys.current = true;
+      leaveAt.current = -10;
       puffAt.current = t;
       wander.current.sitUntil = t + 999;
     }
@@ -88,17 +90,35 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
 
     const cat = walker.current;
     if (!cat) return;
+    if (onKeys.current && focus !== "monitor" && leaveAt.current < 0) {
+      leaveAt.current = t;
+      puffAt.current = t;
+    }
     const pinned = onKeys.current;
+    const leaving = leaveAt.current >= 0;
     if (pinned) {
-      const appear = Math.min(1, Math.max(0, (t - puffAt.current - 0.12) / 0.4));
-      cat.scale.setScalar(Math.max(0.001, 0.62 * appear));
-      cat.position.set(-0.5, 1.19, -1.26);
-      cat.rotation.y = Math.PI;
+      cat.position.set(-0.4, 1.175, -1.08);
+      cat.rotation.set(0, Math.PI / 2, 0);
+      if (leaving) {
+        const out = Math.min(1, (t - leaveAt.current) / 0.35);
+        cat.scale.setScalar(Math.max(0.001, 1 - out));
+        if (out >= 1) {
+          onKeys.current = false;
+          leaveAt.current = -10;
+          cat.scale.setScalar(1);
+          cat.position.set(position.current.x, 0, position.current.z);
+          wander.current.sitUntil = t + 0.4;
+        }
+      } else {
+        const appear = Math.min(1, Math.max(0, (t - puffAt.current - 0.12) / 0.4));
+        cat.scale.setScalar(Math.max(0.001, appear));
+      }
     }
     const puffAge = t - puffAt.current;
     const puffing = puffAt.current > 0 && puffAge < 1.45;
     if (puff.current) {
       puff.current.visible = puffing;
+      puff.current.position.set(-0.4, 1.32, -1.08);
       puff.current.children.forEach((child, index) => {
         const u = Math.min(1, Math.max(0, (puffAge - index * 0.05) / 1.05));
         child.scale.setScalar(0.04 + u * (0.28 + index * 0.06));
@@ -176,7 +196,7 @@ export function Cat({ pets, playing, active, position, duckPosition, encounter, 
 
   return (
     <>
-    <group ref={puff} visible={false} position={[-0.5, 1.32, -1.26]}>
+    <group ref={puff} visible={false} position={[-0.4, 1.32, -1.08]}>
       {[0, 1, 2, 3].map((index) => (
         <mesh key={index} position={[(index - 1.5) * 0.07, 0, index % 2 ? 0.05 : -0.04]}>
           <sphereGeometry args={[0.08, 12, 10]} />

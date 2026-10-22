@@ -12,8 +12,6 @@ export type RoomFx = {
   catToken: number;
 };
 
-export const keyMash = "aaaaaaaaaaaaa";
-
 export type RoomAction =
   | { type: "weather"; place: Exclude<RoomWeather, "none"> }
   | { type: "konami" }

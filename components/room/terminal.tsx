@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { autocomplete, runCommand, type Line } from "@/components/room/terminal-commands";
-import { getRoomFx, keyMash } from "@/components/room/room-fx";
+import { getRoomFx } from "@/components/room/room-fx";
 import { armTerminalKeyboard, blurTerminalKeyboard, terminalKb } from "@/components/room/terminal-keyboard";
 import { paintTerminalScreen } from "@/components/room/terminal-screen";
 import { cn } from "@/lib/utils";
@@ -41,10 +41,27 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
   const [value, setValue] = useState(() => terminalKb.node?.value ?? "");
   const history = useRef<string[]>([]);
   const historyAt = useRef(-1);
-  const painted = useRef<Line[] | null>(null);
-  if (painted.current !== lines) {
-    painted.current = lines;
-    paintTerminalScreen(lines);
+  const [mashing, setMashing] = useState(false);
+  if (!active && mashing) setMashing(false);
+  useEffect(() => {
+    if (!active || !mashing) return;
+    const id = window.setInterval(() => {
+      setLines((current) => {
+        const last = current[current.length - 1];
+        if (last && last.text.length < 72 && /^a+$/.test(last.text)) {
+          const next = current.slice();
+          next[next.length - 1] = { text: last.text + "a" };
+          return next;
+        }
+        return [...current, { text: "a" }];
+      });
+    }, 40);
+    return () => window.clearInterval(id);
+  }, [active, mashing]);
+  const painted = useRef(false);
+  if (!painted.current) {
+    painted.current = true;
+    paintTerminalScreen([], false);
   }
   const wasActive = useRef<boolean | null>(null);
   if (wasActive.current !== active) {
@@ -55,10 +72,12 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
   }
 
   const submit = (raw: string) => {
+    if (mashing) return;
     const command = raw.trim();
     if (!command) return;
     history.current.push(command);
     historyAt.current = -1;
+    const before = getRoomFx().catToken;
     const result = runCommand(command);
     if (result.clear) {
       setLines([]);
@@ -66,26 +85,24 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
       return;
     }
     setLines((current) => [...current, { text: command, tone: "cmd" }, ...(result.lines ?? [])]);
-    setValue(getRoomFx().catToken > 0 ? keyMash : "");
+    setValue("");
+    if (getRoomFx().catToken !== before) setMashing(true);
     if (result.exit) onExit();
   };
 
   const node = terminalKb.node;
   if (node) {
     node.oninput = () => {
-      if (getRoomFx().catToken > 0) {
-        node.value = keyMash;
-        setValue(keyMash);
+      if (mashing) {
+        node.value = "";
         return;
       }
       setValue(node.value);
     };
     node.onkeydown = (event) => {
       event.stopPropagation();
-      if (getRoomFx().catToken > 0 && event.key !== "Escape") {
+      if (mashing && event.key !== "Escape") {
         event.preventDefault();
-        node.value = keyMash;
-        setValue(keyMash);
         return;
       }
       if (event.key === "Enter") {
@@ -137,7 +154,7 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
   return (
     <form
       className={cn(
-        "room-terminal flex h-[360px] w-[640px] flex-col overflow-hidden bg-[#1e1f2b] font-mono text-[13px] leading-[17px] text-[#e8e4dc]",
+        "room-terminal flex h-[360px] w-[640px] flex-col overflow-hidden bg-transparent font-mono text-[13px] leading-[17px] text-[#e8e4dc]",
         !active && "cursor-pointer select-none",
       )}
       onSubmit={(event) => {
@@ -147,6 +164,7 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
           onEnter();
           return;
         }
+        if (mashing) return;
         submit(value);
       }}
       onMouseDown={(event) => {
@@ -177,13 +195,16 @@ export function RoomTerminal({ active, onExit, onEnter }: { active: boolean; onE
               if (!scroller || scroller.clientHeight < 8) return;
               if (scroller.scrollHeight > scroller.clientHeight + 1) scroller.scrollTop = scroller.scrollHeight;
             }}
-            className="flex items-baseline gap-2"
           >
-            <span className="shrink-0 text-[#c3e88d]">{prompt}</span>
-            <span className="text-[#e8e4dc]">
-              {value}
-              {active ? <span className="ml-px inline-block h-[1em] w-[2px] align-text-bottom animate-pulse bg-[#c3e88d]" /> : null}
-            </span>
+            {mashing ? null : (
+              <div className="flex items-baseline gap-2">
+                <span className="shrink-0 text-[#c3e88d]">{prompt}</span>
+                <span className="text-[#e8e4dc]">
+                  {value}
+                  {active ? <span className="ml-px inline-block h-[1em] w-[2px] align-text-bottom animate-pulse bg-[#c3e88d]" /> : null}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

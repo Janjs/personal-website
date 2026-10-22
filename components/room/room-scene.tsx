@@ -35,11 +35,12 @@ function fitZoom(size: { width: number; height: number }) {
 function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; focus: "room" | "monitor"; monitor: RefObject<Object3D | null>; onSettled: () => void }) {
   const size = useThree((state) => state.size);
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const home = useRef({ pos: new Vector3(1.8, 7.2, 15), zoom: 40, target: new Vector3() });
+  const home = useRef({ pos: new Vector3(10, 8.5, 10), zoom: 40, target: new Vector3() });
   const progress = useRef(0);
   const announced = useRef<"room" | "monitor" | null>(null);
   const screen = useRef(new Vector3(-0.4, -0.1, -1.65));
   const focusPos = useRef(new Vector3());
+  const focusTarget = useRef(new Vector3());
   const lastGoal = useRef(0);
   const travel = useRef({ from: 0, to: 0, start: 0, running: false });
   const fit = fitZoom(size);
@@ -72,16 +73,17 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
     }
 
     monitor.current?.getWorldPosition(screen.current);
-    focusPos.current.set(screen.current.x + 0.38, screen.current.y + 0.2, screen.current.z + 0.52);
+    focusPos.current.set(screen.current.x, screen.current.y + 0.22, screen.current.z + 0.95);
+    focusTarget.current.set(screen.current.x, screen.current.y - 0.2, screen.current.z);
 
     const t = progress.current;
     if (t > 0.001 || !idle) {
       camera.position.lerpVectors(home.current.pos, focusPos.current, t);
-      const destZoom = Math.max(nextFit * 6.2, 200);
+      const destZoom = Math.max(nextFit * 4.4, 170);
       camera.zoom = Math.exp(Math.log(Math.max(home.current.zoom, 1)) * (1 - t) + Math.log(destZoom) * t);
       camera.updateProjectionMatrix();
       if (orbit) {
-        orbit.target.lerpVectors(home.current.target, screen.current, t);
+        orbit.target.lerpVectors(home.current.target, focusTarget.current, t);
         orbit.update();
       }
     } else {
@@ -115,8 +117,8 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
       enablePan={false}
       minZoom={fit}
       maxZoom={fit * 8}
-      minAzimuthAngle={-0.25}
-      maxAzimuthAngle={0.95}
+      minAzimuthAngle={0.2}
+      maxAzimuthAngle={1.05}
       minPolarAngle={0.55}
       maxPolarAngle={1.35}
       rotateSpeed={0.6}
@@ -162,7 +164,7 @@ function RoomSpot({ dark }: { dark: boolean }) {
   );
 }
 
-const sunHome = new Vector3(1.8, 7.2, 15).normalize();
+const sunHome = new Vector3(10, 8.5, 10).normalize();
 const sunFrom = new Vector3();
 const sunRest = new Vector3(1.4, 4.2, -5.2);
 const sunTurn = new Quaternion();
@@ -295,7 +297,7 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
         flat
         shadows="percentage"
         dpr={[1, 2]}
-        camera={{ position: [1.8, 7.2, 15], zoom: 40 }}
+        camera={{ position: [10, 8.5, 10], zoom: 40 }}
         onPointerMissed={() => onSelect(null)}
         role="img"
         aria-label="Isometric 3D workspace with a desk setup, guitar, cat, Microduck robot, record player, poster, basketball, and souvenirs"
@@ -321,7 +323,7 @@ export function RoomScene({ selected, playing, pets, quotes, focus, onSelect, on
           <Furniture dark={dark} />
           <Desk {...pick("desk")} dark={dark} monitorRef={monitor} onOpenMonitor={onOpenMonitor} terminal={terminal} hot={terminalHot} />
           <Float seed={1}><Guitar {...pick("guitar")} /></Float>
-          <Cat {...pick("cat")} pets={pets} playing={playing} position={catPosition} duckPosition={duckPosition} encounter={encounter} />
+          <Cat {...pick("cat")} pets={pets} playing={playing} focus={focus} position={catPosition} duckPosition={duckPosition} encounter={encounter} />
           <Microduck {...pick("microduck")} catPosition={catPosition} position={duckPosition} encounter={encounter} onMet={onDuckMet} />
           <RecordPlayer {...pick("vinyl")} playing={playing} />
           <Float seed={2}><Basketball {...pick("basketball")} /></Float>

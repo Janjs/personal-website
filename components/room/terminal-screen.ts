@@ -1,5 +1,4 @@
 import { canvasTexture } from "@/components/room/primitives";
-import { getRoomFx, keyMash } from "@/components/room/room-fx";
 import type { Line } from "@/components/room/terminal-commands";
 import type { CanvasTexture } from "three";
 
@@ -30,9 +29,10 @@ function font() {
   return `${fontSize}px ${family}, ui-monospace, monospace`;
 }
 
-function paint(ctx: CanvasRenderingContext2D, lines: Line[]) {
+function paint(ctx: CanvasRenderingContext2D, lines: Line[], drawText = true, showPrompt = true) {
   ctx.fillStyle = "#1e1f2b";
   ctx.fillRect(0, 0, width, height);
+  if (!drawText) return;
   ctx.font = font();
   ctx.textBaseline = "top";
   const max = Math.floor((height - padY * 2) / row);
@@ -51,12 +51,9 @@ function paint(ctx: CanvasRenderingContext2D, lines: Line[]) {
     }
     y += row;
   }
+  if (!showPrompt) return;
   ctx.fillStyle = "#c3e88d";
   ctx.fillText(prompt, padX, y);
-  if (getRoomFx().catToken > 0) {
-    ctx.fillStyle = "#e8e4dc";
-    ctx.fillText(keyMash, padX + promptW + promptGap, y);
-  }
 }
 
 let texture: CanvasTexture | null = null;
@@ -66,8 +63,8 @@ export function getTerminalScreen() {
   return texture;
 }
 
-export function paintTerminalScreen(lines: Line[]) {
+export function paintTerminalScreen(lines: Line[], drawText = true, showPrompt = true) {
   const screen = getTerminalScreen();
-  paint(screen.image.getContext("2d")!, lines);
+  paint(screen.image.getContext("2d")!, lines, drawText, showPrompt);
   screen.needsUpdate = true;
 }

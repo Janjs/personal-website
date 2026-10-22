@@ -1,6 +1,6 @@
 import { contactLinks, experience, profile, skillGroups } from "@/lib/portfolio";
 import { findProjects, portfolioProjects, projectHref } from "@/lib/projects";
-import { dispatchRoom, keyMash } from "@/components/room/room-fx";
+import { dispatchRoom } from "@/components/room/room-fx";
 
 export type LineTone = "muted" | "accent" | "good" | "warn" | "error" | "cmd";
 
@@ -143,7 +143,7 @@ export const commands: Command[] = [
     run: (args) => {
       if (!args) {
         dispatchRoom({ type: "cat" });
-        return { exit: true, lines: [{ text: keyMash }] };
+        return {};
       }
       if (args === "skills.txt" || args === "skills") {
         return {
@@ -181,7 +181,7 @@ export const commands: Command[] = [
     help: "Steam the mug",
     run: () => {
       dispatchRoom({ type: "coffee" });
-      return { lines: [{ text: "Fresh pot. Press Esc and look at the mug.", tone: "good" }] };
+      return { lines: [{ text: "Fresh pot.", tone: "good" }] };
     },
   },
   {
