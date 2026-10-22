@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   title: "Jan J. Serra | Software Engineer",
   description:
     "Software engineer building artificial intelligence and spatial computing experiences.",
+};
+
+export const viewport: Viewport = {
+  interactiveWidget: "overlays-content",
 };
 
 export default function RootLayout({

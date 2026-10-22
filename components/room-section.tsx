@@ -152,7 +152,7 @@ export function RoomSection() {
           inputMode="text"
           spellCheck={false}
           tabIndex={-1}
-          className="pointer-events-none absolute bottom-0 left-0 h-6 w-full opacity-[0.01]"
+          className="pointer-events-none fixed bottom-0 left-0 z-[100] h-8 w-full opacity-[0.01]"
           style={{ fontSize: 16 }}
         />
         <RoomScene
@@ -185,8 +185,8 @@ export function RoomSection() {
         ) : null}
       </div>
       <p className="text-sm text-muted-foreground">
-        <span className="min-[701px]:hidden">*Tip: drag to rotate, tap items, tap the monitor</span>
-        <span className="hidden min-[701px]:inline">*Tip: click around, or click the monitor</span>
+        <span className="min-[701px]:hidden">*Tip: drag to rotate, pinch to zoom, tap items</span>
+        <span className="hidden min-[701px]:inline">*Tip: click around</span>
       </p>
     </div>
   );
