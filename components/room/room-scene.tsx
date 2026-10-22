@@ -43,6 +43,7 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
   const focusTarget = useRef(new Vector3());
   const lastGoal = useRef(0);
   const travel = useRef({ from: 0, to: 0, start: 0, running: false });
+  const lastFit = useRef(0);
   const fit = fitZoom(size);
 
   useFrame(({ camera, size: frameSize }) => {
@@ -64,12 +65,20 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
     }
 
     const idle = goal === 0 && !travel.current.running;
-    if (idle && orbit && Math.abs(camera.zoom - nextFit) < 2) {
-      home.current.pos.copy(camera.position);
-      home.current.zoom = nextFit;
-      home.current.target.copy(orbit.target);
-    } else if (idle) {
-      home.current.zoom = nextFit;
+    if (idle) {
+      if (lastFit.current === 0) {
+        camera.zoom = nextFit;
+        lastFit.current = nextFit;
+      } else if (Math.abs(nextFit - lastFit.current) > 0.5) {
+        const prev = Math.max(lastFit.current, 1);
+        camera.zoom = Math.min(Math.max(camera.zoom * (nextFit / prev), nextFit), nextFit * 8);
+        lastFit.current = nextFit;
+      }
+      home.current.zoom = camera.zoom;
+      if (orbit) {
+        home.current.pos.copy(camera.position);
+        home.current.target.copy(orbit.target);
+      }
     }
 
     monitor.current?.getWorldPosition(screen.current);
@@ -87,7 +96,6 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
         orbit.update();
       }
     } else {
-      camera.zoom = nextFit;
       if (camera.position.distanceTo(home.current.pos) > 0.4) {
         camera.position.copy(home.current.pos);
         if (orbit) {
@@ -113,7 +121,7 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
       ref={controls}
       makeDefault
       enabled={!locked}
-      enableZoom={false}
+      enableZoom
       enablePan={false}
       minZoom={fit}
       maxZoom={fit * 8}
@@ -122,6 +130,7 @@ function RoomControls({ locked, focus, monitor, onSettled }: { locked: boolean; 
       minPolarAngle={0.55}
       maxPolarAngle={1.35}
       rotateSpeed={0.6}
+      zoomSpeed={0.9}
     />
   );
 }
