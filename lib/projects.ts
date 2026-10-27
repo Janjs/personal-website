@@ -8,6 +8,7 @@ import musicAsCodeScreenshot from "@/public/project-screenshots/music-as-code.pn
 import scandropMcpScreenshot from "@/public/project-screenshots/scandrop-mcp.png";
 import stroopScreenshot from "@/public/project-screenshots/stroop.png";
 import sunnySpotsScreenshot from "@/public/project-screenshots/sunny-spots.jpeg";
+import tinyUtrechtScreenshot from "@/public/project-screenshots/tiny-utrecht.jpeg";
 import todaysHarvestScreenshot from "@/public/project-screenshots/todays-harvest.png";
 
 export type ProjectKind = "web" | "mobile" | "mcp" | "skill";
@@ -111,6 +112,19 @@ export const portfolioProjects: Project[] = [
     description: "Agent skills that turn natural-language music requests into local Strudel, LilyPond, or SuperCollider files.",
     chips: ["Skills", "Music", "Live-coding"],
     techStack: ["Strudel", "LilyPond", "SuperCollider"],
+  },
+  {
+    name: "Tiny Utrecht",
+    tag: "Pixel-art map",
+    liveUrl: "https://tiny-utrecht.janjs.dev/",
+    iconSrc: "/project-icons/tiny-utrecht.svg",
+    github: "tiny-utrecht",
+    kind: "web",
+    screenshotSrc: tinyUtrechtScreenshot,
+    description:
+      "Isometric pixel-art map of central Utrecht, inspired by Boris Starkov's tiny.london.",
+    chips: ["Web App", "Maps", "Pixel art"],
+    techStack: ["Python", "Gemini", "OpenSeadragon"],
   },
   {
     name: "Heighliner",

@@ -52,7 +52,7 @@ export function Poster({ dark, ...props }: ItemProps & { dark: boolean }) {
 
 export function Window({ dark, ...props }: ItemProps & { dark: boolean }) {
   return (
-    <Pickable {...props} tipY={0.8} position={[-0.45, 2.46, -1.98]}>
+    <Pickable {...props} tipY={0.8} tipInteractive position={[-0.45, 2.46, -1.98]}>
       <RBox color="#d8cec0" castShadow={false} size={[1.92, 0.06, 0.24]} position={[0, 0.67, -0.1]} />
       <RBox color="#dfd5c6" castShadow={false} size={[1.92, 0.06, 0.24]} position={[0, -0.67, -0.1]} />
       <RBox color="#d2c7b6" castShadow={false} size={[0.06, 1.38, 0.24]} position={[-0.93, 0, -0.1]} />

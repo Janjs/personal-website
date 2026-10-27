@@ -108,7 +108,21 @@ export function RoomSection() {
     ),
     basketball: <>I play basketball, so I built <QuoteLink name="Highlights AI" /> to cut highlight reels from game footage with computer vision.</>,
     books: <BooksTip />,
-    window: "Outside is Utrecht, my adoptive city. I moved to the Netherlands in 2021 and have been building software here since.",
+    window: (
+      <>
+        Outside is Utrecht, my adoptive city. I moved to the Netherlands in 2021 and have been building software here since. I made{" "}
+        <QuoteLink name="Tiny Utrecht" />, inspired by{" "}
+        <a
+          href="https://x.com/ktoya_me/status/2112439926071693741"
+          target="_blank"
+          rel="noreferrer"
+          className="pointer-events-auto underline underline-offset-2"
+        >
+          this tiny London map
+        </a>
+        .
+      </>
+    ),
     barcelona: "From Barcelona, where I grew up and studied Computer Engineering at UPF.",
     seoul: "From my semester at Ajou University in South Korea, still one of the trips that changed how I see the world.",
     dublin: "From Dublin, where I did my MSc at Trinity and got hooked on AR/VR.",
